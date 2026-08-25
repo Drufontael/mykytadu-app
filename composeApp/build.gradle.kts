@@ -26,6 +26,9 @@ kotlin {
 
     jvm("desktop")
 
+    // Apply Kotlin Multiplatform default source set hierarchy so iosMain is created properly
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -35,6 +38,9 @@ kotlin {
                 implementation(compose.ui)
                 implementation(compose.components.resources)
                 implementation(libs.koin.core)
+                // Ktor common client
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
             }
         }
 
@@ -50,6 +56,8 @@ kotlin {
                 implementation(libs.androidx.appcompat)
                 implementation(compose.preview)
                 implementation(compose.uiTooling)
+                // Ktor Android engine
+                implementation(libs.ktor.client.okhttp)
             }
         }
 
@@ -63,6 +71,18 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                // Ktor Desktop engine
+                implementation(libs.ktor.client.cio)
+            }
+        }
+
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+        val iosMain by getting {
+            dependencies {
+                // Ktor iOS engine
+                implementation(libs.ktor.client.darwin)
             }
         }
     }
