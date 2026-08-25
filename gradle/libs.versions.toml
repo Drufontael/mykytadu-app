@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.2.21"
+kotlin = "2.3.20"
 agp = "8.7.2"
 composeMultiplatform = "1.8.1"
 androidCompileSdk = "35"
@@ -7,7 +7,7 @@ androidMinSdk = "24"
 androidTargetSdk = "35"
 androidxActivityCompose = "1.10.1"
 androidxAppcompat = "1.7.0"
-koin = "3.3.3"
+koin = "4.2.2"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

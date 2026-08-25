@@ -43,3 +43,5 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/local.properties
+/composeApp/src/iosMain/kotlin/br/com/mykytadu/.keep
