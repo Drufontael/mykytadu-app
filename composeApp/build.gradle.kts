@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "br.com.mykytadu"
@@ -41,6 +42,7 @@ kotlin {
                 // Ktor common client
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 
