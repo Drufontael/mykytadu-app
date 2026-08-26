@@ -59,6 +59,8 @@ kotlin {
                 implementation(libs.androidx.appcompat)
                 implementation(compose.preview)
                 implementation(compose.uiTooling)
+                //koin
+                implementation(libs.koin.android)
                 // Ktor Android engine
                 implementation(libs.ktor.client.okhttp)
             }
@@ -79,9 +81,7 @@ kotlin {
             }
         }
 
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
+
         val iosMain by getting {
             dependencies {
                 // Ktor iOS engine
