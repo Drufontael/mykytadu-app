@@ -1,17 +1,15 @@
 package br.com.mykytadu
 
-import android.app.Activity
 import android.os.Bundle
-import android.util.Log
-import io.ktor.client.*
-import org.koin.android.ext.android.inject
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 
-class MainActivity : Activity() {
-
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        setContent {
+            App()
+        }
     }
 }

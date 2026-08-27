@@ -10,6 +10,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = "MykytaDu") {
+            App()
         }
     }
 }

@@ -39,6 +39,13 @@ public data class RadiusTokens(
     val full: Dp,
 )
 
+public data class IconTokens(
+    val sm: Dp,
+    val md: Dp,
+    val lg: Dp,
+    val xl: Dp,
+)
+
 public object AppDimensions {
     public val spacing: SpacingTokens = SpacingTokens(
         none = 0.dp,
@@ -74,5 +81,12 @@ public object AppDimensions {
         xl = 20.dp,
         xxl = 24.dp,
         full = 999.dp,
+    )
+
+    public val icon: IconTokens = IconTokens(
+        sm = 16.dp,
+        md = 20.dp,
+        lg = 24.dp,
+        xl = 32.dp,
     )
 }
