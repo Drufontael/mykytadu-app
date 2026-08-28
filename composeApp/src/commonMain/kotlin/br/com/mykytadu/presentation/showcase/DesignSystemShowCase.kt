@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import br.com.mykytadu.presentation.components.AppCard
 import br.com.mykytadu.presentation.components.AppTextField
 
 @Composable
@@ -54,6 +55,19 @@ fun DesignSystemShowcase() {
                     placeholder = "Digite seu nome",
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                AppCard (
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Meu primeiro Card",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        text = "Acompanhe seus animes favoritos",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
 
 
             }

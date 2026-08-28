@@ -46,6 +46,13 @@ public data class IconTokens(
     val xl: Dp,
 )
 
+public data class ElevationTokens(
+    val none: Dp,
+    val low: Dp,
+    val medium: Dp,
+    val high: Dp,
+)
+
 public object AppDimensions {
     public val spacing: SpacingTokens = SpacingTokens(
         none = 0.dp,
@@ -88,5 +95,12 @@ public object AppDimensions {
         md = 20.dp,
         lg = 24.dp,
         xl = 32.dp,
+    )
+
+    public val elevation: ElevationTokens = ElevationTokens(
+        none = 0.dp,
+        low = 2.dp,
+        medium = 4.dp,
+        high = 8.dp,
     )
 }
