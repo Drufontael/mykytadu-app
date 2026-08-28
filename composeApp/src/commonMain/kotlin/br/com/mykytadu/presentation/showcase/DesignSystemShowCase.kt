@@ -12,50 +12,51 @@ import androidx.compose.ui.Modifier
 import br.com.mykytadu.core.theme.AppDimensions
 import br.com.mykytadu.core.theme.AppTheme
 import br.com.mykytadu.presentation.components.AppButton
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import br.com.mykytadu.presentation.components.AppTextField
 
 @Composable
 fun DesignSystemShowcase() {
+    val textState = remember { mutableStateOf("") }
     AppTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(AppDimensions.padding.lg),
-            verticalArrangement = Arrangement.spacedBy(
-                AppDimensions.spacing.md
-            )
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            Text(
-                text = "Botão 1",
-                style = MaterialTheme.typography.headlineLarge
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(AppDimensions.padding.lg),
+                verticalArrangement = Arrangement.spacedBy(
+                    AppDimensions.spacing.md
+                )
+            ) {
+                Text(
+                    text = "Botão 1",
+                    style = MaterialTheme.typography.headlineLarge
+                )
 
-            AppButton(
-                text = "Continuar",
-                onClick = {},
-                modifier = Modifier.fillMaxWidth()
-            )
+                AppButton(
+                    text = "Continuar",
+                    onClick = {},
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Text(
-                text = "Botão 2",
-                style = MaterialTheme.typography.headlineLarge
-            )
 
-            AppButton(
-                text = "Desabilitado",
-                onClick = {},
-                enabled = false
-            )
+                AppTextField(
+                    value = textState.value,
+                    onValueChange = { textState.value = it },
+                    label = "Nome",
+                    placeholder = "Digite seu nome",
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Text(
-                text = "Botão 3",
-                style = MaterialTheme.typography.headlineLarge
-            )
 
-            AppButton(
-                text = "Carregando",
-                onClick = {},
-                loading = true
-            )
+            }
         }
     }
 }
