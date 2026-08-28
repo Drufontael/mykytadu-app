@@ -17,7 +17,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import br.com.mykytadu.domain.AnimeStatus
 import br.com.mykytadu.presentation.components.AppCard
+import br.com.mykytadu.presentation.components.AppChip
+import br.com.mykytadu.presentation.components.AppDivider
 import br.com.mykytadu.presentation.components.AppIconButton
 import br.com.mykytadu.presentation.components.AppTextField
 
@@ -75,6 +78,14 @@ fun DesignSystemShowcase() {
                 ) {
                     Text("♥")
                 }
+
+                AppChip(
+                    label = "Watching",
+                    status = AnimeStatus.WATCHING,
+                )
+                AppChip(label = "Anime")
+
+                AppDivider()
 
 
             }
