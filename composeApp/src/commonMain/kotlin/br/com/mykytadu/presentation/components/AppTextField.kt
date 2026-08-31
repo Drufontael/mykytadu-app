@@ -1,12 +1,14 @@
 package br.com.mykytadu.presentation.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import br.com.mykytadu.core.theme.AppShapes
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
 fun AppTextField(
@@ -16,7 +18,10 @@ fun AppTextField(
     label: String? = null,
     placeholder: String? = null,
     enabled: Boolean = true,
-    isError: Boolean = false
+    isError: Boolean = false,
+    leadingIcon: ImageVector? = null,
+    trailingIcon: ImageVector? = null,
+    onTrailingIconClick: (() -> Unit)? = null
 
 ) {
     OutlinedTextField(
@@ -28,9 +33,31 @@ fun AppTextField(
         shape = RoundedCornerShape(AppShapes.radius.input),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            focusedBorderColor = MaterialTheme.colorScheme.primary),
+            focusedBorderColor = MaterialTheme.colorScheme.primary
+        ),
         label = label?.let { { androidx.compose.material3.Text(it) } },
         placeholder = placeholder?.let { { androidx.compose.material3.Text(it) } },
+        leadingIcon = leadingIcon?.let { { Icon(imageVector = it, contentDescription = null) } },
+        trailingIcon = trailingIcon?.let { icon ->
+            {
+                if (onTrailingIconClick != null) {
+                    AppIconButton(
+                        onClick = onTrailingIconClick
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null
+                        )
+                    }
+                } else {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null
+                    )
+                }
+            }
+        },
+
     )
 }
 

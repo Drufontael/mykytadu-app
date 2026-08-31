@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,16 +14,18 @@ import br.com.mykytadu.core.theme.AppDimensions
 import br.com.mykytadu.core.theme.AppTheme
 import br.com.mykytadu.presentation.components.AppButton
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import br.com.mykytadu.domain.AnimeStatus
 import br.com.mykytadu.presentation.components.AppCard
 import br.com.mykytadu.presentation.components.AppChip
 import br.com.mykytadu.presentation.components.AppDivider
 import br.com.mykytadu.presentation.components.AppIconButton
+import br.com.mykytadu.presentation.components.AppSearchBar
 import br.com.mykytadu.presentation.components.AppTextField
+import br.com.mykytadu.presentation.components.AppTopBar
+import br.com.mykytadu.presentation.components.icons.AppIcons
+
 
 @Composable
 fun DesignSystemShowcase() {
@@ -55,9 +58,9 @@ fun DesignSystemShowcase() {
                 AppTextField(
                     value = textState.value,
                     onValueChange = { textState.value = it },
+                    modifier = Modifier.fillMaxWidth(),
                     label = "Nome",
                     placeholder = "Digite seu nome",
-                    modifier = Modifier.fillMaxWidth()
                 )
 
                 AppCard (
@@ -86,6 +89,27 @@ fun DesignSystemShowcase() {
                 AppChip(label = "Anime")
 
                 AppDivider()
+
+                AppTopBar(
+                    title = "Top Bar",
+                    navigationIcon = AppIcons.Navigation.Back,
+                    onNavigationClick = {},
+                    actions = {
+                        AppIconButton(
+                            onClick = {}
+                        ) {
+                            Icon(
+                                imageVector = AppIcons.Actions.Search,
+                                contentDescription = "Search"
+                            )
+                        }
+                    }
+                )
+
+                AppSearchBar(
+                    query = textState.value,
+                    onQueryChange = { textState.value = it }
+                )
 
 
             }
