@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import br.com.mykytadu.core.theme.AppShapes
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
@@ -35,8 +36,8 @@ fun AppTextField(
             unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
             focusedBorderColor = MaterialTheme.colorScheme.primary
         ),
-        label = label?.let { { androidx.compose.material3.Text(it) } },
-        placeholder = placeholder?.let { { androidx.compose.material3.Text(it) } },
+        label = label?.let { { Text(it) } },
+        placeholder = placeholder?.let { { Text(it) } },
         leadingIcon = leadingIcon?.let { { Icon(imageVector = it, contentDescription = null) } },
         trailingIcon = trailingIcon?.let { icon ->
             {

@@ -14,7 +14,11 @@ import br.com.mykytadu.core.theme.AppDimensions
 import br.com.mykytadu.core.theme.AppTheme
 import br.com.mykytadu.presentation.components.AppButton
 import br.com.mykytadu.presentation.components.AppDialog
+import br.com.mykytadu.presentation.components.AppEmptyState
+import br.com.mykytadu.presentation.components.AppError
 import br.com.mykytadu.presentation.components.AppIconButton
+import br.com.mykytadu.presentation.components.AppLoading
+import br.com.mykytadu.presentation.components.AppProgressBar
 import br.com.mykytadu.presentation.components.AppSearchBar
 import br.com.mykytadu.presentation.components.AppTopBar
 import br.com.mykytadu.presentation.components.icons.AppIcons
@@ -80,6 +84,44 @@ fun DesignSystemShowcase() {
                         }
                     )
                 }
+
+                AppLoading()
+
+                AppProgressBar(
+                    progress = 0.75f
+                )
+
+                val watchedEpisodes = 13
+                val totalEpisodes = 24
+
+                AppProgressBar(
+                    progress = watchedEpisodes.toFloat() / totalEpisodes
+                )
+
+
+                AppEmptyState(
+                    title = "Nenhum anime encontrado"
+                )
+
+                AppEmptyState(
+                    title = "Nenhum anime encontrado",
+                    message = "Tente pesquisar utilizando outro título."
+                )
+
+                AppEmptyState(
+                    title = "Sua biblioteca está vazia",
+                    message = "Comece adicionando alguns animes à sua biblioteca.",
+                    actionText = "Buscar animes",
+                    onAction = {
+                        // navegação futuramente
+                    }
+                )
+
+                AppEmptyState(
+                    title = "Nenhum resultado",
+                    message = "Tente pesquisar utilizando outro título.",
+                    icon = AppIcons.Actions.Search
+                )
 
             }
         }

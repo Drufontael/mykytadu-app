@@ -1,7 +1,7 @@
 package br.com.mykytadu.presentation.components.icons
 
 
-import androidx.compose.ui.graphics.Color
+import br.com.mykytadu.core.theme.AppColors
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
@@ -31,7 +31,7 @@ object AppIcons {
                 ).apply {
                     // m313 -440 224 224 -57 56 -320 -320 320 -320 57 56 -224 224 h487 v80 H313Z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 313 520
                         moveTo(x = 313.0f, y = 520.0f)
@@ -74,7 +74,7 @@ object AppIcons {
                 ).apply {
                     // M240 -200 h120 v-240 h240 v240 h120 v-360 L480 -740 240 -560 v360Z m-80 80 v-480 l320 -240 320 240 v480 H520 v-240 h-80 v240 H160Z m320 -350Z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 240 760
                         moveTo(x = 240.0f, y = 760.0f)
@@ -142,7 +142,7 @@ object AppIcons {
                 ).apply {
                     // M367 -527 q-47 -47 -47 -113 t47 -113 q47 -47 113 -47 t113 47 q47 47 47 113 t-47 113 q-47 47 -113 47 t-113 -47Z M160 -160 v-112 q0 -34 17.5 -62.5 T224 -378 q62 -31 126 -46.5 T480 -440 q66 0 130 15.5 T736 -378 q29 15 46.5 43.5 T800 -272 v112 H160Z m80 -80 h480 v-32 q0 -11 -5.5 -20 T700 -306 q-54 -27 -109 -40.5 T480 -360 q-56 0 -111 13.5 T260 -306 q-9 5 -14.5 14 t-5.5 20 v32Z m296.5 -343.5 Q560 -607 560 -640 t-23.5 -56.5 Q513 -720 480 -720 t-56.5 23.5 Q400 -673 400 -640 t23.5 56.5 Q447 -560 480 -560 t56.5 -23.5Z M480 -640Z m0 400Z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 367 433
                         moveTo(x = 367.0f, y = 433.0f)
@@ -389,7 +389,7 @@ object AppIcons {
                 ).apply {
                     // M440 -440 H200 v-80 h240 v-240 h80 v240 h240 v80 H520 v240 h-80 v-240Z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 440 520
                         moveTo(x = 440.0f, y = 520.0f)
@@ -438,7 +438,7 @@ object AppIcons {
                 ).apply {
                     // m256 -200 -56 -56 224 -224 -224 -224 56 -56 224 224 224 -224 56 56 -224 224 224 224 -56 56 -224 -224 -224 224Z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 256 760
                         moveTo(x = 256.0f, y = 760.0f)
@@ -487,7 +487,7 @@ object AppIcons {
                 ).apply {
                     // m370 -80 -16 -128 q-13 -5 -24.5 -12 T307 -235 l-119 50 L78 -375 l103 -78 q-1 -7 -1 -13.5 v-27 q0 -6.5 1 -13.5 L78 -585 l110 -190 119 50 q11 -8 23 -15 t24 -12 l16 -128 h220 l16 128 q13 5 24.5 12 t22.5 15 l119 -50 110 190 -103 78 q1 7 1 13.5 v27 q0 6.5 -2 13.5 l103 78 -110 190 -118 -50 q-11 8 -23 15 t-24 12 L590 -80 H370Z m70 -80 h79 l14 -106 q31 -8 57.5 -23.5 T639 -327 l99 41 39 -68 -86 -65 q5 -14 7 -29.5 t2 -31.5 q0 -16 -2 -31.5 t-7 -29.5 l86 -65 -39 -68 -99 42 q-22 -23 -48.5 -38.5 T533 -694 l-13 -106 h-79 l-14 106 q-31 8 -57.5 23.5 T321 -633 l-99 -41 -39 68 86 64 q-5 15 -7 30 t-2 32 q0 16 2 31 t7 30 l-86 65 39 68 99 -42 q22 23 48.5 38.5 T427 -266 l13 106Z m42 -180 q58 0 99 -41 t41 -99 q0 -58 -41 -99 t-99 -41 q-59 0 -99.5 41 T342 -480 q0 58 40.5 99 t99.5 41Z m-2 -140Z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 370 880
                         moveTo(x = 370.0f, y = 880.0f)
@@ -817,7 +817,7 @@ object AppIcons {
                 ).apply {
                     // M784 -120 532 -372 q-30 24 -69 38 t-83 14 q-109 0 -184.5 -75.5 T120 -580 q0 -109 75.5 -184.5 T380 -840 q109 0 184.5 75.5 T640 -580 q0 44 -14 83 t-38 69 l252 252 -56 56Z M380 -400 q75 0 127.5 -52.5 T560 -580 q0 -75 -52.5 -127.5 T380 -760 q-75 0 -127.5 52.5 T200 -580 q0 75 52.5 127.5 T380 -400Z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 784 840
                         moveTo(x = 784.0f, y = 840.0f)
@@ -973,7 +973,7 @@ object AppIcons {
                     }
                     // M8 5 v14 l11 -7z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 8 5
                         moveTo(x = 8.0f, y = 5.0f)
@@ -1014,7 +1014,7 @@ object AppIcons {
                     }
                     // M12 21.35 l-1.45 -1.32 C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3 c1.74 0 3.41 .81 4.5 2.09 C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5 c0 3.78 -3.4 6.86 -8.55 11.54 L12 21.35z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 12 21.35
                         moveTo(x = 12.0f, y = 21.35f)
@@ -1097,7 +1097,7 @@ object AppIcons {
                 ).apply {
                     // m480 -120 -58 -52 q-101 -91 -167 -157 T150 -447.5 Q111 -500 95.5 -544 T80 -634 q0 -94 63 -157 t157 -63 q52 0 99 22 t81 62 q34 -40 81 -62 t99 -22 q94 0 157 63 t63 157 q0 46 -15.5 90 T810 -447.5 Q771 -395 705 -329 T538 -172 l-58 52Z m0 -108 q96 -86 158 -147.5 t98 -107 q36 -45.5 50 -81 t14 -70.5 q0 -60 -40 -100 t-100 -40 q-47 0 -87 26.5 T518 -680 h-76 q-15 -41 -55 -67.5 T300 -774 q-60 0 -100 40 t-40 100 q0 35 14 70.5 t50 81 q36 45.5 98 107 T480 -228Z m0 -273Z
                     path(
-                        fill = SolidColor(Color(0xFFE3E3E3)),
+                        fill = SolidColor(AppColors.light.divider),
                     ) {
                         // M 480 840
                         moveTo(x = 480.0f, y = 840.0f)
