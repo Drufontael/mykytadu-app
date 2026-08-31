@@ -16,22 +16,22 @@ Preparar toda a infraestrutura necessária para o desenvolvimento do aplicativo.
 
 ### Entregas
 
-* Configuração do projeto Compose Multiplatform
-* Organização do Gradle
-* Version Catalog (`libs.versions.toml`)
-* Configuração das bibliotecas principais
-* Estrutura de pacotes
-* Configuração de DI
-* Configuração do cliente HTTP
-* Configuração da serialização
-* Configuração do projeto para múltiplas plataformas
+- [x] Configuração do projeto Compose Multiplatform
+- [x] Organização do Gradle
+- [x] Version Catalog (`libs.versions.toml`)
+- [x] Configuração das bibliotecas principais
+- [x] Estrutura de pacotes
+- [x] Configuração de DI
+- [x] Configuração do cliente HTTP
+- [x] Configuração da serialização
+- [x] Configuração do projeto para múltiplas plataformas
 
 ### Critérios de aceite
 
-* O projeto compila.
-* Não existe código de negócio.
-* Não existe tela funcional.
-* Todas as dependências estão centralizadas.
+- [x] O projeto compila.
+- [x] Não existe código de negócio.
+- [x] Não existe tela funcional.
+- [x] Todas as dependências estão centralizadas.
 
 ---
 
@@ -45,32 +45,32 @@ Criar a identidade visual do aplicativo.
 
 ### Tema
 
-* Colors
-* Typography
-* Shapes
-* Dimensions
-* Spacing
-* Elevations
+- [x] Colors
+- [x] Typography
+- [x] Shapes
+- [x] Dimensions
+- [x] Spacing
+- [x] Elevations
 
 ### Componentes reutilizáveis
 
-* AppButton
-* AppTextField
-* AppCard
-* AppTopBar
-* AppSearchBar
-* AppChip
-* AppDialog
-* AppLoading
-* AppError
-* AppEmptyState
-* AppIconButton
+- [x] AppButton
+- [x] AppTextField
+- [x] AppCard
+- [x] AppTopBar
+- [x] AppSearchBar
+- [x] AppChip
+- [x] AppDialog
+- [ ] AppLoading
+- [ ] AppError
+- [ ] AppEmptyState
+- [x] AppIconButton
 
 ### Critérios de aceite
 
-* Nenhuma cor fixa utilizada nas telas.
-* Todos os componentes reutilizáveis.
-* Tema aplicado globalmente.
+- [ ] Nenhuma cor fixa utilizada nas telas.
+- [ ] Todos os componentes reutilizáveis.
+- [x] Tema aplicado globalmente.
 
 ---
 
@@ -82,25 +82,25 @@ Definir toda a navegação do aplicativo.
 
 ### Rotas
 
-* Splash
-* Login
-* Home
-* Pesquisa
-* Detalhes do Anime
-* Biblioteca
-* Perfil
-* Configurações
+- [ ] Splash
+- [ ] Login
+- [ ] Home
+- [ ] Pesquisa
+- [ ] Detalhes do Anime
+- [ ] Biblioteca
+- [ ] Perfil
+- [ ] Configurações
 
 ### Entregas
 
-* Navegação configurada
-* Rotas protegidas preparadas
-* Estrutura para Deep Links
+- [ ] Navegação configurada
+- [ ] Rotas protegidas preparadas
+- [ ] Estrutura para Deep Links
 
 ### Critérios de aceite
 
-* Navegação funcionando entre todas as telas.
-* Cada tela pode conter apenas um texto identificando seu nome.
+- [ ] Navegação funcionando entre todas as telas.
+- [ ] Cada tela pode conter apenas um texto identificando seu nome.
 
 ---
 
@@ -112,24 +112,24 @@ Preparar toda a comunicação com o backend e APIs externas.
 
 ### Entregas
 
-* Cliente HTTP
-* Configuração de Serialização
-* Tratamento global de erros
-* Timeouts
-* Logging
-* Interceptadores
-* Configuração de autenticação futura
+- [x] Cliente HTTP
+- [x] Configuração de Serialização
+- [ ] Tratamento global de erros
+- [ ] Timeouts
+- [ ] Logging
+- [ ] Interceptadores
+- [ ] Configuração de autenticação futura
 
 ### Serviços
 
-* AnimeApi
-* AuthApi
-* TranslationApi
+- [ ] AnimeApi
+- [ ] AuthApi
+- [ ] TranslationApi
 
 ### Critérios de aceite
 
-* Primeira chamada HTTP funcionando.
-* Erros tratados de forma padronizada.
+- [ ] Primeira chamada HTTP funcionando.
+- [ ] Erros tratados de forma padronizada.
 
 ---
 
@@ -141,20 +141,20 @@ Criar os modelos utilizados pelo frontend.
 
 ### Modelos
 
-* Anime
-* Genre
-* Character
-* Studio
-* Season
-* Episode
-* User
-* LibraryEntry
-* Review
+- [ ] Anime
+- [ ] Genre
+- [ ] Character
+- [ ] Studio
+- [ ] Season
+- [ ] Episode
+- [ ] User
+- [ ] LibraryEntry
+- [ ] Review
 
 ### Critérios de aceite
 
-* Todos os modelos serializáveis.
-* Objetos imutáveis sempre que possível.
+- [ ] Todos os modelos serializáveis.
+- [ ] Objetos imutáveis sempre que possível.
 
 ---
 
@@ -168,19 +168,19 @@ Criar a abstração de acesso aos dados.
 
 Repositories
 
-* AnimeRepository
-* AuthRepository
-* LibraryRepository
+- [ ] AnimeRepository
+- [ ] AuthRepository
+- [ ] LibraryRepository
 
 Data Sources
 
-* Remote
-* Local
+- [ ] Remote
+- [ ] Local
 
 ### Critérios de aceite
 
-* UI não conhece a API diretamente.
-* Toda comunicação passa pelos repositories.
+- [ ] UI não conhece a API diretamente.
+- [ ] Toda comunicação passa pelos repositories.
 
 ---
 
@@ -192,19 +192,19 @@ Padronizar o fluxo de estados da aplicação.
 
 ### Estados
 
-* Loading
-* Success
-* Empty
-* Error
+- [ ] Loading
+- [ ] Success
+- [ ] Empty
+- [ ] Error
 
 ### ViewModels
 
-Preparar os ViewModels para todas as telas.
+- [ ] Preparar os ViewModels para todas as telas.
 
 ### Critérios de aceite
 
-* Todas as telas seguem o mesmo padrão de estados.
-* Nenhuma tela realiza chamadas HTTP diretamente.
+- [ ] Todas as telas seguem o mesmo padrão de estados.
+- [ ] Nenhuma tela realiza chamadas HTTP diretamente.
 
 ---
 
@@ -216,20 +216,20 @@ Implementar a primeira funcionalidade completa.
 
 ### Funcionalidades
 
-* Campo de pesquisa
-* Busca na API
-* Lista de resultados
-* Paginação
-* Tratamento de erros
-* Estado vazio
+- [ ] Campo de pesquisa
+- [ ] Busca na API
+- [ ] Lista de resultados
+- [ ] Paginação
+- [ ] Tratamento de erros
+- [ ] Estado vazio
 
 ### Critérios de aceite
 
 O usuário consegue:
 
-* Pesquisar um anime.
-* Visualizar os resultados.
-* Abrir os detalhes.
+- [ ] Pesquisar um anime.
+- [ ] Visualizar os resultados.
+- [ ] Abrir os detalhes.
 
 ---
 
@@ -241,19 +241,19 @@ Exibir todas as informações de um anime.
 
 ### Informações
 
-* Capa
-* Banner
-* Sinopse
-* Gêneros
-* Nota
-* Episódios
-* Estúdio
-* Temporada
-* Trailer (quando disponível)
+- [ ] Capa
+- [ ] Banner
+- [ ] Sinopse
+- [ ] Gêneros
+- [ ] Nota
+- [ ] Episódios
+- [ ] Estúdio
+- [ ] Temporada
+- [ ] Trailer (quando disponível)
 
 ### Critérios de aceite
 
-Todos os dados vêm da API.
+- [ ] Todos os dados vêm da API.
 
 ---
 
@@ -265,15 +265,15 @@ Implementar autenticação do usuário.
 
 ### Funcionalidades
 
-* Login
-* Cadastro
-* Logout
-* Persistência da sessão
-* Refresh Token
+- [ ] Login
+- [ ] Cadastro
+- [ ] Logout
+- [ ] Persistência da sessão
+- [ ] Refresh Token
 
 ### Critérios de aceite
 
-O usuário permanece autenticado após reiniciar o aplicativo.
+- [ ] O usuário permanece autenticado após reiniciar o aplicativo.
 
 ---
 
@@ -285,24 +285,24 @@ Criar a biblioteca pessoal.
 
 ### Funcionalidades
 
-* Adicionar anime
-* Remover anime
-* Alterar status
-* Favoritar
-* Atualizar progresso
-* Notas pessoais
+- [ ] Adicionar anime
+- [ ] Remover anime
+- [ ] Alterar status
+- [ ] Favoritar
+- [ ] Atualizar progresso
+- [ ] Notas pessoais
 
 ### Status
 
-* Planejando
-* Assistindo
-* Pausado
-* Concluído
-* Abandonado
+- [ ] Planejando
+- [ ] Assistindo
+- [ ] Pausado
+- [ ] Concluído
+- [ ] Abandonado
 
 ### Critérios de aceite
 
-Toda alteração sincroniza com o backend.
+- [ ] Toda alteração sincroniza com o backend.
 
 ---
 
@@ -314,15 +314,15 @@ Criar a área do usuário.
 
 ### Informações
 
-* Avatar
-* Nome
-* Quantidade de animes
-* Horas assistidas
-* Favoritos
+- [ ] Avatar
+- [ ] Nome
+- [ ] Quantidade de animes
+- [ ] Horas assistidas
+- [ ] Favoritos
 
 ### Critérios de aceite
 
-Dados carregados da API.
+- [ ] Dados carregados da API.
 
 ---
 
@@ -330,11 +330,11 @@ Dados carregados da API.
 
 ## Funcionalidades
 
-* Tema claro/escuro
-* Idioma
-* Preferências
-* Sobre
-* Logout
+- [ ] Tema claro/escuro
+- [ ] Idioma
+- [ ] Preferências
+- [ ] Sobre
+- [ ] Logout
 
 ---
 
@@ -346,10 +346,10 @@ Melhorar desempenho.
 
 ### Funcionalidades
 
-* Cache de pesquisas
-* Cache de detalhes
-* Cache de imagens
-* Cache offline
+- [ ] Cache de pesquisas
+- [ ] Cache de detalhes
+- [ ] Cache de imagens
+- [ ] Cache offline
 
 ---
 
@@ -361,10 +361,10 @@ Integrar o sistema de tradução.
 
 ### Fluxo
 
-1. Solicitar dados do anime.
-2. Verificar tradução existente.
-3. Caso não exista, solicitar tradução ao backend.
-4. Exibir conteúdo traduzido.
+- [ ] Solicitar dados do anime.
+- [ ] Verificar tradução existente.
+- [ ] Caso não exista, solicitar tradução ao backend.
+- [ ] Exibir conteúdo traduzido.
 
 ---
 
@@ -376,14 +376,14 @@ Preparar a primeira versão pública.
 
 ### Atividades
 
-* Melhorias de UX
-* Melhorias de UI
-* Acessibilidade
-* Performance
-* Testes
-* Correção de bugs
-* Refatorações
-* Documentação
+- [ ] Melhorias de UX
+- [ ] Melhorias de UI
+- [ ] Acessibilidade
+- [ ] Performance
+- [ ] Testes
+- [ ] Correção de bugs
+- [ ] Refatorações
+- [ ] Documentação
 
 ---
 
@@ -391,15 +391,15 @@ Preparar a primeira versão pública.
 
 Todos os novos recursos deverão seguir as seguintes diretrizes:
 
-* Componentes reutilizáveis antes de componentes específicos.
-* Nenhuma regra de negócio dentro da UI.
-* Toda comunicação externa passa pelos Repositories.
-* Estados padronizados em todas as telas.
-* Código desacoplado e testável.
-* Commits pequenos e descritivos.
-* Uma responsabilidade por classe.
-* Evitar duplicação de código.
-* Evolução incremental, sem antecipar funcionalidades futuras.
+- [ ] Componentes reutilizáveis antes de componentes específicos.
+- [ ] Nenhuma regra de negócio dentro da UI.
+- [ ] Toda comunicação externa passa pelos Repositories.
+- [ ] Estados padronizados em todas as telas.
+- [ ] Código desacoplado e testável.
+- [ ] Commits pequenos e descritivos.
+- [ ] Uma responsabilidade por classe.
+- [ ] Evitar duplicação de código.
+- [ ] Evolução incremental, sem antecipar funcionalidades futuras.
 
 ---
 
@@ -407,12 +407,12 @@ Todos os novos recursos deverão seguir as seguintes diretrizes:
 
 Após a conclusão deste roadmap, o MykytaDu estará preparado para evoluir com recursos como:
 
-* Recomendações personalizadas
-* Sistema de amigos
-* Feed de atividades
-* Estatísticas avançadas
-* Conquistas
-* Notificações
-* Sincronização com serviços externos
-* Modo offline aprimorado
-* Suporte completo a múltiplas plataformas
+- [ ] Recomendações personalizadas
+- [ ] Sistema de amigos
+- [ ] Feed de atividades
+- [ ] Estatísticas avançadas
+- [ ] Conquistas
+- [ ] Notificações
+- [ ] Sincronização com serviços externos
+- [ ] Modo offline aprimorado
+- [ ] Suporte completo a múltiplas plataformas

@@ -67,6 +67,7 @@ private fun AppTypographyTokens.toMaterialTypography(): Typography {
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    //darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) {
