@@ -2,6 +2,7 @@
 kotlin = "2.3.20"
 agp = "8.12.0"
 composeMultiplatform = "1.10.3"
+navigation3 = "1.1.1"
 androidCompileSdk = "36"
 androidMinSdk = "24"
 androidTargetSdk = "36"
@@ -32,4 +33,5 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+jetbrains-navigation3-ui = {module = "org.jetbrains.androidx.navigation3:navigation3-ui",version.ref = "navigation3"}
 

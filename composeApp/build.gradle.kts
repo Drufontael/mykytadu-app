@@ -39,12 +39,11 @@ kotlin {
                 implementation(compose.ui)
                 implementation(compose.components.resources)
                 implementation(libs.koin.core)
-                // Ktor common client
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.kotlinx.serialization.json)
-                //implementation(libs.compose.material.icons.extended)
+                implementation(libs.jetbrains.navigation3.ui)
             }
         }
 
