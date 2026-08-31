@@ -213,7 +213,7 @@ Regra: antes de criar estruturas paralelas, verificar o que já existe no códig
 - Kotlin: **2.3.20**
 - JDK: **21**
 - Gradle Wrapper: **8.14**
-- Compose Multiplatform: **1.8.1**
+- Compose Multiplatform: **1.10.3**
 - Material 3
 - Koin: **4.2.2**
 - Ktor Client
