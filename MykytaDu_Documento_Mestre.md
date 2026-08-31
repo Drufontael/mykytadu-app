@@ -252,7 +252,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 | Sprint | Objetivo | Estado |
 |---|---|---|
 | 1 | Fundação do Projeto | ✅ Concluída |
-| 2 | Design System | 🟡 Em andamento |
+| 2 | Design System | ✅ Concluída |
 | 3 | Navegação | ⏳ Planejada |
 | 4 | Camada de Comunicação | ⏳ Planejada |
 | 5 | Modelagem | ⏳ Planejada |
@@ -294,7 +294,7 @@ Entregas consolidadas:
 
 ## Status
 
-🟡 **EM ANDAMENTO**
+✅ **CONCLUÍDA**
 
 ## 13.1 Tema e tokens implementados
 
@@ -318,22 +318,23 @@ Dark e Light Theme foram validados.
 | `AppSearchBar` | ✅ Implementado |
 | `AppChip` | ✅ Implementado |
 | `AppIconButton` | ✅ Implementado |
-| `AppDialog` | ⏳ Próximo |
-| `AppLoading` | ⏳ Pendente |
-| `AppError` | ⏳ Pendente |
-| `AppEmptyState` | ⏳ Pendente |
+| `AppDialog` | ✅ Implementado |
+| `AppLoading` | ✅ Implementado |
+| `AppError` | ✅ Implementado |
+| `AppEmptyState` | ✅ Implementado |
 
-Dos 11 componentes originalmente previstos no roadmap, **7 estão implementados**.
+Os **11 componentes originalmente previstos no roadmap estão implementados**.
 
 ## 13.3 Elementos adicionais surgidos durante a implementação
 
 | Elemento | Estado | Papel |
 |---|---|---|
 | `AppDivider` | ✅ Implementado | Padroniza divisores visuais |
+| `AppProgressBar` | ✅ Implementado | Padroniza a exibição de progresso determinado |
 | `AppIcons` | ✅ Implementado | Centraliza a linguagem iconográfica |
 | `DesignSystemShowcase` | ✅ Implementado | Validação visual dos componentes |
 
-Esses elementos não constavam na lista original do roadmap e representam evoluções orgânicas do Design System.
+`AppDivider` e `AppProgressBar` são componentes reutilizáveis adicionais que não estavam previstos originalmente na Sprint 2. `AppIcons` e `DesignSystemShowcase` também surgiram durante a implementação como infraestrutura complementar. Essas inclusões representam evoluções orgânicas do Design System e foram incorporadas sem alterar o escopo funcional das próximas sprints.
 
 ---
 
@@ -368,7 +369,7 @@ A preferência é evoluir uma abstração existente em vez de criar componentes 
 
 ## 14.4 AppTopBar
 
-`AppTopBar` foi implementado e validado como parte do Sprint 2.
+`AppTopBar` foi implementado e validado como parte da Sprint 2.
 
 Ele deixa de fazer parte das pendências do Design System.
 
@@ -380,31 +381,37 @@ Durante a validação visual, o shape precisou ser ajustado porque o radius inic
 
 O componente utiliza `AppIcons.Actions.Search` como ícone de busca padrão.
 
+## 14.6 Componentes de feedback e estado
+
+Foram implementados os componentes previstos `AppLoading`, `AppError` e `AppEmptyState`, cobrindo feedback de carregamento, falha e ausência de conteúdo.
+
+Também foi criado `AppProgressBar`, não previsto originalmente, para representar progresso determinado de forma consistente com os tokens do tema. Com ele, o Design System diferencia carregamento indeterminado (`AppLoading`) de progresso mensurável (`AppProgressBar`).
+
+## 14.7 AppDialog
+
+`AppDialog` foi implementado como uma abstração reutilizável para confirmações e mensagens, com título, mensagem, ícone e ações configuráveis.
+
 ---
 
 # 15. Próximo Passo Imediato
 
-O próximo componente definido para implementação é:
+A Sprint 2 foi encerrada após a implementação dos componentes previstos, a incorporação dos componentes adicionais e a validação dos critérios de aceite.
 
-> **`AppDialog`**
+O próximo passo do roadmap é:
 
-Depois dele permanecem:
-
-1. `AppLoading`;
-2. `AppError`;
-3. `AppEmptyState`.
-
-Após esses componentes, o Sprint 2 deve passar por uma revisão geral dos tokens, componentes, Dark/Light Theme e critérios de aceite antes de ser encerrado.
+> **Sprint 3 — Navegação**
 
 ---
 
-# 16. Critérios de Aceite do Sprint 2
+# 16. Critérios de Aceite da Sprint 2
 
 Conforme o roadmap:
 
-- Nenhuma cor fixa utilizada nas telas;
-- Todos os componentes reutilizáveis;
-- Tema aplicado globalmente.
+- [x] Nenhuma cor fixa utilizada nas telas;
+- [x] Todos os componentes reutilizáveis;
+- [x] Tema aplicado globalmente.
+
+A revisão final confirmou que as telas não utilizam literais de cor, os componentes expõem APIs parametrizadas para reutilização e o tema está aplicado globalmente. A compilação e os testes do target Desktop foram executados com sucesso antes do encerramento da sprint.
 
 Além dos critérios formais, a implementação vem seguindo o ciclo:
 
@@ -541,10 +548,10 @@ Ao continuar o desenvolvimento em um novo chat:
 ## Estado atual
 
 - Sprint 1 — Fundação: ✅ Concluída
-- Sprint 2 — Design System: 🟡 Em andamento
+- Sprint 2 — Design System: ✅ Concluída
 - Sprints 3–16: ⏳ Planejadas
 
-## Componentes do roadmap concluídos no Sprint 2
+## Componentes do roadmap concluídos na Sprint 2
 
 - `AppButton`
 - `AppTextField`
@@ -553,16 +560,21 @@ Ao continuar o desenvolvimento em um novo chat:
 - `AppSearchBar`
 - `AppChip`
 - `AppIconButton`
+- `AppDialog`
+- `AppLoading`
+- `AppError`
+- `AppEmptyState`
 
 ## Adições ao Design System
 
 - `AppDivider`
+- `AppProgressBar`
 - `AppIcons`
 - `DesignSystemShowcase`
 
 ## Próximo passo
 
-> **Implementar `AppDialog`.**
+> **Iniciar a Sprint 3 — Navegação.**
 
 ## Filosofia
 

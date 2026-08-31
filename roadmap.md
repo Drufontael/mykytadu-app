@@ -37,6 +37,8 @@ Preparar toda a infraestrutura necessária para o desenvolvimento do aplicativo.
 
 # Sprint 2 — Design System
 
+**Status:** Concluída
+
 ## Objetivo
 
 Criar a identidade visual do aplicativo.
@@ -60,16 +62,18 @@ Criar a identidade visual do aplicativo.
 - [x] AppTopBar
 - [x] AppSearchBar
 - [x] AppChip
+- [x] AppDivider
 - [x] AppDialog
-- [ ] AppLoading
-- [ ] AppError
-- [ ] AppEmptyState
+- [x] AppLoading
+- [x] AppProgressBar
+- [x] AppError
+- [x] AppEmptyState
 - [x] AppIconButton
 
 ### Critérios de aceite
 
-- [ ] Nenhuma cor fixa utilizada nas telas.
-- [ ] Todos os componentes reutilizáveis.
+- [x] Nenhuma cor fixa utilizada nas telas.
+- [x] Todos os componentes reutilizáveis.
 - [x] Tema aplicado globalmente.
 
 ---
