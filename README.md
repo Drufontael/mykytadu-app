@@ -140,14 +140,15 @@ O desenvolvimento está organizado em 16 sprints:
 15. Traduções;
 16. Polimento.
 
-Consulte o [`roadmap.md`](roadmap.md) para entregas e critérios de aceite de cada sprint.
+Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
 ## Documentação
 
-- [`MykytaDu_Documento_Mestre.md`](MykytaDu_Documento_Mestre.md): visão consolidada, decisões técnicas e estado do projeto;
-- [`MykytaDu_Identidade_Visual.md`](MykytaDu_Identidade_Visual.md): identidade, cores, tipografia e princípios de UX;
-- [`MykytaDu_Modelagem.md`](MykytaDu_Modelagem.md): diagramas e propostas de navegação, domínio e fluxos entre camadas;
-- [`roadmap.md`](roadmap.md): planejamento completo das sprints.
+- [`docs/README.md`](docs/README.md): índice da documentação;
+- [`docs/documento-mestre.md`](docs/documento-mestre.md): visão consolidada, decisões técnicas e estado do projeto;
+- [`docs/identidade-visual.md`](docs/identidade-visual.md): identidade, cores, tipografia e princípios de UX;
+- [`docs/modelagem.md`](docs/modelagem.md): diagramas e propostas de navegação, domínio e fluxos entre camadas;
+- [`docs/roadmap.md`](docs/roadmap.md): planejamento completo das sprints.
 
 Quando houver divergências, o código atual representa a fonte de verdade, seguido pelas decisões validadas e pelo Documento Mestre.
 

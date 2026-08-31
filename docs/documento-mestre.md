@@ -449,7 +449,7 @@ Avançar
 
 ## 18.1 Identidade Visual
 
-**`MykytaDu_Identidade_Visual.md`**
+**[`identidade-visual.md`](identidade-visual.md)**
 
 Fonte para:
 
@@ -467,7 +467,7 @@ Fonte para:
 
 ## 18.2 Roadmap do Frontend
 
-**`roadmap.md`**
+**[`roadmap.md`](roadmap.md)**
 
 Fonte para:
 

@@ -532,9 +532,9 @@ Ao atualizar este documento:
 
 Este documento deve ser mantido em conjunto com:
 
-- `MykytaDu_Documento_Mestre.md` — contexto e decisões consolidadas;
-- `MykytaDu_Identidade_Visual.md` — direção de UX e Design System;
-- `roadmap.md` — planejamento das sprints;
+- [`documento-mestre.md`](documento-mestre.md) — contexto e decisões consolidadas;
+- [`identidade-visual.md`](identidade-visual.md) — direção de UX e Design System;
+- [`roadmap.md`](roadmap.md) — planejamento das sprints;
 - código atual do projeto — fonte definitiva do estado real da implementação.
 
 ---
