@@ -1,9 +1,9 @@
 package br.com.mykytadu
 
 import androidx.compose.runtime.Composable
-import br.com.mykytadu.presentation.showcase.DesignSystemShowcase
+import br.com.mykytadu.core.navigation.AppNavigation
 
 @Composable
 fun App() {
-    DesignSystemShowcase()
+    AppNavigation()
 }
