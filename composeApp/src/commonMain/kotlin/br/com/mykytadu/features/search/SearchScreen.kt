@@ -5,10 +5,10 @@ import br.com.mykytadu.presentation.NavigationPlaceholder
 
 @Composable
 fun SearchScreen(
-    onNavigateToAnimeDatails: () -> Unit,
+    onNavigateToAnimeDetails: () -> Unit
 ) {
     NavigationPlaceholder(
         text = "Pesquisa",
-        onClick = onNavigateToAnimeDatails
+        onClick = onNavigateToAnimeDetails
     )
 }

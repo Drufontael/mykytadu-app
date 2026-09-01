@@ -5,10 +5,10 @@ import br.com.mykytadu.presentation.NavigationPlaceholder
 
 @Composable
 fun LoginScreen(
-    onNavigateToHome: () -> Unit,
+    onLoginSuccess: () -> Unit
 ) {
     NavigationPlaceholder(
         text = "Login",
-        onClick = onNavigateToHome
+        onClick = onLoginSuccess
     )
 }

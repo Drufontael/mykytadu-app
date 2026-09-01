@@ -5,10 +5,10 @@ import br.com.mykytadu.presentation.NavigationPlaceholder
 
 @Composable
 fun LibraryScreen(
-    onNavigateToProfile: () -> Unit
+    onNavigateToAnimeDetails: () -> Unit
 ) {
     NavigationPlaceholder(
         text = "Biblioteca",
-        onClick = onNavigateToProfile
+        onClick = onNavigateToAnimeDetails
     )
 }

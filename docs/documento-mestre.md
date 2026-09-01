@@ -253,7 +253,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 |---|---|---|
 | 1 | Fundação do Projeto | ✅ Concluída |
 | 2 | Design System | ✅ Concluída |
-| 3 | Navegação | ⏳ Planejada |
+| 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ⏳ Planejada |
 | 5 | Modelagem | ⏳ Planejada |
 | 6 | Camada de Dados | ⏳ Planejada |
@@ -393,17 +393,45 @@ Também foi criado `AppProgressBar`, não previsto originalmente, para represent
 
 ---
 
-# 15. Próximo Passo Imediato
+# 15. Sprint 3 — Navegação
 
-A Sprint 2 foi encerrada após a implementação dos componentes previstos, a incorporação dos componentes adicionais e a validação dos critérios de aceite.
+## Status
 
-O próximo passo do roadmap é:
+✅ **CONCLUÍDA**
 
-> **Sprint 3 — Navegação**
+Entregas consolidadas:
+
+- oito rotas tipadas, serializáveis e centralizadas em `AppRoute`;
+- navegação compartilhada com Navigation 3, `rememberNavBackStack`, `NavDisplay` e `entryProvider`;
+- serialização polimórfica do back stack com `SavedStateConfiguration`;
+- fluxo de entrada `Splash → Login → Home`, removendo Splash e Login do histórico após o avanço;
+- destinos principais Home, Biblioteca, Pesquisa e Perfil centralizados em `MainDestination`;
+- `MainNavigationBar` exibida somente nos quatro destinos principais;
+- troca entre destinos principais sem acumular as abas visitadas no back stack;
+- transições Pesquisa → Detalhes do Anime, Biblioteca → Detalhes do Anime e Perfil → Configurações;
+- classificação declarativa de rotas públicas e protegidas em `RouteAccess`;
+- resolução compartilhada de Deep Links em `AppDeepLink`;
+- placeholders compartilhados por meio de `NavigationPlaceholder`.
+
+A classificação `PROTECTED` prepara a futura autenticação, mas não aplica validação de sessão ou regras de negócio. Essa responsabilidade permanece planejada para a Sprint 10.
+
+Os Deep Links compartilhados atualmente reconhecem Home, Pesquisa, Biblioteca, Perfil e Configurações. `AnimeDetails` permanece sem Deep Link até que exista um identificador definitivo de anime. Não foi adicionada integração específica por plataforma nesta sprint.
+
+O build completo do módulo e os testes Desktop foram executados com sucesso no encerramento da sprint.
 
 ---
 
-# 16. Critérios de Aceite da Sprint 2
+# 16. Próximo Passo Imediato
+
+A Sprint 3 foi encerrada após a revisão das entregas, dos critérios de aceite, do build multiplataforma e dos testes Desktop.
+
+O próximo passo do roadmap é:
+
+> **Sprint 4 — Camada de Comunicação**
+
+---
+
+# 17. Critérios de Aceite da Sprint 2
 
 Conforme o roadmap:
 
@@ -429,7 +457,7 @@ Avançar
 
 ---
 
-# 17. Diretrizes Gerais do Projeto
+# 18. Diretrizes Gerais do Projeto
 
 - Componentes reutilizáveis antes de componentes específicos;
 - Nenhuma regra de negócio dentro da UI;
@@ -445,9 +473,9 @@ Avançar
 
 ---
 
-# 18. Fontes Oficiais do Projeto
+# 19. Fontes Oficiais do Projeto
 
-## 18.1 Identidade Visual
+## 19.1 Identidade Visual
 
 **[`identidade-visual.md`](identidade-visual.md)**
 
@@ -465,7 +493,7 @@ Fonte para:
 - Princípios de UX;
 - Direção do Design System.
 
-## 18.2 Roadmap do Frontend
+## 19.2 Roadmap do Frontend
 
 **[`roadmap.md`](roadmap.md)**
 
@@ -478,7 +506,7 @@ Fonte para:
 - Diretrizes gerais;
 - Visão de longo prazo.
 
-## 18.3 Histórico Técnico de Desenvolvimento
+## 19.3 Histórico Técnico de Desenvolvimento
 
 Conversas e registros de implementação do projeto.
 
@@ -492,7 +520,7 @@ Fonte para:
 
 ---
 
-# 19. Regra de Prioridade das Fontes
+# 20. Regra de Prioridade das Fontes
 
 Quando houver divergência sobre o estado do projeto:
 
@@ -516,7 +544,7 @@ O código determina **o que realmente existe**.
 
 ---
 
-# 20. Regra para Novos Chats
+# 21. Regra para Novos Chats
 
 Ao continuar o desenvolvimento em um novo chat:
 
@@ -531,7 +559,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ---
 
-# 21. Resumo Executivo
+# 22. Resumo Executivo
 
 ## Produto
 
@@ -549,7 +577,8 @@ Ao continuar o desenvolvimento em um novo chat:
 
 - Sprint 1 — Fundação: ✅ Concluída
 - Sprint 2 — Design System: ✅ Concluída
-- Sprints 3–16: ⏳ Planejadas
+- Sprint 3 — Navegação: ✅ Concluída
+- Sprints 4–16: ⏳ Planejadas
 
 ## Componentes do roadmap concluídos na Sprint 2
 
@@ -574,7 +603,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Iniciar a Sprint 3 — Navegação.**
+> **Iniciar a Sprint 4 — Camada de Comunicação.**
 
 ## Filosofia
 

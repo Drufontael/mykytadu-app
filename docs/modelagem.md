@@ -90,11 +90,13 @@ Cada diagrama deve:
 
 # 4. Sprint 3 — Navegação
 
+> **Status:** Concluída.
+
 ## 4.1 Objetivo
 
 A Sprint 3 tem como objetivo definir a navegação do aplicativo.
 
-As rotas planejadas são:
+As rotas implementadas são:
 
 - Splash;
 - Login;
@@ -127,8 +129,6 @@ A navegação principal da experiência é formada por:
 flowchart TD
     Splash["Splash"]
 
-    AuthCheck{"Usuário autenticado?"}
-
     Login["Login"]
     Home["Home"]
     Search["Pesquisa"]
@@ -137,35 +137,31 @@ flowchart TD
     Profile["Perfil"]
     Settings["Configurações"]
 
-    Splash --> AuthCheck
+    MainNavigation["MainNavigationBar"]
 
-    AuthCheck -->|Não| Login
-    AuthCheck -->|Sim| Home
+    Splash -->|limpa o back stack| Login
+    Login -->|limpa o back stack| Home
 
-    Login -->|Login realizado| Home
-
-    Home --> Search
-    Home --> Library
-    Home --> Profile
+    MainNavigation -.-> Home
+    MainNavigation -.-> Search
+    MainNavigation -.-> Library
+    MainNavigation -.-> Profile
 
     Search --> AnimeDetails
     Library --> AnimeDetails
 
     Profile --> Settings
 
-    AnimeDetails --> Search
-    AnimeDetails --> Library
+    AnimeDetails -->|voltar| Search
+    AnimeDetails -->|voltar| Library
+    Settings -->|voltar| Profile
 ```
 
 ---
 
 ## 4.3 Interpretação
 
-O fluxo começa pela tela `Splash`.
-
-A partir dela, o aplicativo deverá decidir se existe uma sessão válida.
-
-### Usuário não autenticado
+O fluxo começa pela tela `Splash` e segue para `Login`. Após o avanço, cada uma dessas rotas é removida do back stack:
 
 ```text
 Splash
@@ -175,19 +171,9 @@ Login
 Home
 ```
 
-Após autenticação bem-sucedida, o usuário entra na área principal do aplicativo.
+Após o acionamento do placeholder de Login, o usuário entra na área principal do aplicativo.
 
-### Usuário autenticado
-
-```text
-Splash
-  ↓
-Home
-```
-
-O usuário acessa diretamente a área principal.
-
-A validação de autenticação no `Splash` é uma decisão arquitetural proposta para suportar as futuras rotas protegidas previstas no roadmap. A implementação definitiva deverá ser validada durante a evolução da navegação e posteriormente com a Sprint de Autenticação.
+Nesta sprint, o avanço é apenas um gatilho de navegação do placeholder. Não existe autenticação, validação de sessão ou regra de negócio. A infraestrutura apenas classifica as rotas para preparar a Sprint 10.
 
 ---
 
@@ -204,6 +190,8 @@ A navegação principal pode ser entendida conceitualmente como:
 ```
 
 Esses quatro destinos representam as áreas de uso recorrente do aplicativo.
+
+Eles são centralizados em `MainDestination` e apresentados por `MainNavigationBar`. A troca entre eles substitui a aba atual, evitando acumular todas as abas visitadas no back stack. A barra não é exibida em `Splash`, `Login`, `AnimeDetails` ou `Settings`.
 
 O fluxo conceitual completo fica:
 
@@ -260,6 +248,44 @@ Configurações
 ```
 
 Essa organização evita transformar a navegação principal em uma lista excessiva de destinos.
+
+---
+
+## 4.7 Rotas públicas e protegidas
+
+`RouteAccess` consolida a seguinte classificação:
+
+```text
+PUBLIC
+├── Splash
+└── Login
+
+PROTECTED
+├── Home
+├── Search
+├── AnimeDetails
+├── Library
+├── Profile
+└── Settings
+```
+
+Essa classificação é somente declarativa. A validação de sessão será implementada na Sprint 10.
+
+---
+
+## 4.8 Deep Links
+
+`AppDeepLink` fornece uma resolução compartilhada para:
+
+```text
+mykytadu://app/home
+mykytadu://app/search
+mykytadu://app/library
+mykytadu://app/profile
+mykytadu://app/settings
+```
+
+Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetails` não possui Deep Link porque ainda não existe um identificador definitivo de anime. Integrações de entrada específicas para Android e iOS não fazem parte desta sprint.
 
 ---
 
@@ -543,9 +569,13 @@ Este documento deve ser mantido em conjunto com:
 
 ## Consolidado
 
-- Diagrama inicial de navegação da Sprint 3;
-- Separação conceitual entre navegação raiz e área principal;
-- Rotas principais e secundárias identificadas.
+- Sprint 3 concluída e diagrama atualizado para a implementação real;
+- oito rotas tipadas e serializáveis;
+- fluxo de entrada `Splash → Login → Home` com limpeza do histórico;
+- quatro destinos irmãos na navegação principal;
+- rotas secundárias e retorno pelo back stack;
+- classificação declarativa de acesso;
+- estrutura compartilhada e testada para Deep Links.
 
 ## Planejado
 
@@ -555,7 +585,8 @@ Este documento deve ser mantido em conjunto com:
 - Fluxos entre UI, ViewModel, Repository e Data Sources;
 - Arquitetura refinada;
 - Persistência;
-- Fluxo de autenticação;
+- autenticação e validação real de sessão;
+- integração de Deep Links por plataforma, quando necessária;
 - Fluxos de cache e tradução.
 
 ---

@@ -4,11 +4,8 @@ import androidx.compose.runtime.Composable
 import br.com.mykytadu.presentation.NavigationPlaceholder
 
 @Composable
-fun AnimeDetailsScreen(
-    onNavigateToLibrary: () -> Unit,
-) {
+fun AnimeDetailsScreen() {
     NavigationPlaceholder(
-        text = "Detalhes do Anime",
-        onClick = onNavigateToLibrary
+        text = "Detalhes do Anime"
     )
 }

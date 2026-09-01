@@ -80,31 +80,33 @@ Criar a identidade visual do aplicativo.
 
 # Sprint 3 — Navegação
 
+**Status:** Concluída
+
 ## Objetivo
 
 Definir toda a navegação do aplicativo.
 
 ### Rotas
 
-- [ ] Splash
-- [ ] Login
-- [ ] Home
-- [ ] Pesquisa
-- [ ] Detalhes do Anime
-- [ ] Biblioteca
-- [ ] Perfil
-- [ ] Configurações
+- [x] Splash
+- [x] Login
+- [x] Home
+- [x] Pesquisa
+- [x] Detalhes do Anime
+- [x] Biblioteca
+- [x] Perfil
+- [x] Configurações
 
 ### Entregas
 
-- [ ] Navegação configurada
-- [ ] Rotas protegidas preparadas
-- [ ] Estrutura para Deep Links
+- [x] Navegação configurada
+- [x] Rotas protegidas preparadas
+- [x] Estrutura para Deep Links
 
 ### Critérios de aceite
 
-- [ ] Navegação funcionando entre todas as telas.
-- [ ] Cada tela pode conter apenas um texto identificando seu nome.
+- [x] Navegação funcionando entre todas as telas.
+- [x] Cada tela pode conter apenas um texto identificando seu nome.
 
 ---
 
