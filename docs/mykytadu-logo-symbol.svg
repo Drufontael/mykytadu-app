@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Símbolo MykytaDu</title>
+  <desc id="desc">Monograma M combinado com um botão de reprodução e um arco de progresso.</desc>
+
+  <defs>
+    <linearGradient id="violet" x1="220" y1="260" x2="820" y2="780" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8B7CFF"/>
+      <stop offset="1" stop-color="#6C5CE7"/>
+    </linearGradient>
+    <linearGradient id="left-leg" x1="246" y1="326" x2="358" y2="751" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A99BFF"/>
+      <stop offset="0.56" stop-color="#6C5CE7"/>
+      <stop offset="1" stop-color="#8B7CFF"/>
+    </linearGradient>
+    <linearGradient id="descending-diagonal" x1="249" y1="312" x2="586" y2="503" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#AA9CFF"/>
+      <stop offset="0.52" stop-color="#7C6AF4"/>
+      <stop offset="1" stop-color="#5946E6"/>
+    </linearGradient>
+    <linearGradient id="right-piece" x1="730" y1="312" x2="682" y2="780" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#B3A7FF"/>
+      <stop offset="0.48" stop-color="#7B68F2"/>
+      <stop offset="1" stop-color="#563DDF"/>
+    </linearGradient>
+    <linearGradient id="portal" x1="250" y1="230" x2="850" y2="390" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6C5CE7"/>
+      <stop offset="0.58" stop-color="#8B7CFF"/>
+      <stop offset="1" stop-color="#45D6C8"/>
+    </linearGradient>
+    <linearGradient id="play" x1="420" y1="570" x2="640" y2="670" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#45D6C8"/>
+      <stop offset="1" stop-color="#22B8E6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Portal/progresso: o arco inferior acompanha os chanfros sem tocar no monograma. -->
+  <g fill="none" stroke-linecap="round" stroke-width="48" transform="translate(28 0)">
+    <path d="M249 267 A356 356 0 0 1 851 363" stroke="url(#portal)"/>
+    <path d="M873 421 A356 356 0 0 1 884 512" stroke="#45D6C8"/>
+    <path d="M879 574 A356 356 0 0 1 825 697" stroke="#8B7CFF"/>
+    <path d="M318 790 C443 868 640 868 770 772" stroke="url(#violet)"/>
+  </g>
+
+  <!-- Parte 1/3: perna esquerda independente, com chanfro voltado para o arco inferior. -->
+  <path
+    d="M272 326
+       Q246 326 246 352
+       V710
+       Q246 738 270 751
+       Q286 760 302 750
+       L358 714
+       V397
+       L296 334
+       Q286 326 272 326 Z"
+    fill="url(#left-leg)"
+  />
+
+  <!-- Parte 2/3: diagonal superior esquerda sobrepõe a perna e termina no vértice central. -->
+  <path
+    d="M278 302
+       Q260 296 249 312
+       Q237 331 255 344
+       L479 501
+       Q510 523 540 503
+       L586 472
+       L315 312
+       Q296 301 278 302 Z"
+    fill="url(#descending-diagonal)"
+  />
+
+  <!-- Parte 3/3: diagonal direita e perna formam uma única peça com chanfro inferior. -->
+  <path
+    d="M515 448
+       L714 316
+       Q731 305 748 313
+       Q766 322 766 343
+       V704
+       Q766 721 752 731
+       L682 780
+       V458
+       L574 530
+       Q551 546 528 531
+       L484 501 Z"
+    fill="url(#right-piece)"
+  />
+
+  <!-- Play alinhado à perna esquerda, separado por um respiro óptico constante. -->
+  <path
+    d="M393 526
+       Q393 506 411 517
+       L574 613
+       Q595 625 574 637
+       L411 733
+       Q393 744 393 724 Z"
+    fill="url(#play)"
+  />
+</svg>
