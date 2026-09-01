@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, a fundação multiplataforma e o Design System estão concluídos. A aplicação exibe um showcase dos componentes implementados; busca, autenticação, biblioteca e as demais funcionalidades de produto ainda fazem parte das próximas sprints.
+Atualmente, a fundação multiplataforma, o Design System e a infraestrutura de navegação estão concluídos. A aplicação apresenta placeholders conectados pelo Navigation 3; busca, autenticação, biblioteca e as demais funcionalidades de produto ainda fazem parte das próximas sprints.
 
 ## Plataformas
 
@@ -18,8 +18,9 @@ Atualmente, a fundação multiplataforma e o Design System estão concluídos. A
 |---|---|
 | Sprint 1 — Fundação | Concluída |
 | Sprint 2 — Design System | Concluída |
-| Sprint 3 — Navegação | Próxima etapa |
-| Sprints 4 a 16 | Planejadas |
+| Sprint 3 — Navegação | Concluída |
+| Sprint 4 — Comunicação | Próxima etapa |
+| Sprints 5 a 16 | Planejadas |
 
 Já estão disponíveis:
 
@@ -29,7 +30,12 @@ Já estão disponíveis:
 - serialização JSON com Kotlinx Serialization;
 - temas claro e escuro, tipografia, formas e dimensões;
 - componentes reutilizáveis de entrada, ação, navegação e feedback;
-- showcase para validação visual do Design System.
+- showcase para validação visual do Design System;
+- oito rotas tipadas e serializáveis com Navigation 3;
+- fluxo de entrada, navegação principal e rotas secundárias;
+- back stack compartilhado entre as plataformas;
+- classificação declarativa de rotas públicas e protegidas;
+- estrutura compartilhada para resolução de Deep Links.
 
 ## Stack
 
@@ -79,7 +85,7 @@ Abra o projeto no Android Studio, selecione a configuração `composeApp` e exec
 
 ### iOS
 
-Os targets `iosX64`, `iosArm64` e `iosSimulatorArm64` estão configurados. A compilação e a integração do framework iOS exigem macOS e Xcode.
+Os targets `iosArm64` e `iosSimulatorArm64` estão configurados. A compilação e a integração do framework iOS exigem macOS e Xcode.
 
 ## Testes
 
@@ -108,7 +114,7 @@ mykytadu-app/
 │       └── iosMain/       # Engine HTTP do iOS
 ├── gradle/
 │   └── libs.versions.toml # Catálogo central de dependências
-└── *.md                   # Produto, identidade, modelagem e roadmap
+└── docs/                  # Produto, identidade, modelagem e roadmap
 ```
 
 O código compartilhado usa o namespace `br.com.mykytadu`. A arquitetura planejada separa apresentação, domínio e dados, mantendo regras de negócio fora da UI e o acesso externo atrás de repositories.
