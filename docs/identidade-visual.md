@@ -249,44 +249,146 @@ Exemplo:
 
 # 10. Logo e símbolo
 
-O logo deve evitar simplesmente utilizar uma fonte japonesa ou uma tipografia temática de anime.
+## 10.1 Conceito oficial
 
-A identidade pode explorar três conceitos:
+O símbolo oficial combina três ideias complementares:
 
-### Conceito A — Play + Olho
+> **M + Play + Progresso/Portal**
 
-Combinação visual de:
+- **M** — inicial de MykytaDu e elemento de reconhecimento da marca;
+- **Play** — representa assistir animes e continuar uma experiência;
+- **Progresso** — comunica acompanhamento de episódios e evolução da jornada;
+- **Portal** — representa a entrada no universo pessoal de animes do usuário.
 
-**▶ + 👁**
+O resultado deve transmitir:
 
-Representa:
+> **Sua jornada pelos animes.**
 
-> assistir + acompanhar
+<p align="center">
+  <img src="./mykytadu-logo-symbol.svg" alt="Símbolo oficial do MykytaDu: M, play e círculo de progresso" width="320">
+</p>
 
-### Conceito B — M + Play
+<p align="center"><em>Símbolo oficial do MykytaDu.</em></p>
 
-Construção de um símbolo a partir de:
+A referência ao universo dos animes permanece sutil. O símbolo não utiliza personagens, olhos literais, ideogramas japoneses ou tipografia temática.
 
-**M + ▶**
+## 10.2 Anatomia do símbolo
 
-Pode funcionar muito bem como:
+O monograma `M` é construído por três peças vetoriais independentes:
 
-- Ícone do aplicativo
-- Launcher
-- Favicon
-- Splash Screen
-- Avatar
-- Identidade no GitHub
+1. **Perna esquerda** — peça vertical com chanfro inferior voltado para o arco de progresso;
+2. **Diagonal descendente** — parte superior esquerda que termina no vértice central;
+3. **Peça direita** — diagonal ascendente integrada à perna direita, também finalizada com chanfro.
 
-### Conceito C — Portal
+O botão de play ocupa o espaço interno ao lado da perna esquerda. Ele deve permanecer visualmente alinhado, mas separado por um respiro óptico constante. O play não deve tocar nem parecer colado ao monograma.
 
-Símbolo abstrato representando uma abertura ou portal.
+O círculo de progresso contorna o `M` e é dividido em quatro trechos:
 
-Conceito:
+- arco superior com transição de violeta para turquesa;
+- segmento turquesa à direita;
+- segmento violeta à direita;
+- arco violeta inferior.
 
-> "Entrar no seu universo de animes."
+O arco superior inicia-se alinhado à ponta superior esquerda do `M`. O arco inferior acompanha externamente os chanfros das duas pernas, sem tocar no monograma. Essa separação evita a sensação de elementos empilhados.
 
-É a alternativa mais conceitual e sofisticada.
+## 10.3 Construção e proporções
+
+- O arquivo mestre utiliza `viewBox="0 0 1024 1024"`;
+- O símbolo deve permanecer centralizado e preservar suas proporções originais;
+- As três peças do `M` não devem ser fundidas em um único traço;
+- O círculo de progresso é ligeiramente deslocado para a direita em relação ao centro do monograma;
+- Cantos e terminações devem permanecer arredondados;
+- Redimensionamentos devem ser uniformes, sem distorção horizontal ou vertical;
+- A geometria oficial não deve ser redesenhada individualmente em cada plataforma.
+
+O arquivo `mykytadu-logo-symbol.svg` é a fonte única da geometria da marca.
+
+## 10.4 Cores do logo
+
+| Elemento | Direção de cor |
+|---|---|
+| Perna esquerda | Lilás claro → violeta → leve recuperação de luminosidade |
+| Diagonal descendente | Lilás → violeta profundo |
+| Peça direita | Lilás superior → índigo inferior |
+| Play | Turquesa → azul-ciano |
+| Arco superior | Violeta → turquesa |
+| Segmentos direitos | Turquesa e violeta |
+| Arco inferior | Violeta/índigo |
+| Fundo principal | `#0B0D12` |
+
+As cores-base permanecem vinculadas à paleta do Design System:
+
+- Violeta principal: `#8B7CFF`;
+- Índigo: `#6C5CE7`;
+- Turquesa: `#45D6C8`;
+- Texto claro: `#F4F4F7`;
+- Fundo dark: `#0B0D12`.
+
+Gradientes podem ser utilizados dentro das peças oficiais. Brilhos e halos são recursos de composição para splash screens e materiais de divulgação; não fazem parte da geometria mestre.
+
+## 10.5 Wordmark
+
+O nome deve ser escrito exatamente como:
+
+> **MykytaDu**
+
+Regras do wordmark:
+
+- `M` e `D` maiúsculos;
+- Demais letras minúsculas;
+- Fonte principal: **Poppins Bold** ou **Poppins SemiBold**;
+- `Mykyta` em `#F4F4F7` sobre fundos escuros;
+- `Du` em violeta/índigo;
+- O espaçamento entre símbolo e nome deve permitir leitura independente dos dois elementos;
+- Efeitos de brilho devem ser discretos e restritos a peças promocionais ou splash screens.
+
+## 10.6 Área de proteção e tamanho mínimo
+
+A marca deve possuir área livre suficiente para não competir com textos, bordas ou outros elementos.
+
+- Ao redor do símbolo, preservar no mínimo a espessura visual de uma das pernas do `M`;
+- Em avatares circulares, manter o símbolo dentro de aproximadamente `78%` da área;
+- No launcher adaptativo, manter toda a geometria dentro da área segura central;
+- Não aproximar o wordmark do símbolo a ponto de transformá-los em uma única massa visual.
+
+Tamanhos mínimos recomendados:
+
+| Aplicação | Tamanho mínimo |
+|---|---:|
+| Símbolo completo | `32 px` |
+| Ícone convencional | `48 px` |
+| Avatar | `40 px` |
+| Favicon simplificado | `16 px` |
+
+Em `16 px`, deve ser utilizada exclusivamente a variante de favicon, que possui símbolo ampliado e traços de progresso mais espessos.
+
+## 10.7 Derivações oficiais
+
+| Aplicação | Arquivo | Características |
+|---|---|---|
+| Mestre | `mykytadu-logo-symbol.svg` | Geometria oficial com fundo transparente |
+| Launcher — foreground | `mykytadu-launcher-foreground.svg` | Símbolo dentro da área segura adaptativa |
+| Launcher — background | `mykytadu-launcher-background.svg` | Fundo sólido `#0B0D12` |
+| Ícone convencional | `mykytadu-app-icon.svg` | Tile arredondado autocontido |
+| Favicon vetorial | `mykytadu-favicon.svg` | Variante ampliada para tamanhos reduzidos |
+| Favicon legado | `mykytadu-favicon.ico` | Inclui `16`, `32` e `48 px` |
+| Splash Screen | `mykytadu-splash.svg` / `.png` | Composição vertical `1080 × 1920` |
+| Avatar | `mykytadu-avatar.svg` / `.png` | Fundo circular e margem segura |
+| GitHub Social Preview | `mykytadu-github-social-preview.svg` / `.png` | Composição horizontal `1280 × 640` |
+
+## 10.8 Usos incorretos
+
+Não é permitido:
+
+- Alterar as proporções do símbolo;
+- Reposicionar individualmente as peças do `M`;
+- Encostar o play na perna esquerda;
+- Fundir o arco inferior aos chanfros do monograma;
+- Girar, inclinar ou espelhar o símbolo;
+- Substituir as cores oficiais por cores sem relação com o Design System;
+- Aplicar sombras, contornos ou brilhos excessivos;
+- Utilizar tipografia temática de anime ou caracteres japoneses como parte do logo;
+- Recriar manualmente a geometria quando uma derivação oficial já existir.
 
 ---
 
@@ -461,7 +563,7 @@ Cores, contraste, tamanho de texto e áreas de toque devem ser pensados para uso
 
 A evolução recomendada para o projeto é:
 
-1. Definir o conceito final do logo
+1. [x] Definir o conceito final do logo
 2. Validar a paleta Dark/Light
 3. Definir tokens de Design System
 4. Implementar `MykytaDuDarkColorScheme`
