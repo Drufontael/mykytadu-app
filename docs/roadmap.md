@@ -120,11 +120,11 @@ Preparar toda a comunicação com o backend e APIs externas.
 
 - [x] Cliente HTTP
 - [x] Configuração de Serialização
-- [ ] Tratamento global de erros
-- [ ] Timeouts
-- [ ] Logging
-- [ ] Interceptadores
-- [ ] Configuração de autenticação futura
+- [x] Tratamento global de erros
+- [x] Timeouts
+- [x] Logging
+- [x] Interceptadores
+- [x] Configuração de autenticação futura
 
 ### Serviços
 
@@ -135,7 +135,7 @@ Preparar toda a comunicação com o backend e APIs externas.
 ### Critérios de aceite
 
 - [ ] Primeira chamada HTTP funcionando.
-- [ ] Erros tratados de forma padronizada.
+- [x] Erros tratados de forma padronizada.
 
 ---
 

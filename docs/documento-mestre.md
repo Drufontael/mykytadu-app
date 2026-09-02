@@ -468,7 +468,7 @@ A auditoria confirmou que a infraestrutura HTTP básica está implementada de fo
 
 A compilação Desktop, os testes Desktop, o assemble Android e a compilação da metadata de iOS foram executados com sucesso. A compilação nativa de iOS não foi realizada por exigir macOS e Xcode.
 
-Ainda não estão implementados:
+No momento da auditoria, ainda não estavam implementados:
 
 - tratamento global e padronizado de erros;
 - timeouts;
@@ -478,7 +478,7 @@ Ainda não estão implementados:
 - `AnimeApi`, `AuthApi` e `TranslationApi`;
 - primeira chamada HTTP funcional.
 
-Foram identificados como pontos de atenção para as próximas tasks:
+Também foram identificados os seguintes pontos de atenção:
 
 - ausência da permissão `INTERNET` no manifesto Android;
 - inicialização do Koin no iOS ainda não demonstrada pelo código existente;
@@ -506,6 +506,29 @@ A integração deverá distinguir falhas HTTP de erros GraphQL, inclusive respos
 O futuro `AnimeApi` encapsulará queries, variables e envelopes GraphQL, sem expor tipos externos diretamente ao domínio. A implementação do serviço, dos DTOs Kotlin, repositories, modelos de domínio, cache, tradução e OAuth permanece fora do escopo desta decisão.
 
 A decisão completa, incluindo queries validadas, nulabilidade, alternativas avaliadas, riscos e condições de reavaliação, está registrada em [`api-externa-anilist.md`](api-externa-anilist.md).
+
+## 16.3 S4.3 — Robustez e padronização da comunicação HTTP
+
+✅ **CONCLUÍDA**
+
+O `HttpClient` compartilhado foi preparado para o consumo previsível de serviços HTTP sem antecipar APIs, domínio ou regras de negócio:
+
+- timeouts centralizados de 30 segundos para request, 10 segundos para conexão e 30 segundos para socket;
+- logging de desenvolvimento no nível `HEADERS`, sem corpos, desativado em builds móveis release e com sanitização de `Authorization`, `Cookie` e `Set-Cookie`;
+- headers globais `Accept: application/json` e `Content-Type: application/json`, sem URL-base fixa;
+- validação automática de status com `expectSuccess`;
+- fechamento do singleton `HttpClient` quando sua definição Koin for encerrada;
+- permissão `INTERNET` declarada no Android.
+
+Foi criado um contrato técnico compartilhado baseado em `NetworkResult` e `NetworkFailure`. O mecanismo `safeNetworkCall` converte timeouts, falhas de conexão, respostas HTTP não bem-sucedidas, falhas de serialização e erros desconhecidos, preservando a causa técnica e propagando cancelamentos de coroutines.
+
+Requisições públicas continuam sem `Authorization`. A autenticação futura poderá ser adicionada na configuração do Ktor ou por request sem reconstruir o cliente; nenhum token, armazenamento de sessão ou OAuth foi implementado.
+
+O tratamento global permanece restrito a transporte, protocolo HTTP e serialização. Respostas GraphQL HTTP `200` com `errors` ou dados parciais deverão ser interpretadas posteriormente pelo contrato do `AnimeApi`.
+
+Testes com `MockEngine` validam sucesso, erro HTTP, timeout, falha de conexão, serialização, falha desconhecida, ausência de `Authorization` e sanitização do logging. Foram validados commonMain, Desktop, Android e metadata iOS; a compilação nativa iOS permanece dependente de macOS e Xcode.
+
+`AnimeApi`, `AuthApi`, `TranslationApi`, primeira chamada funcional, repositories, modelos de domínio e integrações com UI permanecem pendentes.
 
 ---
 
@@ -654,7 +677,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 1 — Fundação: ✅ Concluída
 - Sprint 2 — Design System: ✅ Concluída
 - Sprint 3 — Navegação: ✅ Concluída
-- Sprint 4 — Camada de Comunicação: 🚧 Em andamento — S4.1 e S4.2 concluídas
+- Sprint 4 — Camada de Comunicação: 🚧 Em andamento — S4.1, S4.2 e S4.3 concluídas
 - Sprints 5–16: ⏳ Planejadas
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -680,7 +703,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Continuar a Sprint 4 com a configuração operacional da comunicação GraphQL.**
+> **Continuar a Sprint 4 com a implementação do `AnimeApi` e da primeira chamada HTTP funcional, sem antecipar as camadas das sprints seguintes.**
 
 ## Filosofia
 
