@@ -176,6 +176,8 @@ Criar abstrações próprias quando elas:
 
 # 8. Arquitetura do Projeto
 
+A fonte oficial para a arquitetura e a modelagem do projeto é o documento [`modelagem.md`](modelagem.md).
+
 Estrutura conceitual principal:
 
 ```text
@@ -223,28 +225,6 @@ As versões efetivamente utilizadas devem sempre ser verificadas no `libs.versio
 
 ---
 
-# 10. Koin e Networking
-
-A infraestrutura de Dependency Injection foi validada em runtime.
-
-Fluxo conceitual:
-
-```text
-Application
-    ↓
-initializeKoin()
-    ↓
-NetworkModule
-    ↓
-HttpClient
-```
-
-O Ktor utiliza uma abstração de engine por plataforma através de `provideHttpClientEngine()`, com implementações específicas para Android, Desktop e iOS.
-
-Não recriar essa abstração sem necessidade.
-
----
-
 # 11. Roadmap Geral do Frontend
 
 O roadmap oficial organiza o desenvolvimento em **16 sprints**:
@@ -287,6 +267,26 @@ Entregas consolidadas:
 - Cliente HTTP;
 - Serialização;
 - Engines HTTP por plataforma.
+
+## 12.1 Koin e Networking
+
+A infraestrutura de Dependency Injection foi validada em runtime.
+
+Fluxo conceitual:
+
+```text
+Application
+    ↓
+initializeKoin()
+    ↓
+NetworkModule
+    ↓
+HttpClient
+```
+
+O Ktor utiliza uma abstração de engine por plataforma através de `provideHttpClientEngine()`, com implementações específicas para Android, Desktop e iOS.
+
+Não recriar essa abstração sem necessidade.
 
 ---
 
@@ -338,15 +338,15 @@ Os **11 componentes originalmente previstos no roadmap estão implementados**.
 
 ---
 
-# 14. Decisões Recentes do Design System
+## 13.4 Decisões Recentes do Design System
 
-## 14.1 AppDivider
+### 13.4.1 AppDivider
 
 `AppDivider` foi criado durante a implementação para centralizar e padronizar divisores visuais.
 
 O componente foi validado visualmente quanto à linha e ao comportamento de padding.
 
-## 14.2 AppIcons
+### 13.4.2 AppIcons
 
 Foi criada a abstração `AppIcons` para centralizar os ícones utilizados pelo Design System.
 
@@ -357,7 +357,7 @@ Objetivos:
 - Facilitar substituições futuras;
 - Fazer com que componentes reutilizáveis dependam da abstração do projeto em vez de escolhas locais de ícones.
 
-## 14.3 AppTextField
+### 13.4.3 AppTextField
 
 O `AppTextField` teve sua API expandida durante a evolução dos componentes.
 
@@ -367,13 +367,13 @@ Essa decisão estabelece um princípio para o Design System:
 
 A preferência é evoluir uma abstração existente em vez de criar componentes redundantes.
 
-## 14.4 AppTopBar
+### 13.4.4 AppTopBar
 
 `AppTopBar` foi implementado e validado como parte da Sprint 2.
 
 Ele deixa de fazer parte das pendências do Design System.
 
-## 14.5 AppSearchBar
+### 13.4.5 AppSearchBar
 
 `AppSearchBar` foi implementado sobre o `SearchBar` do Material 3, mantendo uma API alinhada ao Design System.
 
@@ -381,15 +381,39 @@ Durante a validação visual, o shape precisou ser ajustado porque o radius inic
 
 O componente utiliza `AppIcons.Actions.Search` como ícone de busca padrão.
 
-## 14.6 Componentes de feedback e estado
+### 13.4.6 Componentes de feedback e estado
 
 Foram implementados os componentes previstos `AppLoading`, `AppError` e `AppEmptyState`, cobrindo feedback de carregamento, falha e ausência de conteúdo.
 
 Também foi criado `AppProgressBar`, não previsto originalmente, para representar progresso determinado de forma consistente com os tokens do tema. Com ele, o Design System diferencia carregamento indeterminado (`AppLoading`) de progresso mensurável (`AppProgressBar`).
 
-## 14.7 AppDialog
+### 13.4.7 AppDialog
 
 `AppDialog` foi implementado como uma abstração reutilizável para confirmações e mensagens, com título, mensagem, ícone e ações configuráveis.
+
+## 13.5 Critérios de Aceite da Sprint 2
+
+Conforme o roadmap:
+
+- [x] Nenhuma cor fixa utilizada nas telas;
+- [x] Todos os componentes reutilizáveis;
+- [x] Tema aplicado globalmente.
+
+A revisão final confirmou que as telas não utilizam literais de cor, os componentes expõem APIs parametrizadas para reutilização e o tema está aplicado globalmente. A compilação e os testes do target Desktop foram executados com sucesso antes do encerramento da sprint.
+
+Além dos critérios formais, a implementação vem seguindo o ciclo:
+
+```text
+Implementar
+    ↓
+Compilar
+    ↓
+Validar visualmente
+    ↓
+Ajustar
+    ↓
+Avançar
+```
 
 ---
 
@@ -431,33 +455,7 @@ O próximo passo do roadmap é:
 
 ---
 
-# 17. Critérios de Aceite da Sprint 2
-
-Conforme o roadmap:
-
-- [x] Nenhuma cor fixa utilizada nas telas;
-- [x] Todos os componentes reutilizáveis;
-- [x] Tema aplicado globalmente.
-
-A revisão final confirmou que as telas não utilizam literais de cor, os componentes expõem APIs parametrizadas para reutilização e o tema está aplicado globalmente. A compilação e os testes do target Desktop foram executados com sucesso antes do encerramento da sprint.
-
-Além dos critérios formais, a implementação vem seguindo o ciclo:
-
-```text
-Implementar
-    ↓
-Compilar
-    ↓
-Validar visualmente
-    ↓
-Ajustar
-    ↓
-Avançar
-```
-
----
-
-# 18. Diretrizes Gerais do Projeto
+# 17. Diretrizes Gerais do Projeto
 
 - Componentes reutilizáveis antes de componentes específicos;
 - Nenhuma regra de negócio dentro da UI;
@@ -473,9 +471,9 @@ Avançar
 
 ---
 
-# 19. Fontes Oficiais do Projeto
+# 18. Fontes Oficiais do Projeto
 
-## 19.1 Identidade Visual
+## 18.1 Identidade Visual
 
 **[`identidade-visual.md`](identidade-visual.md)**
 
@@ -493,7 +491,7 @@ Fonte para:
 - Princípios de UX;
 - Direção do Design System.
 
-## 19.2 Roadmap do Frontend
+## 18.2 Roadmap do Frontend
 
 **[`roadmap.md`](roadmap.md)**
 
@@ -506,7 +504,18 @@ Fonte para:
 - Diretrizes gerais;
 - Visão de longo prazo.
 
-## 19.3 Histórico Técnico de Desenvolvimento
+## 18.3 Arquitetura e Modelagem
+
+**[`modelagem.md`](modelagem.md)**
+
+Fonte para:
+
+- Arquitetura do projeto;
+- Organização das camadas;
+- Modelagem das entidades;
+- Relações e responsabilidades entre os componentes.
+
+## 18.4 Histórico Técnico de Desenvolvimento
 
 Conversas e registros de implementação do projeto.
 
@@ -520,7 +529,7 @@ Fonte para:
 
 ---
 
-# 20. Regra de Prioridade das Fontes
+# 19. Regra de Prioridade das Fontes
 
 Quando houver divergência sobre o estado do projeto:
 
@@ -544,7 +553,7 @@ O código determina **o que realmente existe**.
 
 ---
 
-# 21. Regra para Novos Chats
+# 20. Regra para Novos Chats
 
 Ao continuar o desenvolvimento em um novo chat:
 
@@ -559,7 +568,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ---
 
-# 22. Resumo Executivo
+# 21. Resumo Executivo
 
 ## Produto
 
