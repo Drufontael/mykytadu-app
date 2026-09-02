@@ -1,0 +1,7 @@
+interface:
+  display_name: "MykytaDu Git Publish"
+  short_description: "Revisa, commita e publica mudanças do MykytaDu"
+  default_prompt: "Use $mykytadu-git-publish para revisar, preparar, documentar, commitar e publicar as alterações atuais do MykytaDu."
+
+policy:
+  allow_implicit_invocation: false
