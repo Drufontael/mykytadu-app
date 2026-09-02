@@ -7,6 +7,7 @@ Esta pasta reúne a documentação de produto, arquitetura, experiência visual 
 | Documento | Conteúdo |
 |---|---|
 | [Documento Mestre](documento-mestre.md) | Visão consolidada, decisões técnicas e estado atual do projeto |
+| [API Externa AniList](api-externa-anilist.md) | Decisão arquitetural, contrato inicial e restrições da integração com a AniList |
 | [Identidade Visual](identidade-visual.md) | Conceito da marca, cores, tipografia, componentes e princípios de UX |
 | [Modelagem](modelagem.md) | Diagramas de navegação, domínio, estados e fluxos entre camadas |
 | [Roadmap](roadmap.md) | Sprints, entregas, critérios de aceite e visão de longo prazo |

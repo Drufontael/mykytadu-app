@@ -445,13 +445,67 @@ O build completo do módulo e os testes Desktop foram executados com sucesso no 
 
 ---
 
-# 16. Próximo Passo Imediato
+# 16. Sprint 4 — Camada de Comunicação
 
-A Sprint 3 foi encerrada após a revisão das entregas, dos critérios de aceite, do build multiplataforma e dos testes Desktop.
+## Status
 
-O próximo passo do roadmap é:
+🚧 **EM ANDAMENTO**
 
-> **Sprint 4 — Camada de Comunicação**
+A Sprint 4 tem como objetivo preparar a comunicação com o backend e APIs externas. A infraestrutura HTTP básica já existente foi auditada antes do avanço das próximas tasks.
+
+## 16.1 S4.1 — Auditoria da infraestrutura HTTP
+
+✅ **CONCLUÍDA**
+
+A auditoria confirmou que a infraestrutura HTTP básica está implementada de forma compartilhada e coerente com Kotlin Multiplatform:
+
+- `HttpClient` registrado como singleton no Koin;
+- `ContentNegotiation` configurado com Kotlinx Serialization e `ignoreUnknownKeys`;
+- engines OkHttp no Android, CIO no Desktop e Darwin no iOS;
+- configuração comum centralizada em `commonMain` por meio de `expect/actual`;
+- inicialização do Koin confirmada no Android e Desktop;
+- testes de registro, resolução e singleton do cliente aprovados.
+
+A compilação Desktop, os testes Desktop, o assemble Android e a compilação da metadata de iOS foram executados com sucesso. A compilação nativa de iOS não foi realizada por exigir macOS e Xcode.
+
+Ainda não estão implementados:
+
+- tratamento global e padronizado de erros;
+- timeouts;
+- logging;
+- configuração comum de requisições;
+- preparação para autenticação;
+- `AnimeApi`, `AuthApi` e `TranslationApi`;
+- primeira chamada HTTP funcional.
+
+Foram identificados como pontos de atenção para as próximas tasks:
+
+- ausência da permissão `INTERNET` no manifesto Android;
+- inicialização do Koin no iOS ainda não demonstrada pelo código existente;
+- ausência de encerramento explícito do `HttpClient`;
+- possível uso desnecessário da dependência `koin-android`;
+- testes atuais limitados ao registro e ciclo singleton do cliente.
+
+A infraestrutura existente pode ser preservada e o projeto está apto a avançar para a próxima task da Sprint 4, começando pela consolidação da configuração comum do cliente e do tratamento de comunicação.
+
+## 16.2 S4.2 — Seleção da API externa de animes
+
+✅ **CONCLUÍDA**
+
+A **AniList GraphQL API v2** foi escolhida como fonte principal do catálogo de animes. As consultas públicas utilizam `POST` no endpoint `https://graphql.anilist.co`, retornam JSON e não exigem autenticação.
+
+Foram definidas e validadas manualmente duas operações iniciais:
+
+- `SearchAnime`, para pesquisa paginada com `PageInfo`;
+- `GetAnimeDetails`, para obtenção dos dados previstos na tela de detalhes.
+
+O identificador externo principal será `Media.id`, com `Media.idMal` preservado como referência opcional. Os DTOs remotos deverão respeitar campos anuláveis, coleções vazias e datas parciais observadas nas respostas.
+
+A integração deverá distinguir falhas HTTP de erros GraphQL, inclusive respostas HTTP `200` com `errors` ou dados parciais. Também deverá tratar rate limit e HTTP `429`, respeitando `Retry-After` quando disponível.
+
+O futuro `AnimeApi` encapsulará queries, variables e envelopes GraphQL, sem expor tipos externos diretamente ao domínio. A implementação do serviço, dos DTOs Kotlin, repositories, modelos de domínio, cache, tradução e OAuth permanece fora do escopo desta decisão.
+
+A decisão completa, incluindo queries validadas, nulabilidade, alternativas avaliadas, riscos e condições de reavaliação, está registrada em [`api-externa-anilist.md`](api-externa-anilist.md).
 
 ---
 
@@ -515,7 +569,20 @@ Fonte para:
 - Modelagem das entidades;
 - Relações e responsabilidades entre os componentes.
 
-## 18.4 Histórico Técnico de Desenvolvimento
+## 18.4 API Externa de Animes
+
+**[`api-externa-anilist.md`](api-externa-anilist.md)**
+
+Fonte para:
+
+- escolha da AniList GraphQL API v2;
+- endpoint, protocolo e autenticação;
+- operações de pesquisa e detalhes;
+- paginação, nulabilidade e envelopes GraphQL;
+- limites de uso, riscos e critérios de reavaliação;
+- fronteiras arquiteturais da integração externa.
+
+## 18.5 Histórico Técnico de Desenvolvimento
 
 Conversas e registros de implementação do projeto.
 
@@ -587,7 +654,8 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 1 — Fundação: ✅ Concluída
 - Sprint 2 — Design System: ✅ Concluída
 - Sprint 3 — Navegação: ✅ Concluída
-- Sprints 4–16: ⏳ Planejadas
+- Sprint 4 — Camada de Comunicação: 🚧 Em andamento — S4.1 e S4.2 concluídas
+- Sprints 5–16: ⏳ Planejadas
 
 ## Componentes do roadmap concluídos na Sprint 2
 
@@ -612,7 +680,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Iniciar a Sprint 4 — Camada de Comunicação.**
+> **Continuar a Sprint 4 com a configuração operacional da comunicação GraphQL.**
 
 ## Filosofia
 

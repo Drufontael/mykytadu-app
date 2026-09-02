@@ -152,6 +152,7 @@ Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de ac
 
 - [`docs/README.md`](docs/README.md): índice da documentação;
 - [`docs/documento-mestre.md`](docs/documento-mestre.md): visão consolidada, decisões técnicas e estado do projeto;
+- [`docs/api-externa-anilist.md`](docs/api-externa-anilist.md): decisão arquitetural e contrato inicial da integração com a AniList;
 - [`docs/identidade-visual.md`](docs/identidade-visual.md): identidade, cores, tipografia e princípios de UX;
 - [`docs/modelagem.md`](docs/modelagem.md): diagramas e propostas de navegação, domínio e fluxos entre camadas;
 - [`docs/roadmap.md`](docs/roadmap.md): planejamento completo das sprints.
