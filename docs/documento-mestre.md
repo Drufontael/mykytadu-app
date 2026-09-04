@@ -234,7 +234,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 | 1 | Fundação do Projeto | ✅ Concluída |
 | 2 | Design System | ✅ Concluída |
 | 3 | Navegação | ✅ Concluída |
-| 4 | Camada de Comunicação | ⏳ Planejada |
+| 4 | Camada de Comunicação | ✅ Concluída |
 | 5 | Modelagem | ⏳ Planejada |
 | 6 | Camada de Dados | ⏳ Planejada |
 | 7 | Gerenciamento de Estado | ⏳ Planejada |
