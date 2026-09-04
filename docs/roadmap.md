@@ -187,11 +187,18 @@ A biblioteca deve funcionar localmente antes da existência do backend:
 
 # Sprint 5 — Domínio do Catálogo
 
-**Status:** Planejada
+**Status:** Em andamento
 
 ## Objetivo
 
 Criar somente os modelos, conversões e abstrações necessários para pesquisa e detalhes de animes, estabelecendo a separação entre a AniList e o domínio do MykytaDu.
+
+### Progresso
+
+- [x] S5.1 — Auditar contratos e estrutura atuais
+- [x] S5.2 — Implementar contratos fundamentais do domínio
+
+A auditoria confirmou que `AnimeApi`, `AniListAnimeApi`, os DTOs, o tratamento de falhas e o registro no Koin estão implementados, enquanto modelos de catálogo, mapeadores e `AnimeRepository` ainda não existem. A S5.2 estabeleceu o identificador tipado da AniList, resultado e falhas independentes da rede, paginação genérica e a conversão interna de `NetworkFailure`, todos cobertos por testes.
 
 ### Escopo
 

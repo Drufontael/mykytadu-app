@@ -235,7 +235,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 | 2 | Design System | ✅ Concluída |
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
-| 5 | Domínio do Catálogo | ⏳ Planejada |
+| 5 | Domínio do Catálogo | 🚧 Em andamento — S5.1 e S5.2 concluídas |
 | 6 | Busca de Animes End-to-End | ⏳ Planejada |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
@@ -548,7 +548,31 @@ Por dependerem do backend próprio, ainda ausente nesta etapa, `AuthApi` e `Tran
 
 ---
 
-# 17. Diretrizes Gerais do Projeto
+# 17. Sprint 5 — Domínio do Catálogo
+
+## 17.1 S5.1 — Auditoria dos contratos e estrutura atuais
+
+✅ **CONCLUÍDA**
+
+A auditoria confirmou a fronteira remota existente: `AnimeApi` e `AniListAnimeApi` devolvem DTOs por meio de `NetworkResult`, encapsulam GraphQL e validam pesquisa, paginação e ID. Ainda não existem modelos de catálogo, mapeadores ou `AnimeRepository`; as telas de pesquisa e detalhes permanecem placeholders e a rota de detalhes ainda não transporta o ID AniList.
+
+A proposta para as próximas tasks recomenda `AnimeSummary` e `AnimeDetails` separados, modelos auxiliares somente quando houver semântica concreta, gêneros como `List<String>`, conversão de enums no mapper com fallback seguro, IDs externos semanticamente distintos e um resultado de repository independente do transporte. `NetworkFailure` deverá ser convertido sem expor GraphQL, HTTP ou mensagens técnicas aos futuros ViewModels, preservando cancelamentos e a causa para diagnóstico.
+
+O `AnimeStatus` já existente pertence ao vocabulário visual da futura biblioteca e não deve representar o status editorial retornado pela AniList. Modelos sem consumidor imediato — como personagens, episódios como entidades, usuário, biblioteca, cache e persistência — continuam fora do escopo.
+
+Nenhum arquivo de implementação foi alterado durante a auditoria.
+
+## 17.2 S5.2 — Contratos fundamentais do domínio
+
+✅ **CONCLUÍDA**
+
+Foram implementados `AniListAnimeId`, `RepositoryResult`, as categorias estáveis de `RepositoryFailure`, `PageInfo` e `PagedResult`. A camada de dados passou a converter exaustivamente `NetworkFailure` para falhas de repository, preservando a causa técnica sem expor detalhes de rede, GraphQL ou mensagens destinadas à interface no domínio.
+
+Os contratos protegem IDs e parâmetros de paginação inválidos, aceitam páginas vazias e mantêm `hasNextPage` como informação normativa. Os testes específicos, a suíte Desktop, a compilação compartilhada, o build e os testes Android e a metadata iOS foram aprovados, sem dependências novas ou serialização nos modelos de domínio.
+
+---
+
+# 18. Diretrizes Gerais do Projeto
 
 - Componentes reutilizáveis antes de componentes específicos;
 - Nenhuma regra de negócio dentro da UI;
@@ -564,9 +588,9 @@ Por dependerem do backend próprio, ainda ausente nesta etapa, `AuthApi` e `Tran
 
 ---
 
-# 18. Fontes Oficiais do Projeto
+# 19. Fontes Oficiais do Projeto
 
-## 18.1 Identidade Visual
+## 19.1 Identidade Visual
 
 **[`identidade-visual.md`](identidade-visual.md)**
 
@@ -584,7 +608,7 @@ Fonte para:
 - Princípios de UX;
 - Direção do Design System.
 
-## 18.2 Roadmap do Frontend
+## 19.2 Roadmap do Frontend
 
 **[`roadmap.md`](roadmap.md)**
 
@@ -597,7 +621,7 @@ Fonte para:
 - Diretrizes gerais;
 - Visão de longo prazo.
 
-## 18.3 Arquitetura e Modelagem
+## 19.3 Arquitetura e Modelagem
 
 **[`modelagem.md`](modelagem.md)**
 
@@ -608,7 +632,7 @@ Fonte para:
 - Modelagem das entidades;
 - Relações e responsabilidades entre os componentes.
 
-## 18.4 API Externa de Animes
+## 19.4 API Externa de Animes
 
 **[`api-externa-anilist.md`](api-externa-anilist.md)**
 
@@ -621,7 +645,7 @@ Fonte para:
 - limites de uso, riscos e critérios de reavaliação;
 - fronteiras arquiteturais da integração externa.
 
-## 18.5 Histórico Técnico de Desenvolvimento
+## 19.5 Histórico Técnico de Desenvolvimento
 
 Conversas e registros de implementação do projeto.
 
@@ -635,7 +659,7 @@ Fonte para:
 
 ---
 
-# 19. Regra de Prioridade das Fontes
+# 20. Regra de Prioridade das Fontes
 
 Quando houver divergência sobre o estado do projeto:
 
@@ -659,7 +683,7 @@ O código determina **o que realmente existe**.
 
 ---
 
-# 20. Regra para Novos Chats
+# 21. Regra para Novos Chats
 
 Ao continuar o desenvolvimento em um novo chat:
 
@@ -674,7 +698,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ---
 
-# 21. Resumo Executivo
+# 22. Resumo Executivo
 
 ## Produto
 
@@ -694,7 +718,8 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 2 — Design System: ✅ Concluída
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
-- Sprints 5–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
+- Sprint 5 — Domínio do Catálogo: 🚧 Em andamento — S5.1 e S5.2 concluídas
+- Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
 
@@ -719,7 +744,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Iniciar a Sprint 5 com o domínio do catálogo e o `AnimeRepository`, limitados aos casos de uso reais de pesquisa e detalhes e mantendo DTOs da AniList restritos à camada de dados.**
+> **Prosseguir para a S5.3 com os modelos de catálogo necessários aos casos de uso reais de pesquisa e detalhes, sem antecipar o `AnimeRepository` ou consumidores futuros.**
 
 ## Filosofia
 

@@ -291,7 +291,7 @@ Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetai
 
 # 5. Sprint 5 — Domínio do Catálogo
 
-> **Status:** Planejada.
+> **Status:** Em andamento — S5.1 e S5.2 concluídas.
 
 A Sprint 5 modelará somente os conceitos exigidos pelos casos de uso de pesquisa e detalhes. O domínio do MykytaDu será separado dos DTOs da AniList, com conversões explícitas para campos opcionais, coleções vazias e enums externos desconhecidos.
 
@@ -312,18 +312,48 @@ O escopo previsto inclui:
 
 Não fazem parte desta modelagem inicial `Character`, `User`, `LibraryEntry`, `Review` ou regras detalhadas de temporadas e episódios sem consumidor atual. Esses conceitos deverão surgir somente nas sprints em que forem necessários.
 
+## 5.1 Auditoria dos contratos atuais
+
+A S5.1 confirmou que a camada remota já encapsula GraphQL, DTOs, validações de entrada e falhas de rede, mas ainda não existem modelos de catálogo, mapeadores ou `AnimeRepository`. O único tipo no pacote `domain` é o `AnimeStatus` usado pelo Design System para estados da futura biblioteca; ele não deve ser reutilizado como status editorial do catálogo.
+
+A direção proposta para as próximas tasks é:
+
+- separar `AnimeSummary` de `AnimeDetails`;
+- preservar títulos e campos opcionais sem escolher idioma no mapper;
+- manter gêneros como `List<String>`;
+- converter enums remotos no mapper, com fallback seguro para valores desconhecidos;
+- distinguir semanticamente IDs AniList e MyAnimeList, sem antecipar IDs locais ou de backend;
+- manter `NetworkResult` na camada remota e expor pelo repository um resultado independente de transporte;
+- adiar campos e modelos sem consumidor comprovado nas Sprints 6 e 7.
+
+## 5.2 Contratos fundamentais
+
+A S5.2 implementou `AniListAnimeId` como identificador positivo e semanticamente específico, além de `RepositoryResult` e sete categorias de `RepositoryFailure` independentes da infraestrutura. `NetworkFailure` é convertido internamente na camada de dados, com preservação opcional da causa técnica.
+
+`PageInfo` valida página atual, tamanho da página, última página e total. `PagedResult<T>` aceita páginas vazias, preserva `hasNextPage` sem inferência pelo número de itens e mantém um snapshot da lista recebida. Esses tipos não são serializáveis e o domínio não depende de rede, GraphQL, Ktor ou DTOs.
+
 ---
 
-## 5.1 Diagrama de Classes
+## 5.3 Diagrama de Classes
 
 ```mermaid
 classDiagram
-    %% A modelagem será adicionada conforme os casos de uso da Sprint 5 forem consolidados.
+    class PageInfo{
+        +int currentPage
+        +int? lastPage
+        +bool hasNextPage
+        +int perPage
+        +int? total
+    }
+    class PagedResult~out T~{
+        +list~T~ items
+        +PageInfo pageInfo
+     }
 ```
 
 ---
 
-## 5.2 Questões a validar
+## 5.4 Questões a validar
 
 Durante a modelagem de domínio deverão ser respondidas somente questões necessárias aos casos de uso atuais, como:
 

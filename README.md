@@ -20,7 +20,8 @@ Atualmente, as quatro primeiras sprints estão concluídas: fundação multiplat
 | Sprint 2 — Design System | Concluída |
 | Sprint 3 — Navegação | Concluída |
 | Sprint 4 — Comunicação | Concluída |
-| Sprints 5 a 16 | Planejadas |
+| Sprint 5 — Domínio do Catálogo | Em andamento — S5.1 e S5.2 concluídas |
+| Sprints 6 a 16 | Planejadas |
 
 Já estão disponíveis:
 
