@@ -570,8 +570,8 @@ A evolução recomendada para o projeto é:
 5. Implementar `MykytaDuLightColorScheme`
 6. Definir tipografia
 7. Criar componentes base
-8. Criar a Home como tela de referência
+8. Criar a Home como tela de referência na Sprint 10
 9. Validar a experiência em Dark e Light
 10. Expandir o Design System para as demais telas
 
-A Home deve funcionar como a **tela-piloto da identidade visual**. Se a linguagem funcionar nela, o restante do aplicativo poderá seguir os mesmos tokens e componentes com muito menos retrabalho.
+A Home deve funcionar como uma **tela de consolidação da identidade visual** na Sprint 10. As funcionalidades end-to-end anteriores devem aplicar e validar o Design System incrementalmente, sem adiar qualidade visual, temas ou acessibilidade até a Home.

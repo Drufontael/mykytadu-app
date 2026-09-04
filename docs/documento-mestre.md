@@ -235,20 +235,24 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 | 2 | Design System | ✅ Concluída |
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
-| 5 | Modelagem | ⏳ Planejada |
-| 6 | Camada de Dados | ⏳ Planejada |
-| 7 | Gerenciamento de Estado | ⏳ Planejada |
-| 8 | Busca de Animes | ⏳ Planejada |
-| 9 | Tela de Detalhes | ⏳ Planejada |
-| 10 | Autenticação | ⏳ Planejada |
-| 11 | Biblioteca | ⏳ Planejada |
-| 12 | Perfil | ⏳ Planejada |
-| 13 | Configurações | ⏳ Planejada |
-| 14 | Cache | ⏳ Planejada |
-| 15 | Traduções | ⏳ Planejada |
-| 16 | Polimento | ⏳ Planejada |
+| 5 | Domínio do Catálogo | ⏳ Planejada |
+| 6 | Busca de Animes End-to-End | ⏳ Planejada |
+| 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
+| 8 | Persistência e Biblioteca Local | ⏳ Planejada |
+| 9 | Biblioteca End-to-End | ⏳ Planejada |
+| 10 | Home | ⏳ Planejada |
+| 11 | Configurações e Preferências | ⏳ Planejada |
+| 12 | Backend e Autenticação | ⏳ Planejada |
+| 13 | Sincronização e Perfil | ⏳ Planejada |
+| 14 | Cache e Experiência Offline | ⏳ Planejada |
+| 15 | Localização e Tradução | ⏳ Planejada |
+| 16 | Preparação para Lançamento | ⏳ Planejada |
 
 O roadmap é a fonte de planejamento. O código atual e as implementações validadas determinam o estado real do projeto.
+
+A partir da Sprint 5, a evolução será feita por fatias verticais: cada funcionalidade incorpora somente os modelos, repositories, estados, ViewModels, interface e testes necessários para produzir um resultado observável. Abstrações sem consumidor real não devem ser antecipadas.
+
+A biblioteca seguirá uma estratégia local-first. Ela funcionará sem autenticação, persistirá alterações localmente e continuará utilizável quando o backend estiver indisponível. A autenticação futura habilitará sincronização, mantendo IDs locais, IDs externos da AniList e futuros IDs do backend conceitualmente separados.
 
 ---
 
@@ -437,7 +441,7 @@ Entregas consolidadas:
 - resolução compartilhada de Deep Links em `AppDeepLink`;
 - placeholders compartilhados por meio de `NavigationPlaceholder`.
 
-A classificação `PROTECTED` prepara a futura autenticação, mas não aplica validação de sessão ou regras de negócio. Essa responsabilidade permanece planejada para a Sprint 10.
+A classificação `PROTECTED` prepara a futura autenticação, mas não aplica validação de sessão ou regras de negócio. Essa responsabilidade permanece planejada para a Sprint 12.
 
 Os Deep Links compartilhados atualmente reconhecem Home, Pesquisa, Biblioteca, Perfil e Configurações. `AnimeDetails` permanece sem Deep Link até que exista um identificador definitivo de anime. Não foi adicionada integração específica por plataforma nesta sprint.
 
@@ -540,7 +544,7 @@ A integração diferencia falhas de transporte e HTTP dos erros retornados no en
 
 Testes com `MockEngine` cobrem pesquisa, detalhes, queries, variables, nulabilidade, validação de entrada, respostas incompletas e erros GraphQL. Smoke tests Desktop comprovaram chamadas reais de pesquisa e detalhes na AniList. Também foram aprovados commonMain, Desktop, Android e metadata iOS; a compilação nativa iOS continua dependente de macOS e Xcode.
 
-Por dependerem do backend próprio, ainda ausente nesta etapa, `AuthApi` e `TranslationApi` deixam oficialmente o escopo da Sprint 4 e passam para as Sprints 10 e 15, respectivamente. Nenhum fluxo de autenticação, tradução, repository, modelo de domínio ou integração com UI foi antecipado.
+Por dependerem do backend próprio, ainda ausente nesta etapa, `AuthApi` e `TranslationApi` deixam oficialmente o escopo da Sprint 4. Na revisão atual do roadmap, passam para as Sprints 12 e 15, respectivamente. Nenhum fluxo de autenticação, tradução, repository, modelo de domínio ou integração com UI foi antecipado.
 
 ---
 
@@ -690,7 +694,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 2 — Design System: ✅ Concluída
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
-- Sprints 5–16: ⏳ Planejadas, com `AuthApi` na Sprint 10 e `TranslationApi` na Sprint 15
+- Sprints 5–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
 
@@ -715,7 +719,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Iniciar a Sprint 5 com a modelagem do domínio, mantendo DTOs da AniList restritos à camada remota e sem antecipar repositories ou UI.**
+> **Iniciar a Sprint 5 com o domínio do catálogo e o `AnimeRepository`, limitados aos casos de uso reais de pesquisa e detalhes e mantendo DTOs da AniList restritos à camada de dados.**
 
 ## Filosofia
 

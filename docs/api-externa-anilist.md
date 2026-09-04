@@ -22,8 +22,8 @@
 
 O MykytaDu necessita de uma fonte externa de catálogo para sustentar inicialmente:
 
-- Sprint 8 — pesquisa paginada de animes;
-- Sprint 9 — exibição dos detalhes de um anime.
+- Sprint 6 — pesquisa paginada de animes end-to-end;
+- Sprint 7 — exibição dos detalhes de um anime end-to-end.
 
 A biblioteca pessoal, a autenticação do MykytaDu e a tradução de conteúdo permanecem responsabilidades próprias do projeto. A AniList será utilizada como provedora de metadados de catálogo, não como persistência primária dos dados do usuário.
 
@@ -33,7 +33,7 @@ A **AniList GraphQL API v2** foi escolhida como fonte principal de catálogo.
 
 A decisão foi baseada em:
 
-- cobertura dos campos previstos nas Sprints 8 e 9;
+- cobertura dos campos previstos nas Sprints 6 e 7;
 - possibilidade de solicitar apenas os campos necessários;
 - obtenção de dados relacionados em uma única operação;
 - suporte nativo a paginação;
@@ -85,7 +85,7 @@ Motivos para não ser escolhida neste momento:
 - introdução prematura de credenciais;
 - maior acoplamento com contas MyAnimeList;
 - conflito com o planejamento de uma biblioteca e autenticação próprias;
-- nenhuma vantagem necessária para as Sprints 8 e 9.
+- nenhuma vantagem necessária para as Sprints 6 e 7.
 
 Ela poderá ser reavaliada futuramente como integração opcional de importação ou sincronização.
 
@@ -254,7 +254,7 @@ Outros campos também deverão respeitar a nulabilidade declarada pelo schema da
 
 ### 7.1 Objetivo
 
-Obter pelo identificador AniList os dados necessários para a tela de detalhes prevista na Sprint 9.
+Obter pelo identificador AniList os dados necessários para a tela de detalhes prevista na Sprint 7.
 
 ### 7.2 Query validada
 
@@ -471,7 +471,7 @@ Essas situações não devem ser tratadas automaticamente como erro de comunica�
 
 Datas da AniList também podem ser parciais. `year`, `month` e `day` deverão permanecer opcionais no DTO remoto.
 
-## 8. Correspondência com a Sprint 9
+## 8. Correspondência com a Sprint 7
 
 | Requisito | Campo AniList | Observação |
 |---|---|---|
@@ -563,7 +563,7 @@ A paginação seguirá `PageInfo`:
 - uma nova pesquisa reinicia a página para `1`;
 - não será inferida próxima página apenas pelo tamanho da lista.
 
-Debounce, cancelamento de pesquisa anterior e estados da interface pertencem às Sprints 7 e 8.
+Debounce, cancelamento de pesquisa anterior e estados da interface pertencem à Sprint 6.
 
 ## 13. Autenticação
 
@@ -645,7 +645,7 @@ O `AnimeApi` deverá encapsular GraphQL. Repositories, domínio e UI não dever�
 - [x] Operação de pesquisa definida e testada.
 - [x] Operação de detalhes definida e testada.
 - [x] Paginação definida.
-- [x] Campos das Sprints 8 e 9 localizados.
+- [x] Campos das atuais Sprints 6 e 7 localizados.
 - [x] Nulabilidade observada registrada.
 - [x] Particularidades de erros GraphQL identificadas.
 - [x] Restrições de uso e cache reconhecidas.
@@ -675,4 +675,4 @@ Com a escolha consolidada, a próxima task deverá configurar a comunicação op
 - tratamento de erros HTTP e GraphQL;
 - testes determinísticos com engine mockado.
 
-Não implementar as funcionalidades completas das Sprints 8 e 9 durante a configuração da camada de comunicação.
+Não implementar as funcionalidades completas das atuais Sprints 6 e 7 durante a configuração da camada de comunicação.

@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, a fundação multiplataforma, o Design System e a infraestrutura de navegação estão concluídos. A aplicação apresenta placeholders conectados pelo Navigation 3; busca, autenticação, biblioteca e as demais funcionalidades de produto ainda fazem parte das próximas sprints.
+Atualmente, as quatro primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação e camada de comunicação com a AniList. A aplicação apresenta placeholders conectados pelo Navigation 3; busca, autenticação, biblioteca e as demais funcionalidades de produto ainda fazem parte das próximas sprints.
 
 ## Plataformas
 
@@ -19,7 +19,7 @@ Atualmente, a fundação multiplataforma, o Design System e a infraestrutura de 
 | Sprint 1 — Fundação | Concluída |
 | Sprint 2 — Design System | Concluída |
 | Sprint 3 — Navegação | Concluída |
-| Sprint 4 — Comunicação | Próxima etapa |
+| Sprint 4 — Comunicação | Concluída |
 | Sprints 5 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -35,7 +35,9 @@ Já estão disponíveis:
 - fluxo de entrada, navegação principal e rotas secundárias;
 - back stack compartilhado entre as plataformas;
 - classificação declarativa de rotas públicas e protegidas;
-- estrutura compartilhada para resolução de Deep Links.
+- estrutura compartilhada para resolução de Deep Links;
+- comunicação HTTP robusta e padronizada;
+- pesquisa paginada e consulta de detalhes por meio do `AnimeApi` da AniList.
 
 ## Stack
 
@@ -133,18 +135,18 @@ O desenvolvimento está organizado em 16 sprints:
 2. Design System;
 3. Navegação;
 4. Comunicação;
-5. Modelagem;
-6. Camada de dados;
-7. Gerenciamento de estado;
-8. Busca de animes;
-9. Detalhes do anime;
-10. Autenticação;
-11. Biblioteca;
-12. Perfil;
-13. Configurações;
-14. Cache;
-15. Traduções;
-16. Polimento.
+5. Domínio do catálogo;
+6. Busca de animes end-to-end;
+7. Detalhes do anime end-to-end;
+8. Persistência e biblioteca local;
+9. Biblioteca end-to-end;
+10. Home;
+11. Configurações e preferências;
+12. Backend e autenticação;
+13. Sincronização e perfil;
+14. Cache e experiência offline;
+15. Localização e tradução;
+16. Preparação para lançamento.
 
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
@@ -167,6 +169,8 @@ Quando houver divergências, o código atual representa a fonte de verdade, segu
 - usar estados de tela padronizados;
 - favorecer código desacoplado, testável e sem duplicação;
 - evoluir incrementalmente, sem antecipar funcionalidades futuras.
+- entregar fatias verticais e modelar somente a partir de casos de uso concretos;
+- manter a biblioteca local-first, independente de autenticação e backend para seu funcionamento principal.
 
 ---
 

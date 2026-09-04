@@ -10,6 +10,8 @@ Cada sprint deve entregar uma funcionalidade completa ou uma evolução da infra
 
 # Sprint 1 — Fundação do Projeto
 
+**Status:** Concluída
+
 ## Objetivo
 
 Preparar toda a infraestrutura necessária para o desenvolvimento do aplicativo.
@@ -112,6 +114,8 @@ Definir toda a navegação do aplicativo.
 
 # Sprint 4 — Camada de Comunicação
 
+**Status:** Concluída
+
 ## Objetivo
 
 Preparar toda a comunicação com o backend e APIs externas.
@@ -130,7 +134,7 @@ Preparar toda a comunicação com o backend e APIs externas.
 
 - [x] AnimeApi
 
-`AuthApi` e `TranslationApi` foram retiradas desta sprint porque dependem do backend ainda indisponível nesta etapa. Suas entregas passam oficialmente para as Sprints 10 e 15, respectivamente.
+`AuthApi` e `TranslationApi` foram retiradas desta sprint porque dependem do backend ainda indisponível nesta etapa. Na revisão atual do roadmap, suas entregas estão planejadas para as Sprints 12 e 15, respectivamente.
 
 ### Critérios de aceite
 
@@ -139,262 +143,545 @@ Preparar toda a comunicação com o backend e APIs externas.
 
 ---
 
-# Sprint 5 — Modelagem
+# Princípios para as Próximas Sprints
 
-## Objetivo
+## Fatias verticais
 
-Criar os modelos utilizados pelo frontend.
+A partir da Sprint 5, cada funcionalidade deve incluir somente as camadas necessárias para produzir um resultado observável:
 
-### Modelos
+```text
+API ou fonte de dados
+    ↓
+Repository
+    ↓
+ViewModel e estado
+    ↓
+Interface
+    ↓
+Testes e validação
+```
 
-- [ ] Anime
-- [ ] Genre
-- [ ] Character
-- [ ] Studio
-- [ ] Season
-- [ ] Episode
-- [ ] User
-- [ ] LibraryEntry
-- [ ] Review
+Repositories, ViewModels e modelos não devem ser planejados antecipadamente para funcionalidades futuras. O padrão compartilhado de estado será definido na primeira funcionalidade e reutilizado incrementalmente.
 
-### Critérios de aceite
+## Modelagem sob demanda
 
-- [ ] Todos os modelos serializáveis.
-- [ ] Objetos imutáveis sempre que possível.
+Os modelos devem surgir quando houver um caso de uso concreto. DTOs da AniList permanecem na camada de dados e não são modelos de domínio.
 
----
+## Repositories por funcionalidade
 
-# Sprint 6 — Camada de Dados
+- `AnimeRepository` surge com o catálogo.
+- `LibraryRepository` surge com a biblioteca.
+- `AuthRepository` surge com a autenticação.
 
-## Objetivo
+## Biblioteca local-first
 
-Criar a abstração de acesso aos dados.
+A biblioteca deve funcionar localmente antes da existência do backend:
 
-### Entregas
-
-Repositories
-
-- [ ] AnimeRepository
-- [ ] AuthRepository
-- [ ] LibraryRepository
-
-Data Sources
-
-- [ ] Remote
-- [ ] Local
-
-### Critérios de aceite
-
-- [ ] UI não conhece a API diretamente.
-- [ ] Toda comunicação passa pelos repositories.
+- funciona sem autenticação;
+- persiste alterações localmente;
+- autenticação futura habilita sincronização;
+- indisponibilidade do backend não bloqueia a funcionalidade principal;
+- IDs locais, IDs externos da AniList e futuros IDs do backend permanecem conceitualmente separados.
 
 ---
 
-# Sprint 7 — Gerenciamento de Estado
+# Sprint 5 — Domínio do Catálogo
+
+**Status:** Planejada
 
 ## Objetivo
 
-Padronizar o fluxo de estados da aplicação.
+Criar somente os modelos, conversões e abstrações necessários para pesquisa e detalhes de animes, estabelecendo a separação entre a AniList e o domínio do MykytaDu.
 
-### Estados
+### Escopo
 
-- [ ] Loading
-- [ ] Success
-- [ ] Empty
-- [ ] Error
-
-### ViewModels
-
-- [ ] Preparar os ViewModels para todas as telas.
-
-### Critérios de aceite
-
-- [ ] Todas as telas seguem o mesmo padrão de estados.
-- [ ] Nenhuma tela realiza chamadas HTTP diretamente.
-
----
-
-# Sprint 8 — Busca de Animes
-
-## Objetivo
-
-Implementar a primeira funcionalidade completa.
-
-### Funcionalidades
-
-- [ ] Campo de pesquisa
-- [ ] Busca na API
-- [ ] Lista de resultados
+- [ ] Modelos de resultado de pesquisa
+- [ ] Modelo de detalhes
+- [ ] Títulos alternativos
+- [ ] Capas, banners e imagens
+- [ ] Gêneros
+- [ ] Estúdios
+- [ ] Datas parciais
+- [ ] Trailer
+- [ ] Relações entre obras
 - [ ] Paginação
-- [ ] Tratamento de erros
-- [ ] Estado vazio
+- [ ] Enums do domínio
+- [ ] Mapeadores de DTOs AniList para domínio
+- [ ] Contrato e implementação inicial de `AnimeRepository`
+
+A inclusão de modelos auxiliares deve ser guiada pelos casos de uso existentes, não pela antiga lista de entidades.
+
+### Fora do escopo
+
+- `Character`
+- `User`
+- `LibraryEntry`
+- `Review`
+- Autenticação
+- Persistência local
+- ViewModels
+- Telas
+- Cache de catálogo
+- Regras completas de episódios ou temporadas sem consumidor atual
 
 ### Critérios de aceite
 
-O usuário consegue:
-
-- [ ] Pesquisar um anime.
-- [ ] Visualizar os resultados.
-- [ ] Abrir os detalhes.
+- [ ] DTOs da AniList permanecem restritos à camada de dados.
+- [ ] O repository devolve modelos de domínio.
+- [ ] Pesquisa e detalhes podem ser representados sem perda indevida de dados.
+- [ ] Campos opcionais e coleções vazias são preservados corretamente.
+- [ ] Enums externos são convertidos explicitamente.
+- [ ] Valores externos desconhecidos possuem tratamento seguro.
+- [ ] Modelos são imutáveis sempre que possível.
+- [ ] Mapeadores possuem testes.
+- [ ] Serialização é aplicada somente onde existir necessidade técnica concreta.
+- [ ] Nenhum modelo sem caso de uso atual é criado apenas para completar o roadmap.
 
 ---
 
-# Sprint 9 — Tela de Detalhes
+# Sprint 6 — Busca de Animes End-to-End
+
+**Status:** Planejada
 
 ## Objetivo
 
-Exibir todas as informações de um anime.
+Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na AniList e navegar para o item selecionado.
 
-### Informações
+### Escopo
 
+- [ ] Padrão compartilhado de estado assíncrono
+- [ ] `SearchViewModel`
+- [ ] Campo de pesquisa
+- [ ] Normalização da consulta
+- [ ] Debounce
+- [ ] Cancelamento ou invalidação da pesquisa anterior
+- [ ] Lista ou grade de resultados
+- [ ] Carregamento de imagens
+- [ ] Cache básico de imagens
+- [ ] Paginação baseada em `PageInfo.hasNextPage`
+- [ ] Loading inicial
+- [ ] Loading incremental
+- [ ] Estado vazio
+- [ ] Erro com nova tentativa
+- [ ] Navegação com o ID AniList real
+
+### Critérios de aceite
+
+- [ ] Consultas vazias não geram requisições.
+- [ ] Uma nova consulta não mistura resultados da anterior.
+- [ ] A paginação não duplica itens.
+- [ ] Falha ao carregar nova página não elimina resultados já exibidos.
+- [ ] Loading inicial e loading incremental são visualmente distintos.
+- [ ] Estados de erro e vazio utilizam o Design System.
+- [ ] O usuário consegue pesquisar e visualizar resultados.
+- [ ] O usuário consegue abrir a rota de detalhes com o ID correto.
+- [ ] Nenhum DTO remoto chega à UI.
+- [ ] O comportamento é validado nos targets disponíveis.
+
+---
+
+# Sprint 7 — Detalhes do Anime End-to-End
+
+**Status:** Planejada
+
+## Objetivo
+
+Transformar a rota de detalhes em uma funcionalidade completa baseada no anime selecionado.
+
+### Escopo
+
+- [ ] ID obrigatório na rota de detalhes
+- [ ] Deep Link de detalhes, caso seja tecnicamente apropriado
+- [ ] `AnimeDetailsViewModel`
+- [ ] Carregamento pelo `AnimeRepository`
 - [ ] Capa
 - [ ] Banner
+- [ ] Títulos
 - [ ] Sinopse
 - [ ] Gêneros
-- [ ] Nota
-- [ ] Episódios
-- [ ] Estúdio
+- [ ] Notas
+- [ ] Quantidade de episódios
+- [ ] Estúdios
 - [ ] Temporada
-- [ ] Trailer (quando disponível)
+- [ ] Trailer quando disponível
+- [ ] Relações e links externos quando houver caso de uso
+- [ ] Loading
+- [ ] Erro e retry
+- [ ] Adaptação visual para campos ausentes
+- [ ] Normalização segura da descrição
 
 ### Critérios de aceite
 
-- [ ] Todos os dados vêm da API.
+- [ ] A tela carrega o anime pelo ID recebido.
+- [ ] Nenhum DTO remoto é exposto à UI.
+- [ ] Campos nulos ou coleções vazias não quebram o layout.
+- [ ] Seções sem conteúdo são omitidas ou adaptadas.
+- [ ] O retorno preserva adequadamente o contexto da pesquisa.
+- [ ] Links externos somente são apresentados quando válidos.
+- [ ] Loading, erro e retry estão implementados.
+- [ ] O layout é validado nos temas claro e escuro.
+- [ ] O comportamento é validado nos targets disponíveis.
 
 ---
 
-# Sprint 10 — Autenticação
+# Sprint 8 — Persistência e Biblioteca Local
+
+**Status:** Planejada
 
 ## Objetivo
 
-Implementar autenticação do usuário.
+Criar a base local-first da biblioteca pessoal sem depender de autenticação ou backend.
 
-### Funcionalidades
+### Escopo
 
-- [ ] AuthApi
-- [ ] Login
-- [ ] Cadastro
-- [ ] Logout
-- [ ] Persistência da sessão
-- [ ] Refresh Token
+- [ ] Seleção fundamentada da solução de persistência multiplataforma
+- [ ] Esquema local
+- [ ] Migração inicial
+- [ ] Modelo `LibraryEntry`
+- [ ] Enum de status
+- [ ] Progresso
+- [ ] Favorito
+- [ ] Nota pessoal
+- [ ] Avaliação, somente se houver regra consolidada
+- [ ] `LibraryRepository`
+- [ ] Fonte de dados local
+- [ ] Testes de persistência e migração
+- [ ] Separação entre modelo persistido e modelo de domínio
+
+### Status previstos
+
+- Planejando
+- Assistindo
+- Pausado
+- Concluído
+- Abandonado
 
 ### Critérios de aceite
 
-- [ ] O usuário permanece autenticado após reiniciar o aplicativo.
+- [ ] A biblioteca funciona sem conexão e sem autenticação.
+- [ ] Dados permanecem após reiniciar o aplicativo.
+- [ ] Progresso negativo não é aceito.
+- [ ] Progresso acima do total conhecido possui tratamento explícito.
+- [ ] IDs locais, AniList e futuros IDs de backend não são confundidos.
+- [ ] O modelo persistido não é automaticamente tratado como modelo de domínio.
+- [ ] Migrações e operações principais possuem testes.
+- [ ] Nenhum contrato fictício de backend é introduzido.
 
 ---
 
-# Sprint 11 — Biblioteca
+# Sprint 9 — Biblioteca End-to-End
+
+**Status:** Planejada
 
 ## Objetivo
 
-Criar a biblioteca pessoal.
+Entregar ao usuário o gerenciamento completo da biblioteca local.
 
-### Funcionalidades
+### Escopo
 
 - [ ] Adicionar anime
 - [ ] Remover anime
 - [ ] Alterar status
 - [ ] Favoritar
 - [ ] Atualizar progresso
-- [ ] Notas pessoais
-
-### Status
-
-- [ ] Planejando
-- [ ] Assistindo
-- [ ] Pausado
-- [ ] Concluído
-- [ ] Abandonado
+- [ ] Registrar notas pessoais
+- [ ] Avaliação, se consolidada na Sprint 8
+- [ ] Filtros por status
+- [ ] Ordenação quando necessária
+- [ ] Estados vazio e erro
+- [ ] Confirmação de ações destrutivas
+- [ ] Navegação para detalhes
 
 ### Critérios de aceite
 
-- [ ] Toda alteração sincroniza com o backend.
+- [ ] O fluxo completo funciona offline.
+- [ ] Alterações aparecem imediatamente na interface.
+- [ ] Dados sobrevivem à reinicialização.
+- [ ] Filtros preservam estado adequadamente.
+- [ ] Remoção exige confirmação.
+- [ ] A biblioteca permite abrir os detalhes do anime.
+- [ ] As regras de progresso possuem testes.
+- [ ] Nenhuma operação depende do backend.
 
 ---
 
-# Sprint 12 — Perfil
+# Sprint 10 — Home
+
+**Status:** Planejada
 
 ## Objetivo
 
-Criar a área do usuário.
+Criar uma Home híbrida, priorizando a continuidade pessoal e complementando-a com descoberta de conteúdo.
 
-### Informações
+### Direção de produto
 
+A Home deve priorizar:
+
+1. Continuar assistindo
+2. Atividade ou atualizações recentes da biblioteca
+3. Descoberta por tendências, temporada atual ou lançamentos
+
+### Escopo
+
+- [ ] Definição dos requisitos da Home
+- [ ] Seções pessoais baseadas na biblioteca local
+- [ ] Consultas AniList adicionais estritamente necessárias
+- [ ] Estados independentes por seção
+- [ ] Navegação para detalhes
+- [ ] Comportamento quando a biblioteca estiver vazia
+- [ ] Tratamento de indisponibilidade parcial
+
+### Critérios de aceite
+
+- [ ] Conteúdo pessoal tem prioridade visual.
+- [ ] A Home continua útil quando a biblioteca está vazia.
+- [ ] Falha em uma seção não derruba toda a tela.
+- [ ] Novas operações AniList são isoladas na camada de dados.
+- [ ] A Home permite abrir detalhes.
+- [ ] Estados vazio, loading e erro são tratados por seção.
+
+---
+
+# Sprint 11 — Configurações e Preferências
+
+**Status:** Planejada
+
+## Objetivo
+
+Permitir personalização local e preparar a aplicação para localização.
+
+### Escopo
+
+- [ ] Tema claro
+- [ ] Tema escuro
+- [ ] Seguir o sistema
+- [ ] Idioma da interface
+- [ ] Preferência de título
+- [ ] Preferência sobre conteúdo adulto
+- [ ] Outras preferências justificadas
+- [ ] Persistência local
+- [ ] Tela Sobre
+- [ ] Recursos de string da aplicação
+
+Logout não pertence a esta sprint porque ainda não existe autenticação.
+
+### Critérios de aceite
+
+- [ ] Preferências permanecem após reiniciar o aplicativo.
+- [ ] Alterações de tema são aplicadas globalmente.
+- [ ] Textos da interface utilizam recursos apropriados.
+- [ ] A preferência de título é aplicada de forma consistente.
+- [ ] Configurações inválidas possuem fallback seguro.
+- [ ] Logout não é exibido sem sessão autenticada.
+
+---
+
+# Sprint 12 — Backend e Autenticação
+
+**Status:** Planejada
+
+## Objetivo
+
+Integrar autenticação somente após existirem contratos reais do backend próprio.
+
+### Pré-condição
+
+Esta sprint não deve começar sem contrato documentado e backend disponível ou mockado de forma oficial.
+
+### Escopo
+
+- [ ] `AuthApi`
+- [ ] `AuthRepository`
+- [ ] Modelo `User`
+- [ ] Cadastro
+- [ ] Login
+- [ ] Logout
+- [ ] Armazenamento seguro de credenciais
+- [ ] Refresh token
+- [ ] Restauração da sessão
+- [ ] Expiração da sessão
+- [ ] Aplicação efetiva de `RouteAccess`
+- [ ] Erros de autenticação
+- [ ] Testes dos fluxos principais
+
+### Critérios de aceite
+
+- [ ] O usuário pode cadastrar-se, entrar e sair.
+- [ ] A sessão é restaurada após reiniciar o aplicativo.
+- [ ] Tokens não são armazenados em preferências comuns.
+- [ ] Dados sensíveis não aparecem em logs.
+- [ ] Refresh e expiração possuem comportamento definido.
+- [ ] Rotas protegidas verificam a sessão real.
+- [ ] Falhas de autenticação não apagam indevidamente dados locais.
+
+---
+
+# Sprint 13 — Sincronização e Perfil
+
+**Status:** Planejada
+
+## Objetivo
+
+Associar a experiência local ao usuário autenticado e sincronizar a biblioteca com o backend.
+
+### Escopo
+
+- [ ] Estratégia de sincronização
+- [ ] Vínculo entre registros locais e remotos
+- [ ] Fila de operações pendentes
+- [ ] Resolução de conflitos
+- [ ] Retry
+- [ ] Estados de sincronização
+- [ ] Comportamento offline
+- [ ] Perfil
 - [ ] Avatar
 - [ ] Nome
 - [ ] Quantidade de animes
 - [ ] Horas assistidas
 - [ ] Favoritos
+- [ ] Outras estatísticas comprovadamente disponíveis
 
 ### Critérios de aceite
 
-- [ ] Dados carregados da API.
+- [ ] Biblioteca local continua utilizável offline.
+- [ ] Alterações pendentes são sincronizadas posteriormente.
+- [ ] Conflitos possuem política explícita.
+- [ ] Falhas de sincronização não causam perda silenciosa.
+- [ ] O usuário consegue identificar o estado da sincronização.
+- [ ] Perfil usa dados reais do backend ou agregações locais documentadas.
+- [ ] Logout preserva ou remove dados locais conforme política explícita.
 
 ---
 
-# Sprint 13 — Configurações
+# Sprint 14 — Cache e Experiência Offline
 
-## Funcionalidades
-
-- [ ] Tema claro/escuro
-- [ ] Idioma
-- [ ] Preferências
-- [ ] Sobre
-- [ ] Logout
-
----
-
-# Sprint 14 — Cache
+**Status:** Planejada
 
 ## Objetivo
 
-Melhorar desempenho.
+Aprimorar desempenho, resiliência e uso offline do catálogo.
 
-### Funcionalidades
+### Escopo
 
 - [ ] Cache de pesquisas
 - [ ] Cache de detalhes
-- [ ] Cache de imagens
-- [ ] Cache offline
+- [ ] Revisão do cache de imagens
+- [ ] Política de expiração
+- [ ] Invalidação
+- [ ] Fallback offline
+- [ ] Diferenciação entre dado atual, cache válido e cache expirado
+- [ ] Limpeza controlada
+- [ ] Limites de armazenamento
+- [ ] Testes de política de cache
+
+### Critérios de aceite
+
+- [ ] Dados armazenados possuem política de validade explícita.
+- [ ] O aplicativo apresenta conteúdo disponível quando estiver offline.
+- [ ] Dados expirados não são tratados silenciosamente como atuais.
+- [ ] Limpeza não remove dados permanentes da biblioteca.
+- [ ] Cache não replica indiscriminadamente a base da AniList.
+- [ ] Falhas de atualização preservam conteúdo útil já disponível.
 
 ---
 
-# Sprint 15 — Traduções
+# Sprint 15 — Localização e Tradução
+
+**Status:** Planejada
 
 ## Objetivo
 
-Integrar o sistema de tradução.
+Localizar a interface e integrar tradução opcional do conteúdo externo.
 
-### Serviço
+### Separação obrigatória
 
-- [ ] TranslationApi
+Distinguir:
 
-### Fluxo
+- Localização dos textos da interface
+- Tradução de sinopses e outros conteúdos vindos da API
 
-- [ ] Solicitar dados do anime.
-- [ ] Verificar tradução existente.
-- [ ] Caso não exista, solicitar tradução ao backend.
-- [ ] Exibir conteúdo traduzido.
+### Escopo
+
+- [ ] Idiomas suportados pela interface
+- [ ] Revisão dos recursos de string
+- [ ] `TranslationApi`
+- [ ] Repository ou serviço apropriado
+- [ ] Cache de traduções
+- [ ] Fallback para conteúdo original
+- [ ] Preferência de idioma
+- [ ] Preferência de título
+- [ ] Estados de carregamento e falha da tradução
+
+### Critérios de aceite
+
+- [ ] A interface pode trocar de idioma sem textos fixos relevantes.
+- [ ] Falha de tradução não impede a exibição do conteúdo original.
+- [ ] Traduções são reutilizadas quando disponíveis.
+- [ ] Conteúdo original permanece preservado.
+- [ ] Tradução não altera os DTOs nem o contrato da AniList.
+- [ ] Idiomas não suportados possuem fallback definido.
 
 ---
 
-# Sprint 16 — Polimento
+# Sprint 16 — Preparação para Lançamento
+
+**Status:** Planejada
 
 ## Objetivo
 
-Preparar a primeira versão pública.
+Preparar a primeira versão pública sem concentrar nesta sprint toda a qualidade que deveria ter sido construída anteriormente.
 
-### Atividades
+### Escopo
 
-- [ ] Melhorias de UX
-- [ ] Melhorias de UI
-- [ ] Acessibilidade
+- [ ] Revisão de UX e UI
+- [ ] Acessibilidade final
 - [ ] Performance
-- [ ] Testes
+- [ ] Testes de regressão
 - [ ] Correção de bugs
-- [ ] Refatorações
+- [ ] Refatorações justificadas
 - [ ] Documentação
+- [ ] Licenças e atribuições
+- [ ] Privacidade
+- [ ] Revisão de logs
+- [ ] Ícones e splash definitivos
+- [ ] Empacotamento por plataforma
+- [ ] Remoção ou isolamento do showcase no fluxo de produção
+- [ ] Checklist de release
+
+### Critérios de aceite
+
+- [ ] Não existem falhas críticas conhecidas.
+- [ ] Fluxos principais possuem testes e validação manual.
+- [ ] Logs de produção não expõem dados sensíveis.
+- [ ] Acessibilidade básica foi revisada.
+- [ ] Performance dos fluxos principais é aceitável.
+- [ ] Ícones, splash, versão e metadados estão corretos.
+- [ ] Licenças e atribuições necessárias estão documentadas.
+- [ ] Documentação representa o estado real do projeto.
+- [ ] Builds de distribuição aplicáveis são gerados com sucesso.
+
+---
+
+# Definition of Done Transversal
+
+Aplicável a todas as próximas sprints:
+
+- [ ] O incremento possui resultado observável.
+- [ ] Regras de negócio não ficam na UI.
+- [ ] Tipos remotos não escapam da camada de dados.
+- [ ] Loading, sucesso, vazio e erro são tratados quando aplicáveis.
+- [ ] Cancelamento de coroutines é preservado.
+- [ ] Regras, conversões e estados relevantes possuem testes.
+- [ ] Desktop e Android são validados.
+- [ ] Metadata iOS é compilada quando aplicável.
+- [ ] Limitações da validação nativa iOS são registradas.
+- [ ] Dados sensíveis não aparecem em logs.
+- [ ] Componentes respeitam o Design System.
+- [ ] Temas claro e escuro são verificados quando houver interface.
+- [ ] Acessibilidade básica é considerada durante a implementação.
+- [ ] A documentação registra apenas entregas comprovadas.
+- [ ] Commits permanecem pequenos e descritivos.
+- [ ] Não são antecipadas abstrações sem consumidor real.
 
 ---
 

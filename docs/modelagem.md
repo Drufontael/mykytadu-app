@@ -173,7 +173,7 @@ Home
 
 Após o acionamento do placeholder de Login, o usuário entra na área principal do aplicativo.
 
-Nesta sprint, o avanço é apenas um gatilho de navegação do placeholder. Não existe autenticação, validação de sessão ou regra de negócio. A infraestrutura apenas classifica as rotas para preparar a Sprint 10.
+Nesta sprint, o avanço é apenas um gatilho de navegação do placeholder. Não existe autenticação, validação de sessão ou regra de negócio. A infraestrutura apenas classifica as rotas para preparar a autenticação, atualmente planejada para a Sprint 12.
 
 ---
 
@@ -269,7 +269,7 @@ PROTECTED
 └── Settings
 ```
 
-Essa classificação é somente declarativa. A validação de sessão será implementada na Sprint 10.
+Essa classificação é somente declarativa. A validação de sessão será implementada na Sprint 12.
 
 ---
 
@@ -289,40 +289,28 @@ Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetai
 
 ---
 
-# 5. Sprint 5 — Modelo de Domínio
+# 5. Sprint 5 — Domínio do Catálogo
 
-> **Status:** A definir durante a Sprint 5.
+> **Status:** Planejada.
 
-O roadmap prevê os seguintes modelos:
+A Sprint 5 modelará somente os conceitos exigidos pelos casos de uso de pesquisa e detalhes. O domínio do MykytaDu será separado dos DTOs da AniList, com conversões explícitas para campos opcionais, coleções vazias e enums externos desconhecidos.
 
-- `Anime`;
-- `Genre`;
-- `Character`;
-- `Studio`;
-- `Season`;
-- `Episode`;
-- `User`;
-- `LibraryEntry`;
-- `Review`.
+O escopo previsto inclui:
 
-Esta seção receberá o **Diagrama de Classes / Modelo de Domínio** quando as relações e responsabilidades forem analisadas.
+- resultados de pesquisa;
+- detalhes de anime;
+- títulos alternativos;
+- imagens;
+- gêneros;
+- estúdios;
+- datas parciais;
+- trailer;
+- relações entre obras;
+- paginação;
+- enums do domínio;
+- `AnimeRepository`.
 
-Estrutura inicial de estudo:
-
-```text
-Anime
- ├── Genre
- ├── Character
- ├── Studio
- └── Season
-       └── Episode
-
-User
- ├── LibraryEntry
- └── Review
-```
-
-> Este esboço não representa ainda uma decisão final de cardinalidade ou composição.
+Não fazem parte desta modelagem inicial `Character`, `User`, `LibraryEntry`, `Review` ou regras detalhadas de temporadas e episódios sem consumidor atual. Esses conceitos deverão surgir somente nas sprints em que forem necessários.
 
 ---
 
@@ -330,31 +318,36 @@ User
 
 ```mermaid
 classDiagram
-    %% A modelagem será adicionada durante a Sprint 5.
+    %% A modelagem será adicionada conforme os casos de uso da Sprint 5 forem consolidados.
 ```
 
 ---
 
 ## 5.2 Questões a validar
 
-Durante a modelagem de domínio deverão ser respondidas questões como:
+Durante a modelagem de domínio deverão ser respondidas somente questões necessárias aos casos de uso atuais, como:
 
-- Qual é a relação entre `Anime` e `Season`?
-- `Episode` pertence diretamente ao `Anime` ou somente a uma `Season`?
-- Como gêneros serão representados?
-- Um anime pode possuir múltiplos estúdios?
-- Quais informações de personagens são necessárias para o frontend?
-- O que pertence ao domínio e o que é apenas DTO de API?
-- Como representar dados opcionais vindos de APIs externas?
-- `Review` é uma entidade independente ou parte da relação entre usuário e anime?
+- quais dados distinguem resultados de pesquisa de detalhes;
+- como representar títulos, imagens, gêneros, estúdios e datas parciais;
+- o que pertence ao domínio e o que é apenas DTO de API;
+- como representar dados opcionais e coleções vazias vindos da AniList;
+- como converter enums externos e preservar valores desconhecidos com segurança.
 
 ---
 
-# 6. Sprint 5 / Sprint 11 — Estado da Biblioteca
+# 6. Sprint 8 — Estado da Biblioteca Local
 
 > **Status:** Planejado.
 
-`LibraryEntry` representa conceitualmente a relação do usuário com um anime dentro de sua biblioteca pessoal.
+`LibraryEntry` será modelado quando a persistência local for implementada. Ele representa conceitualmente a relação local com um anime dentro da biblioteca pessoal e não depende da existência de usuário autenticado ou backend.
+
+A biblioteca seguirá a estratégia local-first:
+
+- funciona sem autenticação;
+- persiste alterações localmente;
+- continua disponível sem conexão ou backend;
+- habilita sincronização somente após autenticação futura;
+- mantém IDs locais, IDs AniList e futuros IDs de backend separados.
 
 Estados previstos:
 
@@ -386,15 +379,15 @@ stateDiagram-v2
     Abandonado --> [*]
 ```
 
-> As transições acima representam uma proposta inicial. Regras como reabrir um anime concluído, retomar um abandonado ou concluir automaticamente pelo número de episódios deverão ser decididas durante a modelagem de domínio.
+> As transições acima representam uma proposta inicial. Regras como reabrir um anime concluído, retomar um abandonado ou concluir automaticamente pelo número de episódios deverão ser decididas durante a Sprint 8 e validadas no fluxo da Sprint 9.
 
 ---
 
-# 7. Sprint 6 e Sprint 7 — Fluxos entre Camadas
+# 7. Fatias Verticais e Fluxos entre Camadas
 
 > **Status:** Planejado.
 
-Quando repositories, data sources e ViewModels estiverem definidos, esta seção documentará os fluxos principais da aplicação.
+Repositories, fontes de dados, ViewModels e estados serão criados por funcionalidade, quando necessários para entregar um resultado observável. Não serão preparados antecipadamente para todas as telas.
 
 Arquitetura conceitual esperada:
 
@@ -431,7 +424,7 @@ sequenceDiagram
     VM-->>UI: atualizar estado
 ```
 
-> Diagrama conceitual. Nomes finais de métodos, estados e classes serão definidos durante as Sprints 6, 7 e 8.
+> Diagrama conceitual da Sprint 6. Nomes finais de métodos e estados serão definidos durante a implementação da busca.
 
 ---
 
@@ -443,18 +436,18 @@ sequenceDiagram
     participant UI as AnimeDetails
     participant VM as LibraryViewModel
     participant Repo as LibraryRepository
-    participant Remote as RemoteDataSource
+    participant Local as LocalDataSource
 
     User->>UI: adiciona ou atualiza anime
     UI->>VM: solicita alteração
     VM->>Repo: atualizar LibraryEntry
-    Repo->>Remote: sincronizar alteração
-    Remote-->>Repo: resultado
+    Repo->>Local: persistir alteração
+    Local-->>Repo: registro persistido
     Repo-->>VM: LibraryEntry atualizada
     VM-->>UI: atualizar estado
 ```
 
-> Diagrama conceitual. A estratégia definitiva de sincronização será definida quando a camada de dados estiver implementada.
+> Diagrama conceitual das Sprints 8 e 9. A operação principal é local e independe do backend. A sincronização será modelada separadamente na Sprint 13, quando existirem autenticação e contratos reais.
 
 ---
 
@@ -523,17 +516,18 @@ erDiagram
 |---|---|
 | 3 — Navegação | Diagrama de Navegação |
 | 4 — Comunicação | Fluxos HTTP, se necessário |
-| 5 — Modelagem | Diagrama de Classes / Domínio |
-| 5 / 11 — Biblioteca | Diagrama de Estados |
-| 6 — Dados | Sequência entre Repository e Data Sources |
-| 7 — Estado | Sequência UI → ViewModel → Repository |
-| 8 — Busca | Fluxo completo da pesquisa |
-| 9 — Detalhes | Fluxos de carregamento dos detalhes |
-| 10 — Autenticação | Fluxo e estados da sessão |
-| 11 — Biblioteca | Fluxos de alteração e sincronização |
-| 14 — Cache | Estratégia Remote / Local / Cache |
-| 15 — Traduções | Fluxo de tradução |
-| 16 — Polimento | Revisão geral da documentação |
+| 5 — Domínio do Catálogo | Modelos e conversões necessários a pesquisa e detalhes |
+| 6 — Busca End-to-End | Sequência UI → ViewModel → AnimeRepository → AnimeApi |
+| 7 — Detalhes End-to-End | Fluxo de carregamento pelo ID AniList |
+| 8 — Persistência e Biblioteca Local | Estado de `LibraryEntry` e estrutura persistida |
+| 9 — Biblioteca End-to-End | Fluxos locais de alteração da biblioteca |
+| 10 — Home | Composição e independência dos estados por seção |
+| 11 — Configurações | Preferências locais e localização da interface |
+| 12 — Backend e Autenticação | Fluxo e estados da sessão, após contrato real |
+| 13 — Sincronização e Perfil | Sincronização, conflitos e vínculo local/remoto |
+| 14 — Cache e Offline | Estratégia Remote / Cache e políticas de validade |
+| 15 — Localização e Tradução | Separação entre interface e conteúdo externo |
+| 16 — Preparação para Lançamento | Revisão geral da documentação |
 
 Essa lista é orientativa e pode mudar de acordo com a evolução real do projeto.
 
@@ -579,15 +573,15 @@ Este documento deve ser mantido em conjunto com:
 
 ## Planejado
 
-- Modelo de domínio;
-- Cardinalidades entre entidades;
+- Domínio do catálogo guiado por pesquisa e detalhes;
 - Estados de `LibraryEntry`;
-- Fluxos entre UI, ViewModel, Repository e Data Sources;
+- Persistência e biblioteca local-first;
+- Fluxos verticais entre UI, ViewModel, Repository e fontes de dados;
 - Arquitetura refinada;
-- Persistência;
 - autenticação e validação real de sessão;
+- sincronização posterior com o backend;
 - integração de Deep Links por plataforma, quando necessária;
-- Fluxos de cache e tradução.
+- fluxos de Home, cache, localização e tradução.
 
 ---
 
