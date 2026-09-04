@@ -449,9 +449,9 @@ O build completo do módulo e os testes Desktop foram executados com sucesso no 
 
 ## Status
 
-🚧 **EM ANDAMENTO**
+✅ **CONCLUÍDA**
 
-A Sprint 4 tem como objetivo preparar a comunicação com o backend e APIs externas. A infraestrutura HTTP básica já existente foi auditada antes do avanço das próximas tasks.
+A Sprint 4 preparou a comunicação compartilhada e a integração inicial com a AniList. Os serviços dependentes do backend próprio foram realocados para as sprints em que poderão ser implementados com seus contratos reais.
 
 ## 16.1 S4.1 — Auditoria da infraestrutura HTTP
 
@@ -528,7 +528,19 @@ O tratamento global permanece restrito a transporte, protocolo HTTP e serializa�
 
 Testes com `MockEngine` validam sucesso, erro HTTP, timeout, falha de conexão, serialização, falha desconhecida, ausência de `Authorization` e sanitização do logging. Foram validados commonMain, Desktop, Android e metadata iOS; a compilação nativa iOS permanece dependente de macOS e Xcode.
 
-`AnimeApi`, `AuthApi`, `TranslationApi`, primeira chamada funcional, repositories, modelos de domínio e integrações com UI permanecem pendentes.
+Ao encerrar a S4.3, `AnimeApi`, a primeira chamada funcional, repositories, modelos de domínio e integrações com UI permaneciam pendentes. `AuthApi` e `TranslationApi` também aguardavam a definição do backend.
+
+## 16.4 S4.4 — Implementação do AnimeApi
+
+✅ **CONCLUÍDA**
+
+O contrato compartilhado `AnimeApi` e sua implementação `AniListAnimeApi` passaram a oferecer pesquisa paginada e consulta de detalhes por identificador. Queries, variables, envelopes GraphQL e DTOs remotos ficam isolados na camada `data/remote`, enquanto o serviço reutiliza o `HttpClient` singleton resolvido pelo Koin.
+
+A integração diferencia falhas de transporte e HTTP dos erros retornados no envelope GraphQL, rejeita respostas obrigatórias ausentes e valida argumentos antes de enviar uma requisição. Chamadas públicas permanecem sem `Authorization`.
+
+Testes com `MockEngine` cobrem pesquisa, detalhes, queries, variables, nulabilidade, validação de entrada, respostas incompletas e erros GraphQL. Smoke tests Desktop comprovaram chamadas reais de pesquisa e detalhes na AniList. Também foram aprovados commonMain, Desktop, Android e metadata iOS; a compilação nativa iOS continua dependente de macOS e Xcode.
+
+Por dependerem do backend próprio, ainda ausente nesta etapa, `AuthApi` e `TranslationApi` deixam oficialmente o escopo da Sprint 4 e passam para as Sprints 10 e 15, respectivamente. Nenhum fluxo de autenticação, tradução, repository, modelo de domínio ou integração com UI foi antecipado.
 
 ---
 
@@ -677,8 +689,8 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 1 — Fundação: ✅ Concluída
 - Sprint 2 — Design System: ✅ Concluída
 - Sprint 3 — Navegação: ✅ Concluída
-- Sprint 4 — Camada de Comunicação: 🚧 Em andamento — S4.1, S4.2 e S4.3 concluídas
-- Sprints 5–16: ⏳ Planejadas
+- Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
+- Sprints 5–16: ⏳ Planejadas, com `AuthApi` na Sprint 10 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
 
@@ -703,7 +715,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Continuar a Sprint 4 com a implementação do `AnimeApi` e da primeira chamada HTTP funcional, sem antecipar as camadas das sprints seguintes.**
+> **Iniciar a Sprint 5 com a modelagem do domínio, mantendo DTOs da AniList restritos à camada remota e sem antecipar repositories ou UI.**
 
 ## Filosofia
 

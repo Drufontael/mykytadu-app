@@ -14,5 +14,10 @@ sealed interface NetworkFailure {
 
     data class Serialization(override val cause: Throwable) : NetworkFailure
 
+    data class GraphQl(val messages: List<String>, override val cause: Throwable) : NetworkFailure
+
+    data class InvalidRequest(val message: String, override val cause: Throwable) : NetworkFailure
+
+    data class InvalidResponse(val message: String, override val cause: Throwable) : NetworkFailure
     data class Unknown(override val cause: Throwable) : NetworkFailure
 }

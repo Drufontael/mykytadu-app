@@ -18,7 +18,8 @@ import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.onClose
 import org.koin.core.module.dsl.withOptions
 import org.koin.dsl.module
-
+import br.com.mykytadu.data.remote.anilist.AniListAnimeApi
+import br.com.mykytadu.data.remote.api.AnimeApi
 // Platform-specific engine factory provider (actual implementations per platform)
 expect fun provideHttpClientEngine(): HttpClientEngineFactory<*>
 
@@ -29,6 +30,10 @@ val NetworkModule = module {
         }
     } withOptions {
         onClose { client -> client?.close() }
+    }
+
+    single<AnimeApi> {
+        AniListAnimeApi(httpClient = get())
     }
 }
 

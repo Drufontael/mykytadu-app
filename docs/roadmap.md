@@ -128,13 +128,13 @@ Preparar toda a comunicação com o backend e APIs externas.
 
 ### Serviços
 
-- [ ] AnimeApi
-- [ ] AuthApi
-- [ ] TranslationApi
+- [x] AnimeApi
+
+`AuthApi` e `TranslationApi` foram retiradas desta sprint porque dependem do backend ainda indisponível nesta etapa. Suas entregas passam oficialmente para as Sprints 10 e 15, respectivamente.
 
 ### Critérios de aceite
 
-- [ ] Primeira chamada HTTP funcionando.
+- [x] Primeira chamada HTTP funcionando.
 - [x] Erros tratados de forma padronizada.
 
 ---
@@ -271,6 +271,7 @@ Implementar autenticação do usuário.
 
 ### Funcionalidades
 
+- [ ] AuthApi
 - [ ] Login
 - [ ] Cadastro
 - [ ] Logout
@@ -364,6 +365,10 @@ Melhorar desempenho.
 ## Objetivo
 
 Integrar o sistema de tradução.
+
+### Serviço
+
+- [ ] TranslationApi
 
 ### Fluxo
 
