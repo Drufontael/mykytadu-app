@@ -1,0 +1,6 @@
+package br.com.mykytadu.domain.model
+
+enum class AnimeRelationType {
+    ADAPTATION, PREQUEL, SEQUEL, PARENT, SIDE_STORY, CHARACTER, SUMMARY,
+    ALTERNATIVE, SPIN_OFF, OTHER, SOURCE, COMPILATION, CONTAINS, UNKNOWN,
+}

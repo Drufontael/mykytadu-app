@@ -235,7 +235,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 | 2 | Design System | ✅ Concluída |
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
-| 5 | Domínio do Catálogo | 🚧 Em andamento — S5.1 e S5.2 concluídas |
+| 5 | Domínio do Catálogo | 🚧 Em andamento — S5.1, S5.2 e S5.3 concluídas |
 | 6 | Busca de Animes End-to-End | ⏳ Planejada |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
@@ -572,6 +572,18 @@ Os contratos protegem IDs e parâmetros de paginação inválidos, aceitam pági
 
 ---
 
+## 17.3 S5.3 — Modelos do Catálogo
+
+✅ **CONCLUÍDA — aceita pelo usuário**
+
+Foram implementados `AnimeSummary` e `AnimeDetails` como contratos independentes, acompanhados de títulos, imagens, datas parciais, estúdios, trailer, relações e cinco enums de domínio com `UNKNOWN`. Os modelos reutilizam `AniListAnimeId`, preservam `idMal` opcional, títulos alternativos e gêneros abertos, sem dependências de infraestrutura ou serialização.
+
+Campos opcionais e coleções vazias são aceitos; as listas recebidas mantêm snapshots. Datas validam somente os intervalos de mês e dia, e relações preservam dados resumidos sem recursividade. Os 15 novos testes passaram no Desktop e Android, assim como a compilação compartilhada, o assemble Android e a metadata iOS. A compilação nativa iOS permanece dependente de macOS e Xcode.
+
+Mapeadores, repository, regras de apresentação e campos deliberadamente adiados permanecem fora desta entrega.
+
+---
+
 # 18. Diretrizes Gerais do Projeto
 
 - Componentes reutilizáveis antes de componentes específicos;
@@ -718,7 +730,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 2 — Design System: ✅ Concluída
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
-- Sprint 5 — Domínio do Catálogo: 🚧 Em andamento — S5.1 e S5.2 concluídas
+- Sprint 5 — Domínio do Catálogo: 🚧 Em andamento — S5.1, S5.2 e S5.3 concluídas
 - Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -744,7 +756,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a S5.3 com os modelos de catálogo necessários aos casos de uso reais de pesquisa e detalhes, sem antecipar o `AnimeRepository` ou consumidores futuros.**
+> **Prosseguir para a S5.4 com os mapeadores AniList → domínio, utilizando os contratos aceitos na S5.3, sem antecipar o `AnimeRepository` ou consumidores futuros.**
 
 ## Filosofia
 

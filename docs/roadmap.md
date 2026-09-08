@@ -197,22 +197,23 @@ Criar somente os modelos, conversões e abstrações necessários para pesquisa 
 
 - [x] S5.1 — Auditar contratos e estrutura atuais
 - [x] S5.2 — Implementar contratos fundamentais do domínio
+- [x] S5.3 — Modelos do Catálogo
 
-A auditoria confirmou que `AnimeApi`, `AniListAnimeApi`, os DTOs, o tratamento de falhas e o registro no Koin estão implementados, enquanto modelos de catálogo, mapeadores e `AnimeRepository` ainda não existem. A S5.2 estabeleceu o identificador tipado da AniList, resultado e falhas independentes da rede, paginação genérica e a conversão interna de `NetworkFailure`, todos cobertos por testes.
+A auditoria confirmou que `AnimeApi`, `AniListAnimeApi`, os DTOs, o tratamento de falhas e o registro no Koin estão implementados, enquanto modelos de catálogo, mapeadores e `AnimeRepository` ainda não existiam naquela etapa. A S5.2 estabeleceu o identificador tipado da AniList, resultado e falhas independentes da rede, paginação genérica e a conversão interna de `NetworkFailure`, todos cobertos por testes. A S5.3 implementou os modelos independentes de pesquisa e detalhes, seus tipos auxiliares e enums de domínio; mapeadores e `AnimeRepository` permanecem pendentes.
 
 ### Escopo
 
-- [ ] Modelos de resultado de pesquisa
-- [ ] Modelo de detalhes
-- [ ] Títulos alternativos
-- [ ] Capas, banners e imagens
-- [ ] Gêneros
-- [ ] Estúdios
-- [ ] Datas parciais
-- [ ] Trailer
-- [ ] Relações entre obras
-- [ ] Paginação
-- [ ] Enums do domínio
+- [x] Modelos de resultado de pesquisa
+- [x] Modelo de detalhes
+- [x] Títulos alternativos
+- [x] Capas, banners e imagens
+- [x] Gêneros
+- [x] Estúdios
+- [x] Datas parciais
+- [x] Trailer
+- [x] Relações entre obras
+- [x] Paginação
+- [x] Enums do domínio
 - [ ] Mapeadores de DTOs AniList para domínio
 - [ ] Contrato e implementação inicial de `AnimeRepository`
 

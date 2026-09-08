@@ -291,7 +291,7 @@ Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetai
 
 # 5. Sprint 5 — Domínio do Catálogo
 
-> **Status:** Em andamento — S5.1 e S5.2 concluídas.
+> **Status:** Em andamento — S5.1, S5.2 e S5.3 concluídas.
 
 A Sprint 5 modelará somente os conceitos exigidos pelos casos de uso de pesquisa e detalhes. O domínio do MykytaDu será separado dos DTOs da AniList, com conversões explícitas para campos opcionais, coleções vazias e enums externos desconhecidos.
 
@@ -314,7 +314,7 @@ Não fazem parte desta modelagem inicial `Character`, `User`, `LibraryEntry`, `R
 
 ## 5.1 Auditoria dos contratos atuais
 
-A S5.1 confirmou que a camada remota já encapsula GraphQL, DTOs, validações de entrada e falhas de rede, mas ainda não existem modelos de catálogo, mapeadores ou `AnimeRepository`. O único tipo no pacote `domain` é o `AnimeStatus` usado pelo Design System para estados da futura biblioteca; ele não deve ser reutilizado como status editorial do catálogo.
+A S5.1 confirmou que a camada remota já encapsulava GraphQL, DTOs, validações de entrada e falhas de rede, mas naquela etapa ainda não existiam modelos de catálogo, mapeadores ou `AnimeRepository`. O único tipo no pacote `domain` era o `AnimeStatus` usado pelo Design System para estados da futura biblioteca; ele não deve ser reutilizado como status editorial do catálogo.
 
 A direção proposta para as próximas tasks é:
 
@@ -334,34 +334,222 @@ A S5.2 implementou `AniListAnimeId` como identificador positivo e semanticamente
 
 ---
 
-## 5.3 Diagrama de Classes
+## 5.3 Modelos do catálogo
+
+A S5.3 implementou `AnimeSummary` e `AnimeDetails` independentes, sem herança nem composição entre eles. Ambos declaram seus próprios campos e reutilizam `AniListAnimeId`, `idMal: Int?`, `AnimeTitles` e `AnimeImages`.
+
+- `AnimeTitles` preserva romaji, inglês, nativo e um snapshot dos sinônimos, sem selecionar o título exibido.
+- `AnimeImages` mantém capa large, extraLarge, banner e cor opcionais.
+- `PartialDate` aceita componentes independentes e valida apenas mês entre 1–12 e dia entre 1–31, sem conversão para data completa ou restrição de ano.
+- `AnimeDetails` acrescenta descrição original, duração, indicação de conteúdo adulto, datas, gêneros como `List<String>`, estúdios, trailer e relações. Gêneros, estúdios e relações mantêm snapshots das listas recebidas e aceitam vazio.
+- `Studio` contém ID, nome e indicação opcional de estúdio de animação. `Trailer` contém identificador, site e thumbnail opcional; a validação de strings pertence ao mapper.
+- `AnimeRelation` mantém ID AniList, tipo da relação, tipo da mídia, títulos, formato, status e capa medium. Não referencia objetos completos e pode representar obras de mangá, reutilizando o identificador existente.
+- `AnimeFormat`, `AnimeReleaseStatus`, `AnimeSeason`, `MediaType` e `AnimeRelationType` possuem `UNKNOWN`. As propriedades de enum são anuláveis, distinguindo ausência de valor desconhecido.
+
+Os contratos não possuem serialização, dependências de infraestrutura ou regras de apresentação. A seleção futura de título pertence às Sprints 6 e 7: inglês, romaji, nativo, primeiro sinônimo e recurso localizado de título indisponível. Conversões remotas, descarte de trailers incompletos e relações inválidas permanecem para a S5.4.
+
+## 5.4 Diagrama de Classes
+
+Os diagramas representam os contratos implementados em `domain/model`. `?` indica propriedade opcional e `0..*` indica coleção que aceita vazio. As associações mostram referências entre contratos, sem implicar propriedade exclusiva ou ciclo de vida compartilhado.
+
+### Catálogo e modelos auxiliares
+
+`AnimeSummary` e `AnimeDetails` declaram seus campos independentemente. `AnimeRelation` identifica a obra relacionada por ID, sem referenciar um resumo ou detalhes completos.
 
 ```mermaid
 classDiagram
-    class PageInfo{
-        +int currentPage
-        +int? lastPage
-        +bool hasNextPage
-        +int perPage
-        +int? total
+    direction LR
+
+    class AniListAnimeId {
+        <<value class>>
+        +Int value
     }
-    class PagedResult~out T~{
-        +list~T~ items
+
+    class AnimeSummary {
+        +AniListAnimeId id
+        +Int? idMal
+        +AnimeTitles titles
+        +AnimeImages images
+        +AnimeFormat? format
+        +AnimeReleaseStatus? status
+        +Int? episodes
+        +AnimeSeason? season
+        +Int? seasonYear
+        +Int? averageScore
+    }
+
+    class AnimeDetails {
+        +AniListAnimeId id
+        +Int? idMal
+        +AnimeTitles titles
+        +AnimeImages images
+        +String? description
+        +AnimeFormat? format
+        +AnimeReleaseStatus? status
+        +Int? episodes
+        +Int? duration
+        +AnimeSeason? season
+        +Int? seasonYear
+        +Boolean? isAdult
+        +PartialDate? startDate
+        +PartialDate? endDate
+        +List~String~ genres
+        +Int? averageScore
+        +List~Studio~ studios
+        +Trailer? trailer
+        +List~AnimeRelation~ relations
+    }
+
+    class AnimeTitles {
+        +String? romaji
+        +String? english
+        +String? native
+        +List~String~ synonyms
+    }
+
+    class AnimeImages {
+        +String? coverLarge
+        +String? coverExtraLarge
+        +String? banner
+        +String? color
+    }
+
+    class PartialDate {
+        +Int? year
+        +Int? month
+        +Int? day
+    }
+
+    class Studio {
+        +Int id
+        +String name
+        +Boolean? isAnimationStudio
+    }
+
+    class Trailer {
+        +String id
+        +String site
+        +String? thumbnail
+    }
+
+    class AnimeRelation {
+        +AniListAnimeId id
+        +AnimeRelationType? relationType
+        +MediaType? mediaType
+        +AnimeTitles titles
+        +AnimeFormat? format
+        +AnimeReleaseStatus? status
+        +String? coverMedium
+    }
+
+    AnimeSummary --> "1" AniListAnimeId : id
+    AnimeSummary --> "1" AnimeTitles : titles
+    AnimeSummary --> "1" AnimeImages : images
+    AnimeDetails --> "1" AniListAnimeId : id
+    AnimeDetails --> "1" AnimeTitles : titles
+    AnimeDetails --> "1" AnimeImages : images
+    AnimeDetails --> "0..1" PartialDate : startDate
+    AnimeDetails --> "0..1" PartialDate : endDate
+    AnimeDetails --> "0..*" Studio : studios
+    AnimeDetails --> "0..1" Trailer : trailer
+    AnimeDetails --> "0..*" AnimeRelation : relations
+    AnimeRelation --> "1" AniListAnimeId : id
+    AnimeRelation --> "1" AnimeTitles : titles
+```
+
+### Enums do catálogo
+
+`AnimeFormat` e `AnimeReleaseStatus` são utilizados por pesquisa, detalhes e relações; `AnimeSeason`, por pesquisa e detalhes. `MediaType` e `AnimeRelationType` são utilizados pelas relações. Todos possuem `UNKNOWN`, sem conversão de valores remotos nos próprios enums.
+
+```mermaid
+classDiagram
+    class AnimeFormat {
+        <<enumeration>>
+        TV
+        TV_SHORT
+        MOVIE
+        SPECIAL
+        OVA
+        ONA
+        MUSIC
+        MANGA
+        NOVEL
+        ONE_SHOT
+        UNKNOWN
+    }
+
+    class AnimeReleaseStatus {
+        <<enumeration>>
+        FINISHED
+        RELEASING
+        NOT_YET_RELEASED
+        CANCELLED
+        HIATUS
+        UNKNOWN
+    }
+
+    class AnimeSeason {
+        <<enumeration>>
+        WINTER
+        SPRING
+        SUMMER
+        FALL
+        UNKNOWN
+    }
+
+    class MediaType {
+        <<enumeration>>
+        ANIME
+        MANGA
+        UNKNOWN
+    }
+
+    class AnimeRelationType {
+        <<enumeration>>
+        ADAPTATION
+        PREQUEL
+        SEQUEL
+        PARENT
+        SIDE_STORY
+        CHARACTER
+        SUMMARY
+        ALTERNATIVE
+        SPIN_OFF
+        OTHER
+        SOURCE
+        COMPILATION
+        CONTAINS
+        UNKNOWN
+    }
+```
+
+### Paginação
+
+`PagedResult<out T>` é genérico e pode representar páginas de `AnimeSummary`, sem depender desse tipo. A lista de itens mantém um snapshot e `hasNextPage` não é inferido pela quantidade de itens.
+
+```mermaid
+classDiagram
+    class PageInfo {
+        +Int currentPage
+        +Int? lastPage
+        +Boolean hasNextPage
+        +Int perPage
+        +Int? total
+    }
+
+    class PagedResult~T~ {
+        +List~T~ items
         +PageInfo pageInfo
-     }
+    }
+
+    PagedResult --> "1" PageInfo : pageInfo
 ```
 
 ---
 
-## 5.4 Questões a validar
+## 5.5 Questões a validar
 
-Durante a modelagem de domínio deverão ser respondidas somente questões necessárias aos casos de uso atuais, como:
-
-- quais dados distinguem resultados de pesquisa de detalhes;
-- como representar títulos, imagens, gêneros, estúdios e datas parciais;
-- o que pertence ao domínio e o que é apenas DTO de API;
-- como representar dados opcionais e coleções vazias vindos da AniList;
-- como converter enums externos e preservar valores desconhecidos com segurança.
+Com os modelos aceitos, as próximas tasks deverão definir e testar as conversões de campos opcionais, coleções e enums externos, incluindo valores desconhecidos e dados remotos inválidos. Mapeadores e `AnimeRepository` ainda não estão implementados.
 
 ---
 
@@ -593,6 +781,7 @@ Este documento deve ser mantido em conjunto com:
 
 ## Consolidado
 
+- Contratos fundamentais e modelos do catálogo das S5.2 e S5.3, independentes de infraestrutura;
 - Sprint 3 concluída e diagrama atualizado para a implementação real;
 - oito rotas tipadas e serializáveis;
 - fluxo de entrada `Splash → Login → Home` com limpeza do histórico;
@@ -603,7 +792,7 @@ Este documento deve ser mantido em conjunto com:
 
 ## Planejado
 
-- Domínio do catálogo guiado por pesquisa e detalhes;
+- Mapeadores e repository do catálogo guiados por pesquisa e detalhes;
 - Estados de `LibraryEntry`;
 - Persistência e biblioteca local-first;
 - Fluxos verticais entre UI, ViewModel, Repository e fontes de dados;
