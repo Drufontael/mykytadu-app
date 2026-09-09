@@ -235,7 +235,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 | 2 | Design System | ✅ Concluída |
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
-| 5 | Domínio do Catálogo | 🚧 Em andamento — S5.1, S5.2, S5.3 e S5.4 concluídas |
+| 5 | Domínio do Catálogo | ✅ Concluída |
 | 6 | Busca de Animes End-to-End | ⏳ Planejada |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
@@ -590,7 +590,17 @@ Mapeadores, repository, regras de apresentação e campos deliberadamente adiado
 
 A S5.4 implementou os mapeadores internos da camada `data.mapper` para títulos, imagens, datas parciais, estúdios, trailers, enums, pesquisa, paginação, detalhes e relações. As conversões preservam nulabilidade e coleções vazias, distinguem ausência de valores desconhecidos (`null` e `UNKNOWN`) e descartam individualmente dados estruturais inválidos. Relações permanecem resumidas e não recursivas; as subtasks S5.4.3 e S5.4.4 foram aceitas manualmente pelo usuário.
 
-O `AnimeRepository`, DI, consumidores de UI e campos deliberadamente adiados continuam fora desta entrega. O próximo passo da Sprint 5 é a S5.5.
+O `AnimeRepository`, DI, consumidores de UI e campos deliberadamente adiados continuam fora desta entrega específica. O repository foi implementado na S5.5.
+
+---
+
+## 17.5 S5.5 — AnimeRepository
+
+✅ **CONCLUÍDA — aceita pelo usuário**
+
+A S5.5 criou o contrato de domínio `AnimeRepository`, a implementação `AniListAnimeRepository`, a política de validação e falhas e o registro singleton no Koin. A pesquisa normaliza a consulta, valida paginação e retorna resultados paginados; a consulta de detalhes utiliza `AniListAnimeId`. Falhas remotas são convertidas para o resultado de repository, erros de mapeamento tornam-se `InvalidData` e cancelamentos e exceções inesperadas são preservados.
+
+Os testes cobrem sucessos, entradas inválidas, falhas remotas, mapeamento, cancelamento e DI. A metadata compartilhada, os testes Desktop e o build Android foram aprovados. A Sprint 5 está concluída; os consumidores de pesquisa e detalhes serão implementados nas sprints seguintes.
 
 ---
 
@@ -740,7 +750,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 2 — Design System: ✅ Concluída
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
-- Sprint 5 — Domínio do Catálogo: 🚧 Em andamento — S5.1, S5.2, S5.3 e S5.4 concluídas
+- Sprint 5 — Domínio do Catálogo: ✅ Concluída — S5.1 a S5.5 concluídas
 - Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -766,7 +776,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a S5.5 com o contrato e a implementação inicial do `AnimeRepository`, utilizando os mapeadores AniList → domínio aceitos na S5.4.**
+> **Prosseguir para a Sprint 6, integrando a pesquisa de animes ao `AnimeRepository` por meio de estado, ViewModel e UI.**
 
 ## Filosofia
 

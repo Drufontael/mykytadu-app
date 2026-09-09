@@ -291,7 +291,7 @@ Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetai
 
 # 5. Sprint 5 — Domínio do Catálogo
 
-> **Status:** Em andamento — S5.1, S5.2, S5.3 e S5.4 concluídas.
+> **Status:** Concluída — S5.1 a S5.5 concluídas.
 
 A Sprint 5 modelará somente os conceitos exigidos pelos casos de uso de pesquisa e detalhes. O domínio do MykytaDu será separado dos DTOs da AniList, com conversões explícitas para campos opcionais, coleções vazias e enums externos desconhecidos.
 
@@ -553,11 +553,17 @@ A S5.4 implementou mapeadores internos em `data.mapper` para os contratos remoto
 
 Os mapeadores preservam nulabilidade e coleções vazias, mantêm valores desconhecidos como `UNKNOWN` e não expõem DTOs, GraphQL, Ktor ou tipos de rede ao domínio. Relações sem nó ou ID válido são descartadas individualmente, sem criar um grafo recursivo. As subtasks S5.4.3 e S5.4.4 foram aceitas manualmente pelo usuário.
 
-O `AnimeRepository` permanece como próximo passo da Sprint 5.
+O `AnimeRepository` foi implementado na S5.5, permanecendo os consumidores de UI para as sprints seguintes.
 
-## 5.6 Questões a validar
+## 5.6 AnimeRepository
 
-Com os modelos e mapeadores aceitos, a próxima task deverá definir o contrato e a implementação inicial de `AnimeRepository`, mantendo a separação entre domínio e AniList.
+A S5.5 criou `AnimeRepository` no domínio com pesquisa paginada e consulta de detalhes por `AniListAnimeId`. `AniListAnimeRepository` permanece na camada de dados, depende de `AnimeApi` e dos mapeadores aceitos e converte falhas remotas para `RepositoryFailure`.
+
+A pesquisa normaliza a consulta com `trim` e rejeita consulta vazia, página ou tamanho inválidos. Falhas de mapeamento por `IllegalArgumentException` resultam em `InvalidData`; cancelamentos e exceções inesperadas não são interceptados. `RepositoryModule` registra uma instância singleton de `AnimeRepository` e reutiliza `AnimeApi` pelo Koin.
+
+## 5.7 Questões a validar
+
+Com o domínio, mapeadores e repository aceitos, as próximas sprints deverão integrar os consumidores de pesquisa e detalhes por meio de estado, ViewModel e UI.
 
 ---
 
@@ -789,7 +795,7 @@ Este documento deve ser mantido em conjunto com:
 
 ## Consolidado
 
-- Contratos fundamentais, modelos do catálogo e mapeadores das S5.2, S5.3 e S5.4, independentes de infraestrutura;
+- Contratos fundamentais, modelos, mapeadores e repository do catálogo das S5.2 a S5.5, independentes de infraestrutura;
 - Sprint 3 concluída e diagrama atualizado para a implementação real;
 - oito rotas tipadas e serializáveis;
 - fluxo de entrada `Splash → Login → Home` com limpeza do histórico;
@@ -800,7 +806,7 @@ Este documento deve ser mantido em conjunto com:
 
 ## Planejado
 
-- `AnimeRepository` guiado por pesquisa e detalhes;
+- Consumidores de `AnimeRepository` guiados por pesquisa e detalhes;
 - Estados de `LibraryEntry`;
 - Persistência e biblioteca local-first;
 - Fluxos verticais entre UI, ViewModel, Repository e fontes de dados;

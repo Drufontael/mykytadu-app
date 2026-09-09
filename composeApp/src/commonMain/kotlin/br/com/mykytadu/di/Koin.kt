@@ -5,7 +5,8 @@ import org.koin.core.context.startKoin
 fun initializeKoin() {
     startKoin {
         modules(
-            NetworkModule
+            NetworkModule,
+            RepositoryModule,
         )
     }
 }

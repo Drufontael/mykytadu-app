@@ -14,7 +14,7 @@ internal fun AnimeSearchDataDto.toPagedAnimeSummaries(): PagedResult<AnimeSummar
         "Anime search page must be present."
     }.toPagedAnimeSummaries()
 
-private fun AnimeSearchPageDto.toPagedAnimeSummaries(): PagedResult<AnimeSummary> =
+internal fun AnimeSearchPageDto.toPagedAnimeSummaries(): PagedResult<AnimeSummary> =
     PagedResult(
         items = media.map { it.toAnimeSummary() },
         pageInfo = requireNotNull(pageInfo) {

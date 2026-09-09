@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, as quatro primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação e camada de comunicação com a AniList. A aplicação apresenta placeholders conectados pelo Navigation 3; busca, autenticação, biblioteca e as demais funcionalidades de produto ainda fazem parte das próximas sprints.
+Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList e domínio do catálogo. A aplicação apresenta placeholders conectados pelo Navigation 3; busca end-to-end, autenticação, biblioteca e as demais funcionalidades de produto ainda fazem parte das próximas sprints.
 
 ## Plataformas
 
@@ -20,7 +20,7 @@ Atualmente, as quatro primeiras sprints estão concluídas: fundação multiplat
 | Sprint 2 — Design System | Concluída |
 | Sprint 3 — Navegação | Concluída |
 | Sprint 4 — Comunicação | Concluída |
-| Sprint 5 — Domínio do Catálogo | Em andamento — S5.1 e S5.2 concluídas |
+| Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprints 6 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -38,7 +38,8 @@ Já estão disponíveis:
 - classificação declarativa de rotas públicas e protegidas;
 - estrutura compartilhada para resolução de Deep Links;
 - comunicação HTTP robusta e padronizada;
-- pesquisa paginada e consulta de detalhes por meio do `AnimeApi` da AniList.
+- pesquisa paginada e consulta de detalhes por meio do `AnimeApi` da AniList;
+- modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes.
 
 ## Stack
 

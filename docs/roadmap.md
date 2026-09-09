@@ -187,7 +187,7 @@ A biblioteca deve funcionar localmente antes da existência do backend:
 
 # Sprint 5 — Domínio do Catálogo
 
-**Status:** Em andamento
+**Status:** Concluída
 
 ## Objetivo
 
@@ -199,8 +199,9 @@ Criar somente os modelos, conversões e abstrações necessários para pesquisa 
 - [x] S5.2 — Implementar contratos fundamentais do domínio
 - [x] S5.3 — Modelos do Catálogo
 - [x] S5.4 — Mapeadores AniList → domínio
+- [x] S5.5 — AnimeRepository
 
-A auditoria confirmou que `AnimeApi`, `AniListAnimeApi`, os DTOs, o tratamento de falhas e o registro no Koin estão implementados. A S5.2 estabeleceu o identificador tipado da AniList, resultado e falhas independentes da rede, paginação genérica e a conversão interna de `NetworkFailure`. A S5.3 implementou os modelos independentes de pesquisa e detalhes, seus tipos auxiliares e enums de domínio. A S5.4 implementou e testou os mapeadores auxiliares, as conversões explícitas de enums e os mapeamentos de pesquisa, paginação, detalhes e relações; o `AnimeRepository` permanece pendente.
+A auditoria confirmou que `AnimeApi`, `AniListAnimeApi`, os DTOs, o tratamento de falhas e o registro no Koin estão implementados. A S5.2 estabeleceu o identificador tipado da AniList, resultado e falhas independentes da rede, paginação genérica e a conversão interna de `NetworkFailure`. A S5.3 implementou os modelos independentes de pesquisa e detalhes, seus tipos auxiliares e enums de domínio. A S5.4 implementou e testou os mapeadores auxiliares, as conversões explícitas de enums e os mapeamentos de pesquisa, paginação, detalhes e relações. A S5.5 implementou o contrato e a integração do `AnimeRepository`, com política de validação, falhas e registro no Koin.
 
 ### Escopo
 
@@ -216,7 +217,7 @@ A auditoria confirmou que `AnimeApi`, `AniListAnimeApi`, os DTOs, o tratamento d
 - [x] Paginação
 - [x] Enums do domínio
 - [x] Mapeadores de DTOs AniList para domínio
-- [ ] Contrato e implementação inicial de `AnimeRepository`
+- [x] Contrato e implementação inicial de `AnimeRepository`
 
 A inclusão de modelos auxiliares deve ser guiada pelos casos de uso existentes, não pela antiga lista de entidades.
 
@@ -236,15 +237,15 @@ A inclusão de modelos auxiliares deve ser guiada pelos casos de uso existentes,
 ### Critérios de aceite
 
 - [x] DTOs da AniList permanecem restritos à camada de dados.
-- [ ] O repository devolve modelos de domínio.
+- [x] O repository devolve modelos de domínio.
 - [x] Pesquisa e detalhes podem ser representados sem perda indevida de dados.
 - [x] Campos opcionais e coleções vazias são preservados corretamente.
 - [x] Enums externos são convertidos explicitamente.
 - [x] Valores externos desconhecidos possuem tratamento seguro.
-- [ ] Modelos são imutáveis sempre que possível.
+- [x] Modelos são imutáveis sempre que possível.
 - [x] Mapeadores possuem testes.
-- [ ] Serialização é aplicada somente onde existir necessidade técnica concreta.
-- [ ] Nenhum modelo sem caso de uso atual é criado apenas para completar o roadmap.
+- [x] Serialização é aplicada somente onde existir necessidade técnica concreta.
+- [x] Nenhum modelo sem caso de uso atual é criado apenas para completar o roadmap.
 
 ---
 
