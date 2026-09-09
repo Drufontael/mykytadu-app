@@ -26,6 +26,16 @@ kotlin {
 
     jvm("desktop")
 
+    wasmJs {
+        browser()
+        binaries.executable()
+    }
+
+    js {
+        browser()
+        binaries.executable()
+    }
+
     // Apply Kotlin Multiplatform default source set hierarchy so iosMain is created properly
     applyDefaultHierarchyTemplate()
 
@@ -89,6 +99,12 @@ kotlin {
             dependencies {
                 // Ktor iOS engine
                 implementation(libs.ktor.client.darwin)
+            }
+        }
+
+        val webMain by getting {
+            dependencies {
+                implementation(libs.ktor.client.cio)
             }
         }
     }

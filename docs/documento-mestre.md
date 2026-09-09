@@ -227,7 +227,7 @@ As versões efetivamente utilizadas devem sempre ser verificadas no `libs.versio
 
 # 11. Roadmap Geral do Frontend
 
-O roadmap oficial organiza o desenvolvimento em **16 sprints**:
+O roadmap oficial organiza o desenvolvimento em **16 sprints funcionais** e uma sprint técnica adicional, identificada como **W1**, sem renumerar as sprints existentes:
 
 | Sprint | Objetivo | Estado |
 |---|---|---|
@@ -236,6 +236,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
 | 5 | Domínio do Catálogo | ✅ Concluída |
+| W1 | Fundação Web | 🚧 Em andamento — W1.1 e W1.2 concluídas |
 | 6 | Busca de Animes End-to-End | ⏳ Planejada |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
@@ -604,6 +605,22 @@ Os testes cobrem sucessos, entradas inválidas, falhas remotas, mapeamento, canc
 
 ---
 
+## 17.6 Sprint W1 — Fundação Web
+
+🚧 **EM ANDAMENTO — W1.1 e W1.2 concluídas e aceitas pelo usuário**
+
+A Sprint W1 prepara o mesmo módulo `:composeApp` para execução no navegador, com `wasmJs` como target principal e `js` como fallback de compatibilidade. Ela é uma sprint técnica inserida entre as Sprints 5 e 6, sem renumerar as 16 sprints funcionais existentes.
+
+A W1.1 confirmou que `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack podem permanecer compartilhados em `commonMain`; a configuração polimórfica atual é a base adequada para targets não JVM.
+
+A W1.2 implementou `wasmJs` e `js`, com `webMain` e `webTest`, entrypoint que inicializa o Koin antes de renderizar `App()` por `ComposeViewport`, engine Ktor CIO e logging Web desabilitado. `AppNavigation` e Navigation 3 permaneceram compartilhados; SVGs, fontes Poppins, distribuições e testes Web foram validados, e os shells renderizaram a aplicação compartilhada no navegador com navegação interna para frente funcional.
+
+A política de repositórios passou a `PREFER_PROJECT` porque o plugin Kotlin Web adiciona, durante a configuração, o repositório necessário à distribuição Node. Essa decisão é restrita a essa necessidade técnica e poderá ser reavaliada se o tooling ou a configuração Gradle mudarem.
+
+Browser back/forward, URLs e reload continuam pendentes: a seta Voltar permaneceu desabilitada nos shells, comportamento esperado sem integração com o histórico do navegador. CORS/preflight e comunicação real com a AniList, imagens remotas, responsividade e acessibilidade ainda não foram validados. O próximo passo é a W1.3 — Comunicação Web e prova de CORS.
+
+---
+
 # 18. Diretrizes Gerais do Projeto
 
 - Componentes reutilizáveis antes de componentes específicos;
@@ -742,7 +759,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Roadmap
 
-**16 Sprints**
+**16 Sprints funcionais + W1 técnica**
 
 ## Estado atual
 
@@ -751,6 +768,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
 - Sprint 5 — Domínio do Catálogo: ✅ Concluída — S5.1 a S5.5 concluídas
+- Sprint W1 — Fundação Web: 🚧 Em andamento — W1.1 e W1.2 concluídas e aceitas
 - Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -776,7 +794,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a Sprint 6, integrando a pesquisa de animes ao `AnimeRepository` por meio de estado, ViewModel e UI.**
+> **Prosseguir para a W1.3 — Comunicação Web e prova de CORS.**
 
 ## Filosofia
 

@@ -249,6 +249,54 @@ A inclusão de modelos auxiliares deve ser guiada pelos casos de uso existentes,
 
 ---
 
+# Sprint W1 — Fundação Web
+
+**Status:** Em andamento
+
+## Objetivo
+
+Preparar o módulo `:composeApp` para executar no navegador com Compose Multiplatform, usando `wasmJs` como target principal e `js` como fallback de compatibilidade. A W1 é uma sprint técnica adicional entre as Sprints 5 e 6; as 16 sprints funcionais existentes não são renumeradas.
+
+### Progresso
+
+- [x] W1.1 — Auditoria de compatibilidade Web, aceita pelo usuário
+- [x] W1.2 — Targets, infraestrutura mínima e shell Web, aceita pelo usuário
+- [ ] W1.3 — Comunicação Web e CORS
+- [ ] W1.4 — Navegação Web, URL e histórico
+- [ ] W1.5 — Shell responsivo e acessível
+- [ ] W1.6 — Testes, distribuição e documentação
+
+### Escopo das tasks
+
+- W1.1: auditar compatibilidade, fronteiras de plataforma, Navigation 3, rede e baseline dos targets existentes.
+- W1.2: declarar `wasmJs` e `js`, criar shell/entrypoint Web, `webMain`, `webTest` e os `actual` mínimos de engine HTTP e logging; validar `AppNavigation` e `NavDisplay` compartilhados.
+- W1.3: validar engine, plugins Ktor, AniList real, CORS/preflight, cancelamento, timeout, logging, `MockEngine` e uma imagem AniList.
+- W1.4: decidir estratégia de URL e integrar browser history, reload, `pushState`, `replaceState` e `popstate` sem duplicar o back stack.
+- W1.5: preparar responsividade, mouse, hover, teclado, foco, scroll e acessibilidade.
+- W1.6: consolidar testes Web, distribuições Wasm/JS e documentação após aceite.
+
+### Critérios gerais de aceite
+
+- [x] `wasmJs` executa como target Web principal e `js` como fallback.
+- [x] `webMain` e `webTest` compartilham o código Web aplicável.
+- [x] `App`, Navigation 3 e o back stack continuam compartilhados em `commonMain`.
+- [x] Engine HTTP e logging possuem implementações Web.
+- [ ] Comunicação AniList no navegador, CORS e preflight são validados.
+- [ ] URL, reload, back e forward permanecem consistentes com o back stack.
+- [ ] Shell Web atende critérios básicos de responsividade e acessibilidade.
+- [x] Testes e distribuições Web são validados.
+
+### Fora do escopo
+
+- Busca funcional da Sprint 6;
+- persistência local;
+- autenticação;
+- PWA, service worker e cache offline;
+- proxy no backend;
+- CI, deploy e hospedagem definitiva.
+
+---
+
 # Sprint 6 — Busca de Animes End-to-End
 
 **Status:** Planejada

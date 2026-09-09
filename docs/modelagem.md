@@ -565,6 +565,27 @@ A pesquisa normaliza a consulta com `trim` e rejeita consulta vazia, página ou 
 
 Com o domínio, mapeadores e repository aceitos, as próximas sprints deverão integrar os consumidores de pesquisa e detalhes por meio de estado, ViewModel e UI.
 
+## 5.8 Sprint W1 — Fundação Web
+
+> **Status:** W1.1 e W1.2 concluídas e aceitas. A infraestrutura Web mínima está implementada; as integrações de navegador e comunicação permanecem planejadas.
+
+A W1 adicionou suporte Web ao mesmo módulo, sem alterar o compartilhamento de domínio, repositories, UI ou Navigation 3. `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack permanecem em `commonMain`. O entrypoint Web inicializa Koin uma vez antes de `ComposeViewport`; engine HTTP CIO e logging desabilitado são implementações compartilhadas em `webMain`.
+
+```text
+commonMain
+├── Android
+├── Desktop
+├── iOS
+└── webMain
+    ├── jsMain
+    └── wasmJsMain
+
+commonTest
+└── webTest
+```
+
+`wasmJs` é o target principal e `js` o fallback de compatibilidade. `webMain` e `webTest` compartilham o código Web aplicável; não existe motivo comprovado para modularização adicional. Permanecem planejados: browser history, formato das URLs, reload de rotas, comunicação AniList validada no navegador, carregamento remoto de imagens, shell responsivo, PWA e persistência.
+
 ---
 
 # 6. Sprint 8 — Estado da Biblioteca Local
@@ -796,6 +817,7 @@ Este documento deve ser mantido em conjunto com:
 ## Consolidado
 
 - Contratos fundamentais, modelos, mapeadores e repository do catálogo das S5.2 a S5.5, independentes de infraestrutura;
+- Targets `wasmJs` e `js`, `webMain`, `webTest`, entrypoint Web, engine HTTP CIO e logging Web implementados na W1.2; `App` e Navigation 3 permanecem compartilhados;
 - Sprint 3 concluída e diagrama atualizado para a implementação real;
 - oito rotas tipadas e serializáveis;
 - fluxo de entrada `Splash → Login → Home` com limpeza do histórico;
@@ -807,6 +829,7 @@ Este documento deve ser mantido em conjunto com:
 ## Planejado
 
 - Consumidores de `AnimeRepository` guiados por pesquisa e detalhes;
+- Fundação Web: comunicação AniList no navegador, histórico e URLs, reload de rotas, imagens remotas, responsividade, PWA e persistência;
 - Estados de `LibraryEntry`;
 - Persistência e biblioteca local-first;
 - Fluxos verticais entre UI, ViewModel, Repository e fontes de dados;

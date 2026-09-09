@@ -21,6 +21,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 3 — Navegação | Concluída |
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
+| Sprint W1 — Fundação Web | Em andamento — W1.1 e W1.2 concluídas |
 | Sprints 6 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -131,13 +132,14 @@ Entre os elementos implementados estão `AppButton`, `AppTextField`, `AppCard`, 
 
 ## Roadmap resumido
 
-O desenvolvimento está organizado em 16 sprints:
+O desenvolvimento está organizado em 16 sprints funcionais e uma sprint técnica adicional, W1, inserida entre as Sprints 5 e 6:
 
 1. Fundação do projeto;
 2. Design System;
 3. Navegação;
 4. Comunicação;
 5. Domínio do catálogo;
+W1. Fundação Web;
 6. Busca de animes end-to-end;
 7. Detalhes do anime end-to-end;
 8. Persistência e biblioteca local;
