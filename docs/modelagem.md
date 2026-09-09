@@ -291,7 +291,7 @@ Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetai
 
 # 5. Sprint 5 — Domínio do Catálogo
 
-> **Status:** Em andamento — S5.1, S5.2 e S5.3 concluídas.
+> **Status:** Em andamento — S5.1, S5.2, S5.3 e S5.4 concluídas.
 
 A Sprint 5 modelará somente os conceitos exigidos pelos casos de uso de pesquisa e detalhes. O domínio do MykytaDu será separado dos DTOs da AniList, com conversões explícitas para campos opcionais, coleções vazias e enums externos desconhecidos.
 
@@ -346,7 +346,7 @@ A S5.3 implementou `AnimeSummary` e `AnimeDetails` independentes, sem herança n
 - `AnimeRelation` mantém ID AniList, tipo da relação, tipo da mídia, títulos, formato, status e capa medium. Não referencia objetos completos e pode representar obras de mangá, reutilizando o identificador existente.
 - `AnimeFormat`, `AnimeReleaseStatus`, `AnimeSeason`, `MediaType` e `AnimeRelationType` possuem `UNKNOWN`. As propriedades de enum são anuláveis, distinguindo ausência de valor desconhecido.
 
-Os contratos não possuem serialização, dependências de infraestrutura ou regras de apresentação. A seleção futura de título pertence às Sprints 6 e 7: inglês, romaji, nativo, primeiro sinônimo e recurso localizado de título indisponível. Conversões remotas, descarte de trailers incompletos e relações inválidas permanecem para a S5.4.
+Os contratos não possuem serialização, dependências de infraestrutura ou regras de apresentação. A seleção futura de título pertence às Sprints 6 e 7: inglês, romaji, nativo, primeiro sinônimo e recurso localizado de título indisponível. As conversões remotas, o descarte de trailers incompletos e o descarte individual de relações inválidas foram implementados na S5.4.
 
 ## 5.4 Diagrama de Classes
 
@@ -547,9 +547,17 @@ classDiagram
 
 ---
 
-## 5.5 Questões a validar
+## 5.5 Mapeadores AniList → domínio
 
-Com os modelos aceitos, as próximas tasks deverão definir e testar as conversões de campos opcionais, coleções e enums externos, incluindo valores desconhecidos e dados remotos inválidos. Mapeadores e `AnimeRepository` ainda não estão implementados.
+A S5.4 implementou mapeadores internos em `data.mapper` para os contratos remotos reais. A S5.4.1 cobre títulos, imagens, datas parciais, estúdios e trailers; a S5.4.2 converte explicitamente os cinco enums de domínio; a S5.4.3 mapeia pesquisa e paginação; e a S5.4.4 mapeia detalhes e relações resumidas.
+
+Os mapeadores preservam nulabilidade e coleções vazias, mantêm valores desconhecidos como `UNKNOWN` e não expõem DTOs, GraphQL, Ktor ou tipos de rede ao domínio. Relações sem nó ou ID válido são descartadas individualmente, sem criar um grafo recursivo. As subtasks S5.4.3 e S5.4.4 foram aceitas manualmente pelo usuário.
+
+O `AnimeRepository` permanece como próximo passo da Sprint 5.
+
+## 5.6 Questões a validar
+
+Com os modelos e mapeadores aceitos, a próxima task deverá definir o contrato e a implementação inicial de `AnimeRepository`, mantendo a separação entre domínio e AniList.
 
 ---
 
@@ -781,7 +789,7 @@ Este documento deve ser mantido em conjunto com:
 
 ## Consolidado
 
-- Contratos fundamentais e modelos do catálogo das S5.2 e S5.3, independentes de infraestrutura;
+- Contratos fundamentais, modelos do catálogo e mapeadores das S5.2, S5.3 e S5.4, independentes de infraestrutura;
 - Sprint 3 concluída e diagrama atualizado para a implementação real;
 - oito rotas tipadas e serializáveis;
 - fluxo de entrada `Splash → Login → Home` com limpeza do histórico;
@@ -792,7 +800,7 @@ Este documento deve ser mantido em conjunto com:
 
 ## Planejado
 
-- Mapeadores e repository do catálogo guiados por pesquisa e detalhes;
+- `AnimeRepository` guiado por pesquisa e detalhes;
 - Estados de `LibraryEntry`;
 - Persistência e biblioteca local-first;
 - Fluxos verticais entre UI, ViewModel, Repository e fontes de dados;

@@ -235,7 +235,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints**:
 | 2 | Design System | ✅ Concluída |
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
-| 5 | Domínio do Catálogo | 🚧 Em andamento — S5.1, S5.2 e S5.3 concluídas |
+| 5 | Domínio do Catálogo | 🚧 Em andamento — S5.1, S5.2, S5.3 e S5.4 concluídas |
 | 6 | Busca de Animes End-to-End | ⏳ Planejada |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
@@ -584,6 +584,16 @@ Mapeadores, repository, regras de apresentação e campos deliberadamente adiado
 
 ---
 
+## 17.4 S5.4 — Mapeadores AniList → domínio
+
+✅ **CONCLUÍDA — aceita pelo usuário**
+
+A S5.4 implementou os mapeadores internos da camada `data.mapper` para títulos, imagens, datas parciais, estúdios, trailers, enums, pesquisa, paginação, detalhes e relações. As conversões preservam nulabilidade e coleções vazias, distinguem ausência de valores desconhecidos (`null` e `UNKNOWN`) e descartam individualmente dados estruturais inválidos. Relações permanecem resumidas e não recursivas; as subtasks S5.4.3 e S5.4.4 foram aceitas manualmente pelo usuário.
+
+O `AnimeRepository`, DI, consumidores de UI e campos deliberadamente adiados continuam fora desta entrega. O próximo passo da Sprint 5 é a S5.5.
+
+---
+
 # 18. Diretrizes Gerais do Projeto
 
 - Componentes reutilizáveis antes de componentes específicos;
@@ -730,7 +740,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 2 — Design System: ✅ Concluída
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
-- Sprint 5 — Domínio do Catálogo: 🚧 Em andamento — S5.1, S5.2 e S5.3 concluídas
+- Sprint 5 — Domínio do Catálogo: 🚧 Em andamento — S5.1, S5.2, S5.3 e S5.4 concluídas
 - Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -756,7 +766,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a S5.4 com os mapeadores AniList → domínio, utilizando os contratos aceitos na S5.3, sem antecipar o `AnimeRepository` ou consumidores futuros.**
+> **Prosseguir para a S5.5 com o contrato e a implementação inicial do `AnimeRepository`, utilizando os mapeadores AniList → domínio aceitos na S5.4.**
 
 ## Filosofia
 
