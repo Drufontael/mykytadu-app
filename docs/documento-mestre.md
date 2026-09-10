@@ -236,7 +236,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints funcionais** e uma 
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
 | 5 | Domínio do Catálogo | ✅ Concluída |
-| W1 | Fundação Web | 🚧 Em andamento — W1.1 e W1.2 concluídas |
+| W1 | Fundação Web | 🚧 Em andamento — W1.1 a W1.3 concluídas |
 | 6 | Busca de Animes End-to-End | ⏳ Planejada |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
@@ -607,17 +607,21 @@ Os testes cobrem sucessos, entradas inválidas, falhas remotas, mapeamento, canc
 
 ## 17.6 Sprint W1 — Fundação Web
 
-🚧 **EM ANDAMENTO — W1.1 e W1.2 concluídas e aceitas pelo usuário**
+🚧 **EM ANDAMENTO — W1.1, W1.2 e W1.3 concluídas e aceitas pelo usuário**
 
 A Sprint W1 prepara o mesmo módulo `:composeApp` para execução no navegador, com `wasmJs` como target principal e `js` como fallback de compatibilidade. Ela é uma sprint técnica inserida entre as Sprints 5 e 6, sem renumerar as 16 sprints funcionais existentes.
 
 A W1.1 confirmou que `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack podem permanecer compartilhados em `commonMain`; a configuração polimórfica atual é a base adequada para targets não JVM.
 
-A W1.2 implementou `wasmJs` e `js`, com `webMain` e `webTest`, entrypoint que inicializa o Koin antes de renderizar `App()` por `ComposeViewport`, engine Ktor CIO e logging Web desabilitado. `AppNavigation` e Navigation 3 permaneceram compartilhados; SVGs, fontes Poppins, distribuições e testes Web foram validados, e os shells renderizaram a aplicação compartilhada no navegador com navegação interna para frente funcional.
+A W1.2 implementou `wasmJs` e `js`, com `webMain` e `webTest`, entrypoint que inicializa o Koin antes de renderizar `App()` por `ComposeViewport` e logging Web desabilitado. `AppNavigation` e Navigation 3 permaneceram compartilhados; SVGs, fontes Poppins, distribuições e testes Web foram validados, e os shells renderizaram a aplicação compartilhada no navegador com navegação interna para frente funcional.
 
 A política de repositórios passou a `PREFER_PROJECT` porque o plugin Kotlin Web adiciona, durante a configuração, o repositório necessário à distribuição Node. Essa decisão é restrita a essa necessidade técnica e poderá ser reavaliada se o tooling ou a configuração Gradle mudarem.
 
-Browser back/forward, URLs e reload continuam pendentes: a seta Voltar permaneceu desabilitada nos shells, comportamento esperado sem integração com o histórico do navegador. CORS/preflight e comunicação real com a AniList, imagens remotas, responsividade e acessibilidade ainda não foram validados. O próximo passo é a W1.3 — Comunicação Web e prova de CORS.
+A W1.3 validou comunicação real em JS e WasmJS por meio de um diagnóstico técnico isolado em `?network-smoke=true`. Ele resolve `AnimeRepository` pelo Koin, consulta `Naruto` e apresenta somente dados de domínio, preservando cancelamento, proteção contra concorrência e resultados obsoletos. O diagnóstico sanitiza detalhes técnicos e sonda a capa remota; não é funcionalidade de usuário.
+
+CIO compilava para os targets Web, mas falhava no navegador ao tentar usar `node:net` antes do transporte. A engine Web foi substituída explicitamente por `Js` de `ktor-client-js`, baseada em Fetch; CIO permanece restrita ao Desktop. Em ambos os targets, a AniList respondeu ao preflight `OPTIONS` e ao `POST` com `200 OK`, `Access-Control-Allow-Origin: *`, métodos `GET, POST, OPTIONS`, `Content-Type: application/json` e sem `Authorization`. A resposta foi convertida em modelos de domínio e a capa carregou no navegador.
+
+Browser back/forward, URLs e reload continuam pendentes: a seta Voltar permanece sem integração com o histórico do navegador. Responsividade e acessibilidade completas, PWA, offline, persistência e telas funcionais da Sprint 6 também continuam planejados. O próximo passo é a W1.4 — Navegação Web, URL e histórico.
 
 ---
 
@@ -768,7 +772,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
 - Sprint 5 — Domínio do Catálogo: ✅ Concluída — S5.1 a S5.5 concluídas
-- Sprint W1 — Fundação Web: 🚧 Em andamento — W1.1 e W1.2 concluídas e aceitas
+- Sprint W1 — Fundação Web: 🚧 Em andamento — W1.1 a W1.3 concluídas e aceitas
 - Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -794,7 +798,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a W1.3 — Comunicação Web e prova de CORS.**
+> **Prosseguir para a W1.4 — Navegação Web, URL e histórico.**
 
 ## Filosofia
 

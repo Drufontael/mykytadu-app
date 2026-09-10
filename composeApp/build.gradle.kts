@@ -104,7 +104,7 @@ kotlin {
 
         val webMain by getting {
             dependencies {
-                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.client.js)
             }
         }
     }

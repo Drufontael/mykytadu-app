@@ -11,6 +11,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 - Android
 - Desktop (JVM)
 - iOS (dispositivo e simulador)
+- Web (WasmJS e JavaScript)
 
 ## Estado atual
 
@@ -21,7 +22,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 3 — Navegação | Concluída |
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
-| Sprint W1 — Fundação Web | Em andamento — W1.1 e W1.2 concluídas |
+| Sprint W1 — Fundação Web | Em andamento — W1.1 a W1.3 concluídas |
 | Sprints 6 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -41,6 +42,7 @@ Já estão disponíveis:
 - comunicação HTTP robusta e padronizada;
 - pesquisa paginada e consulta de detalhes por meio do `AnimeApi` da AniList;
 - modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes.
+- shell Web com transporte Ktor baseado em Fetch e comunicação direta validada com a AniList.
 
 ## Stack
 
@@ -116,7 +118,10 @@ mykytadu-app/
 │       ├── commonTest/    # Testes compartilhados
 │       ├── androidMain/   # Entrada e engine HTTP do Android
 │       ├── desktopMain/   # Entrada e engine HTTP do Desktop
-│       └── iosMain/       # Engine HTTP do iOS
+│       ├── iosMain/       # Engine HTTP do iOS
+│       ├── webMain/       # Entrada, engine Fetch e diagnóstico técnico Web
+│       ├── jsMain/        # APIs específicas do JavaScript
+│       └── wasmJsMain/    # APIs específicas do WasmJS
 ├── gradle/
 │   └── libs.versions.toml # Catálogo central de dependências
 └── docs/                  # Produto, identidade, modelagem e roadmap

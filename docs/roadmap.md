@@ -261,7 +261,7 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 
 - [x] W1.1 — Auditoria de compatibilidade Web, aceita pelo usuário
 - [x] W1.2 — Targets, infraestrutura mínima e shell Web, aceita pelo usuário
-- [ ] W1.3 — Comunicação Web e CORS
+- [x] W1.3 — Comunicação Web e CORS, aceita pelo usuário
 - [ ] W1.4 — Navegação Web, URL e histórico
 - [ ] W1.5 — Shell responsivo e acessível
 - [ ] W1.6 — Testes, distribuição e documentação
@@ -270,7 +270,7 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 
 - W1.1: auditar compatibilidade, fronteiras de plataforma, Navigation 3, rede e baseline dos targets existentes.
 - W1.2: declarar `wasmJs` e `js`, criar shell/entrypoint Web, `webMain`, `webTest` e os `actual` mínimos de engine HTTP e logging; validar `AppNavigation` e `NavDisplay` compartilhados.
-- W1.3: validar engine, plugins Ktor, AniList real, CORS/preflight, cancelamento, timeout, logging, `MockEngine` e uma imagem AniList.
+- W1.3: validou a engine `Js` baseada em Fetch, comunicação real com a AniList, CORS/preflight, cancelamento, timeout, logging, `MockEngine` e uma imagem AniList nos dois targets Web. O diagnóstico `network-smoke` permanece isolado como ferramenta técnica.
 - W1.4: decidir estratégia de URL e integrar browser history, reload, `pushState`, `replaceState` e `popstate` sem duplicar o back stack.
 - W1.5: preparar responsividade, mouse, hover, teclado, foco, scroll e acessibilidade.
 - W1.6: consolidar testes Web, distribuições Wasm/JS e documentação após aceite.
@@ -281,7 +281,7 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 - [x] `webMain` e `webTest` compartilham o código Web aplicável.
 - [x] `App`, Navigation 3 e o back stack continuam compartilhados em `commonMain`.
 - [x] Engine HTTP e logging possuem implementações Web.
-- [ ] Comunicação AniList no navegador, CORS e preflight são validados.
+- [x] Comunicação AniList no navegador, CORS e preflight são validados em JS e WasmJS.
 - [ ] URL, reload, back e forward permanecem consistentes com o back stack.
 - [ ] Shell Web atende critérios básicos de responsividade e acessibilidade.
 - [x] Testes e distribuições Web são validados.
