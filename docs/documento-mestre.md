@@ -607,7 +607,7 @@ Os testes cobrem sucessos, entradas inválidas, falhas remotas, mapeamento, canc
 
 ## 17.6 Sprint W1 — Fundação Web
 
-🚧 **EM ANDAMENTO — W1.1, W1.2 e W1.3 concluídas e aceitas pelo usuário**
+🚧 **EM ANDAMENTO — W1.1 a W1.4 concluídas e aceitas pelo usuário**
 
 A Sprint W1 prepara o mesmo módulo `:composeApp` para execução no navegador, com `wasmJs` como target principal e `js` como fallback de compatibilidade. Ela é uma sprint técnica inserida entre as Sprints 5 e 6, sem renumerar as 16 sprints funcionais existentes.
 
@@ -621,7 +621,9 @@ A W1.3 validou comunicação real em JS e WasmJS por meio de um diagnóstico té
 
 CIO compilava para os targets Web, mas falhava no navegador ao tentar usar `node:net` antes do transporte. A engine Web foi substituída explicitamente por `Js` de `ktor-client-js`, baseada em Fetch; CIO permanece restrita ao Desktop. Em ambos os targets, a AniList respondeu ao preflight `OPTIONS` e ao `POST` com `200 OK`, `Access-Control-Allow-Origin: *`, métodos `GET, POST, OPTIONS`, `Content-Type: application/json` e sem `Authorization`. A resposta foi convertida em modelos de domínio e a capa carregou no navegador.
 
-Browser back/forward, URLs e reload continuam pendentes: a seta Voltar permanece sem integração com o histórico do navegador. Responsividade e acessibilidade completas, PWA, offline, persistência e telas funcionais da Sprint 6 também continuam planejados. O próximo passo é a W1.4 — Navegação Web, URL e histórico.
+A W1.4 integrou Navigation 3 ao histórico do navegador por fragment routing, sem expor APIs de DOM ao código compartilhado. O codec centralizado mapeia as oito `AppRoute` atuais para fragmentos, canonicaliza URLs vazias, inválidas ou desconhecidas para `#/splash` e preserva `?network-smoke=true`. Entradas que limpam a pilha usam substituição; navegação entre destinos e rotas secundárias cria entradas; restaurações por back/forward não escrevem novo histórico. Reload, deep links e a navegação nos dois targets Web foram validados. `AnimeDetails` continua sem ID na URL porque seu contrato ainda não possui parâmetro.
+
+O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. Responsividade e acessibilidade completas, PWA, offline, persistência e telas funcionais da Sprint 6 continuam planejados. O próximo passo é a W1.5 — Shell responsivo e acessível.
 
 ---
 
@@ -798,7 +800,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a W1.4 — Navegação Web, URL e histórico.**
+> **Prosseguir para a W1.5 — Shell responsivo e acessível.**
 
 ## Filosofia
 

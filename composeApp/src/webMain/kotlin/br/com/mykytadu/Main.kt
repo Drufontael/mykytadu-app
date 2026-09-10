@@ -6,6 +6,10 @@ import br.com.mykytadu.di.initializeKoin
 import br.com.mykytadu.web.diagnostics.WebNetworkDiagnosticScreen
 import br.com.mykytadu.web.diagnostics.webLocationSearch
 import br.com.mykytadu.web.diagnostics.isWebNetworkSmokeEnabled
+import br.com.mykytadu.web.navigation.WebNavigationHistoryController
+import br.com.mykytadu.web.navigation.createWebBrowserHistoryPort
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
@@ -15,7 +19,16 @@ fun main() {
         if (isWebNetworkSmokeEnabled(webLocationSearch())) {
             WebNetworkDiagnosticScreen()
         } else {
-            App()
+            WebApp()
         }
     }
+}
+
+@Composable
+private fun WebApp() {
+    val navigationHistory = remember {
+        WebNavigationHistoryController(createWebBrowserHistoryPort())
+    }
+
+    App(navigationHistory)
 }

@@ -22,7 +22,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 3 — Navegação | Concluída |
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
-| Sprint W1 — Fundação Web | Em andamento — W1.1 a W1.3 concluídas |
+| Sprint W1 — Fundação Web | Em andamento — W1.1 a W1.4 concluídas |
 | Sprints 6 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -43,6 +43,7 @@ Já estão disponíveis:
 - pesquisa paginada e consulta de detalhes por meio do `AnimeApi` da AniList;
 - modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes.
 - shell Web com transporte Ktor baseado em Fetch e comunicação direta validada com a AniList.
+- navegação Web por fragmentos, integrada ao histórico do navegador em JS e WasmJS.
 
 ## Stack
 

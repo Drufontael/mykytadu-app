@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -34,12 +35,33 @@ private val navigationConfig = SavedStateConfiguration {
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(
+    navigationHistoryBridge: NavigationHistoryBridge? = null,
+) {
     val backStack = rememberNavBackStack(
         navigationConfig,
-        AppRoute.Splash
+        *(navigationHistoryBridge?.initialBackStack ?: listOf(AppRoute.Splash)).toTypedArray(),
     )
     val currentRoute = backStack.last() as AppRoute
+
+    fun updateBackStack(
+        mutation: NavigationMutation,
+        update: () -> Unit,
+    ) {
+        update()
+        navigationHistoryBridge?.onAppNavigation(backStack.map { it as AppRoute }, mutation)
+    }
+
+    DisposableEffect(navigationHistoryBridge) {
+        val dispose = navigationHistoryBridge?.bind { restoredBackStack ->
+            backStack.clear()
+            backStack.addAll(restoredBackStack)
+        }
+
+        onDispose {
+            dispose?.invoke()
+        }
+    }
 
     val showMainNavigation = MainDestination.entries.any {
         it.route == currentRoute
@@ -52,8 +74,10 @@ fun AppNavigation() {
                     currentRoute = currentRoute,
                     onNavigate = { route ->
                         if (route != currentRoute) {
-                            backStack.removeLastOrNull()
-                            backStack.add(route)
+                            updateBackStack(NavigationMutation.PUSH) {
+                                backStack.removeLastOrNull()
+                                backStack.add(route)
+                            }
                         }
                     }
                 )
@@ -68,14 +92,22 @@ fun AppNavigation() {
             NavDisplay(
                 backStack = backStack,
                 onBack = {
-                    backStack.removeLastOrNull()
+                    if (navigationHistoryBridge == null) {
+                        backStack.removeLastOrNull()
+                    } else if (!navigationHistoryBridge.requestBrowserBack() && backStack.size > 1) {
+                        updateBackStack(NavigationMutation.REPLACE) {
+                            backStack.removeLastOrNull()
+                        }
+                    }
                 },
                 entryProvider = entryProvider {
                     entry<AppRoute.Splash> {
                         SplashScreen(
                             onNavigateToLogin = {
-                                backStack.clear()
-                                backStack.add(AppRoute.Login)
+                                updateBackStack(NavigationMutation.REPLACE) {
+                                    backStack.clear()
+                                    backStack.add(AppRoute.Login)
+                                }
                             }
                         )
                     }
@@ -83,8 +115,10 @@ fun AppNavigation() {
                     entry<AppRoute.Login> {
                         LoginScreen(
                             onLoginSuccess = {
-                                backStack.clear()
-                                backStack.add(AppRoute.Home)
+                                updateBackStack(NavigationMutation.REPLACE) {
+                                    backStack.clear()
+                                    backStack.add(AppRoute.Home)
+                                }
                             }
                         )
                     }
@@ -96,7 +130,9 @@ fun AppNavigation() {
                     entry<AppRoute.Search> {
                         SearchScreen(
                             onNavigateToAnimeDetails = {
-                                backStack.add(AppRoute.AnimeDetails)
+                                updateBackStack(NavigationMutation.PUSH) {
+                                    backStack.add(AppRoute.AnimeDetails)
+                                }
                             }
                         )
                     }
@@ -108,7 +144,9 @@ fun AppNavigation() {
                     entry<AppRoute.Library> {
                         LibraryScreen(
                             onNavigateToAnimeDetails = {
-                                backStack.add(AppRoute.AnimeDetails)
+                                updateBackStack(NavigationMutation.PUSH) {
+                                    backStack.add(AppRoute.AnimeDetails)
+                                }
                             }
                         )
                     }
@@ -116,7 +154,9 @@ fun AppNavigation() {
                     entry<AppRoute.Profile> {
                         ProfileScreen(
                             onNavigateToSettings = {
-                                backStack.add(AppRoute.Settings)
+                                updateBackStack(NavigationMutation.PUSH) {
+                                    backStack.add(AppRoute.Settings)
+                                }
                             }
                         )
                     }
