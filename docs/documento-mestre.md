@@ -623,7 +623,7 @@ CIO compilava para os targets Web, mas falhava no navegador ao tentar usar `node
 
 A W1.4 integrou Navigation 3 ao histórico do navegador por fragment routing, sem expor APIs de DOM ao código compartilhado. O codec centralizado mapeia as oito `AppRoute` atuais para fragmentos, canonicaliza URLs vazias, inválidas ou desconhecidas para `#/splash` e preserva `?network-smoke=true`. Entradas que limpam a pilha usam substituição; navegação entre destinos e rotas secundárias cria entradas; restaurações por back/forward não escrevem novo histórico. Reload, deep links e a navegação nos dois targets Web foram validados. `AnimeDetails` continua sem ID na URL porque seu contrato ainda não possui parâmetro.
 
-O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. Responsividade e acessibilidade completas, PWA, offline, persistência e telas funcionais da Sprint 6 continuam planejados. O próximo passo é a W1.5 — Shell responsivo e acessível.
+O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. A auditoria W1.5.1 foi concluída e aceita sem alterações de código: confirmou a `NavigationBar` fixa, a ausência de adaptação por largura, contenção centralizada e scroll explícito, além de lacunas de semântica, foco, teclado, hover e cursor. A validação visual e de acessibilidade em runtime ainda depende de navegador controlável. A W1.5 permanece em andamento, com W1.5.2 — Layout responsivo como próximo passo; responsividade e acessibilidade completas, PWA, offline, persistência e telas funcionais da Sprint 6 continuam planejados.
 
 ---
 
@@ -774,7 +774,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
 - Sprint 5 — Domínio do Catálogo: ✅ Concluída — S5.1 a S5.5 concluídas
-- Sprint W1 — Fundação Web: 🚧 Em andamento — W1.1 a W1.3 concluídas e aceitas
+- Sprint W1 — Fundação Web: 🚧 Em andamento — W1.1 a W1.4 concluídas e aceitas; W1.5.1 concluída e aceita
 - Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -800,7 +800,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a W1.5 — Shell responsivo e acessível.**
+> **Prosseguir para a W1.5.2 — Layout responsivo.**
 
 ## Filosofia
 

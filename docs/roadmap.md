@@ -272,7 +272,11 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 - W1.2: declarar `wasmJs` e `js`, criar shell/entrypoint Web, `webMain`, `webTest` e os `actual` mínimos de engine HTTP e logging; validar `AppNavigation` e `NavDisplay` compartilhados.
 - W1.3: validou a engine `Js` baseada em Fetch, comunicação real com a AniList, CORS/preflight, cancelamento, timeout, logging, `MockEngine` e uma imagem AniList nos dois targets Web. O diagnóstico `network-smoke` permanece isolado como ferramenta técnica.
 - W1.4: implementou fragment routing, codec centralizado de `AppRoute`, History API, canonicalização, reload, deep links e restauração por back/forward sem duplicar o back stack; `?network-smoke=true` permanece compatível.
-- W1.5: preparar responsividade, mouse, hover, teclado, foco, scroll e acessibilidade.
+- W1.5: preparar responsividade, mouse, hover, teclado, foco, scroll e acessibilidade. A execução foi decomposta operacionalmente em:
+  - [x] W1.5.1 — Auditoria do shell responsivo e acessível, concluída e aceita; diagnóstico estático das lacunas e planejamento, sem entrega de capacidades visuais ou acessíveis.
+  - [ ] W1.5.2 — Layout responsivo: shell adaptativo por largura, `NavigationBar`/`NavigationRail`, largura máxima, centralização, scroll, altura reduzida e redimensionamento.
+  - [ ] W1.5.3 — Interação e acessibilidade: nomes acessíveis, foco, teclado, placeholders com ações explícitas, distinção entre informação e ação, hover, cursor e semântica de estados e dialogs.
+  - [ ] W1.5.4 — Validação consolidada: JS e WasmJS, matriz de viewports, zoom, temas, teclado, foco, mouse, árvore de acessibilidade e regressões multiplataforma.
 - W1.6: consolidar testes Web, distribuições Wasm/JS e documentação após aceite.
 
 ### Critérios gerais de aceite
