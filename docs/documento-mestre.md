@@ -236,7 +236,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints funcionais** e uma 
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
 | 5 | Domínio do Catálogo | ✅ Concluída |
-| W1 | Fundação Web | 🚧 Em andamento — W1.1 a W1.5 concluídas; W1.6 planejada |
+| W1 | Fundação Web | ✅ Concluída |
 | 6 | Busca de Animes End-to-End | ⏳ Planejada |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
@@ -607,9 +607,9 @@ Os testes cobrem sucessos, entradas inválidas, falhas remotas, mapeamento, canc
 
 ## 17.6 Sprint W1 — Fundação Web
 
-🚧 **EM ANDAMENTO — W1.1 a W1.5 concluídas e aceitas pelo usuário; W1.6 planejada**
+✅ **CONCLUÍDA — W1.1 a W1.6 aceitas pelo usuário**
 
-A Sprint W1 prepara o mesmo módulo `:composeApp` para execução no navegador, com `wasmJs` como target principal e `js` como fallback de compatibilidade. Ela é uma sprint técnica inserida entre as Sprints 5 e 6, sem renumerar as 16 sprints funcionais existentes.
+A Sprint W1 preparou o mesmo módulo `:composeApp` para execução no navegador, com `wasmJs` como target principal e `js` como fallback de compatibilidade. Ela é uma sprint técnica inserida entre as Sprints 5 e 6, sem renumerar as 16 sprints funcionais existentes.
 
 A W1.1 confirmou que `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack podem permanecer compartilhados em `commonMain`; a configuração polimórfica atual é a base adequada para targets não JVM.
 
@@ -625,7 +625,11 @@ A W1.4 integrou Navigation 3 ao histórico do navegador por fragment routing, se
 
 O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. A auditoria W1.5.1 foi concluída e aceita sem alterações de código. A W1.5.2 entregou o shell adaptativo por largura, com `NavigationBar` abaixo de `600.dp`, `NavigationRail` a partir desse limite, conteúdo centralizado até `1200.dp` e scroll vertical no showcase. A W1.5.3 foi concluída e aceita no escopo validado: placeholders usam botões explícitos, a navegação compartilha ícones, labels e seleção, controles acionáveis possuem nomes acessíveis, chips informativos não simulam ações, cursores e semântica de loading/progresso foram ajustados, e o showcase técnico é ativado por `?design-system-showcase=true`, com precedência de `?network-smoke=true`. `App()` agora aplica `AppTheme` e uma `Surface` raiz, alinhando o tema da aplicação ao showcase. O foco utiliza os estados visuais nativos de cada componente e seus shapes, sem o contorno retangular rejeitado. O usuário considerou o foco dos botões no tema escuro ainda sutil, mas aceitou o comportamento para o escopo da W1.5.3. O refinamento visual será reavaliado na Sprint 16 — Preparação para Lançamento.
 
-A W1.5.4 consolidou e validou a integração do shell em JS e WasmJS. A bateria final terminou com sucesso, com 11 tasks executadas e 109 `UP-TO-DATE`; a compilação de metadata iOS não substitui build nativo com Xcode. A validação visual cobriu a fronteira de `599/600` px, tamanhos compacto, reduzido e amplo, zoom de 200%, tema claro, scroll, centralização e preservação de rota e seleção. As evidências já aceitas de navegação, histórico, modos técnicos, comunicação AniList, teclado, foco, dialogs e semântica foram reaproveitadas. Com isso, a W1.5 está concluída e aceita; a W1.6 — Testes, distribuição e documentação — é o próximo passo.
+A W1.5.4 consolidou e validou a integração do shell em JS e WasmJS. A bateria final terminou com sucesso, com 11 tasks executadas e 109 `UP-TO-DATE`; a compilação de metadata iOS não substitui build nativo com Xcode. A validação visual cobriu a fronteira de `599/600` px, tamanhos compacto, reduzido e amplo, zoom de 200%, tema claro, scroll, centralização e preservação de rota e seleção. As evidências já aceitas de navegação, histórico, modos técnicos, comunicação AniList, teclado, foco, dialogs e semântica foram reaproveitadas. Com isso, a W1.5 foi concluída e aceita.
+
+A W1.6 gerou e validou por HTTP estático as distribuições de produção separadas em `composeApp/build/dist/wasmJs/productionExecutable` e `composeApp/build/dist/js/productionExecutable`. Os builds JS e WasmJS terminaram com sucesso em 2m08s e 4m01s, com 6 e 7 tasks executadas, respectivamente. Ambas as distribuições incluem `index.html`, fontes Poppins, dez SVGs compartilhados e recursos Compose. O smoke test nos dois targets comprovou o fluxo principal, fragmentos, histórico, reload, deep links, canonicalização, modos técnicos, comunicação pelo `AnimeRepository` e carregamento da capa. No WasmJS, HTML, JavaScript, Wasm, fonte e SVG responderam com status `200`, e o binário foi servido como `application/wasm`. Na rodada observada, o Console não apresentou avisos ou erros; os avisos de tamanho dos bundles e tooling ocorreram durante o build e não impediram as distribuições.
+
+Como fotografia dos artefatos avaliados, a distribuição JS possuía 23 arquivos e 28,03 MiB, enquanto a WasmJS possuía 19 arquivos e 14,93 MiB. O Wasm da aplicação media 4,39 MiB e o runtime Skiko Wasm, também presente na distribuição JS, 8,24 MiB. Esses valores não representam limites nem tamanhos de download comprimido. O fechamento automatizado do dialog não foi conclusivo nessa rodada; confirmar, cancelar, Escape e retorno do foco permanecem sustentados pela validação manual aceita da W1.5.4. WasmJS permanece o target principal e JS uma alternativa com distribuição própria, sem seleção automática de fallback. A Sprint W1 está concluída; PWA, service worker, offline, deploy e hospedagem definitiva não foram implementados, e não há declaração de conformidade WCAG completa.
 
 ---
 
@@ -776,7 +780,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
 - Sprint 5 — Domínio do Catálogo: ✅ Concluída — S5.1 a S5.5 concluídas
-- Sprint W1 — Fundação Web: 🚧 Em andamento — W1.1 a W1.5 concluídas e aceitas; W1.6 planejada
+- Sprint W1 — Fundação Web: ✅ Concluída — W1.1 a W1.6 aceitas
 - Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -802,7 +806,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a W1.6 — Testes, distribuição e documentação.**
+> **Prosseguir para a Sprint 6 — Busca de Animes End-to-End.**
 
 ## Filosofia
 

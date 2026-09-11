@@ -22,7 +22,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 3 — Navegação | Concluída |
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
-| Sprint W1 — Fundação Web | Em andamento — W1.1 a W1.5 concluídas; W1.6 planejada |
+| Sprint W1 — Fundação Web | Concluída |
 | Sprints 6 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -44,6 +44,7 @@ Já estão disponíveis:
 - modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes.
 - shell Web com transporte Ktor baseado em Fetch e comunicação direta validada com a AniList.
 - navegação Web por fragmentos, integrada ao histórico do navegador em JS e WasmJS.
+- shell Web responsivo e acessível no escopo validado, com distribuições de produção separadas para WasmJS e JavaScript.
 
 ## Stack
 
@@ -94,6 +95,39 @@ Abra o projeto no Android Studio, selecione a configuração `composeApp` e exec
 ### iOS
 
 Os targets `iosArm64` e `iosSimulatorArm64` estão configurados. A compilação e a integração do framework iOS exigem macOS e Xcode.
+
+### Web
+
+WasmJS é o target Web principal e JavaScript é a alternativa de compatibilidade. Os dois são executados e distribuídos separadamente; não existe seleção automática de fallback.
+
+Para executar os servidores de desenvolvimento no Windows:
+
+```powershell
+.\gradlew.bat :composeApp:wasmJsBrowserDevelopmentRun
+.\gradlew.bat :composeApp:jsBrowserDevelopmentRun
+```
+
+Para gerar as distribuições de produção:
+
+```powershell
+.\gradlew.bat :composeApp:wasmJsBrowserDistribution
+.\gradlew.bat :composeApp:jsBrowserDistribution
+```
+
+Os artefatos são gerados, respectivamente, em:
+
+```text
+composeApp/build/dist/wasmJs/productionExecutable
+composeApp/build/dist/js/productionExecutable
+```
+
+Sirva cada diretório por HTTP estático; abrir o `index.html` diretamente pelo sistema de arquivos não representa a execução validada. Por exemplo, em um ambiente com Python:
+
+```powershell
+python -m http.server 8080 --directory composeApp\build\dist\wasmJs\productionExecutable
+```
+
+A navegação atual usa fragmentos (`#/...`) e não depende de rewrite de paths no servidor. Os parâmetros `?network-smoke=true` e `?design-system-showcase=true` ativam modos técnicos incluídos nas distribuições; o diagnóstico de rede tem precedência quando ambos estão ativos.
 
 ## Testes
 
@@ -159,6 +193,8 @@ W1. Fundação Web;
 16. Preparação para lançamento.
 
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
+
+A próxima etapa funcional é a **Sprint 6 — Busca de Animes End-to-End**.
 
 ## Documentação
 

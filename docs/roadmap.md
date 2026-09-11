@@ -251,7 +251,7 @@ A inclusão de modelos auxiliares deve ser guiada pelos casos de uso existentes,
 
 # Sprint W1 — Fundação Web
 
-**Status:** Em andamento
+**Status:** Concluída e aceita
 
 ## Objetivo
 
@@ -264,7 +264,7 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 - [x] W1.3 — Comunicação Web e CORS, aceita pelo usuário
 - [x] W1.4 — Navegação Web, URL e histórico, aceita pelo usuário
 - [x] W1.5 — Shell responsivo e acessível, concluída e aceita
-- [ ] W1.6 — Testes, distribuição e documentação
+- [x] W1.6 — Testes, distribuição e documentação, concluída e aceita
 
 ### Escopo das tasks
 
@@ -272,16 +272,16 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 - W1.2: declarar `wasmJs` e `js`, criar shell/entrypoint Web, `webMain`, `webTest` e os `actual` mínimos de engine HTTP e logging; validar `AppNavigation` e `NavDisplay` compartilhados.
 - W1.3: validou a engine `Js` baseada em Fetch, comunicação real com a AniList, CORS/preflight, cancelamento, timeout, logging, `MockEngine` e uma imagem AniList nos dois targets Web. O diagnóstico `network-smoke` permanece isolado como ferramenta técnica.
 - W1.4: implementou fragment routing, codec centralizado de `AppRoute`, History API, canonicalização, reload, deep links e restauração por back/forward sem duplicar o back stack; `?network-smoke=true` permanece compatível.
-- W1.5: preparar responsividade, mouse, hover, teclado, foco, scroll e acessibilidade. A execução foi decomposta operacionalmente em:
+- W1.5: implementou e validou responsividade, mouse, hover, teclado, foco, scroll e acessibilidade no escopo definido. A execução foi decomposta operacionalmente em:
   - [x] W1.5.1 — Auditoria do shell responsivo e acessível, concluída e aceita; diagnóstico estático das lacunas e planejamento, sem entrega de capacidades visuais ou acessíveis.
   - [x] W1.5.2 — Layout responsivo, concluída e aceita; shell adaptativo por largura, `NavigationBar`/`NavigationRail`, largura máxima, centralização, scroll, altura reduzida e redimensionamento.
   - [x] W1.5.3 — Interação e acessibilidade, concluída e aceita; ações explícitas nos placeholders, navegação com ícones e labels, nomes acessíveis, chip informativo, cursor, semântica de estados, showcase técnico e foco integrado aos estados visuais dos componentes. O foco dos botões no tema escuro foi considerado sutil, mas aceito no escopo; refinamento futuro fica para a revisão de UX da Sprint 16 — Preparação para Lançamento.
   - [x] W1.5.4 — Validação consolidada, concluída e aceita: JS e WasmJS, matriz de viewports, zoom, temas, integração de navegação, interação e regressões multiplataforma. A bateria final teve 11 tasks executadas e 109 `UP-TO-DATE`; as evidências manuais anteriores de teclado, foco, dialogs e semântica foram reaproveitadas.
-- W1.6: consolidar testes Web, distribuições Wasm/JS e documentação após aceite.
+- W1.6: consolidou as evidências de testes, gerou e validou por HTTP estático as distribuições de produção separadas de WasmJS e JS e encerrou a documentação da Fundação Web. WasmJS permanece o target principal e JS a alternativa de compatibilidade, sem seleção automática de fallback.
 
 ### Critérios gerais de aceite
 
-- [x] `wasmJs` executa como target Web principal e `js` como fallback.
+- [x] `wasmJs` executa como target Web principal e `js` como alternativa de compatibilidade com distribuição separada, sem seleção automática de fallback.
 - [x] `webMain` e `webTest` compartilham o código Web aplicável.
 - [x] `App`, Navigation 3 e o back stack continuam compartilhados em `commonMain`.
 - [x] Engine HTTP e logging possuem implementações Web.

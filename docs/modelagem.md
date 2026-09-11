@@ -567,7 +567,7 @@ Com o domínio, mapeadores e repository aceitos, as próximas sprints deverão i
 
 ## 5.8 Sprint W1 — Fundação Web
 
-> **Status:** W1.1 a W1.5 concluídas e aceitas. A infraestrutura, a comunicação, a navegação Web e o shell responsivo e acessível no escopo validado estão implementados; a W1.6 permanece planejada.
+> **Status:** Sprint W1 concluída e aceita. W1.1 a W1.6 implementaram e validaram a Fundação Web no escopo definido.
 
 A W1 adicionou suporte Web ao mesmo módulo, sem alterar o compartilhamento de domínio, repositories, UI ou Navigation 3. `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack permanecem em `commonMain`. O entrypoint Web inicializa Koin uma vez antes de `ComposeViewport`; `webMain` fornece a engine Ktor `Js`, baseada em Fetch, e logging HTTP desabilitado. CIO permanece uma escolha do Desktop.
 
@@ -589,6 +589,8 @@ commonTest
 A W1.4 adicionou uma fronteira Web entre Navigation 3 e a History API: um codec em `webMain` converte as oito `AppRoute` atuais em fragmentos e um controlador sincroniza a pilha compartilhada com `pushState`, `replaceState`, `popstate` e `hashchange`. O mapeamento atual é `Splash → #/splash`, `Login → #/login`, `Home → #/home`, `Search → #/search`, `AnimeDetails → #/anime-details`, `Library → #/library`, `Profile → #/profile` e `Settings → #/settings`. As adaptações de `window`, `location` e `history` permanecem em `jsMain` e `wasmJsMain`. Fragment routing (`#/…`) foi adotado por não haver fallback de SPA no servidor comprovado; URLs inválidas são canonicalizadas para `#/splash`, e deep links de detalhes e configurações formam pilhas mínimas determinísticas. `AnimeDetails` não contém ID na URL até a Sprint 6.
 
 A W1.5.2 adicionou a classificação compartilhada de layout por largura: abaixo de `600.dp`, o shell usa `NavigationBar`; a partir de `600.dp`, usa `NavigationRail`. O conteúdo expandido é centralizado e limitado a `1200.dp`, com `innerPadding` aplicado uma única vez. O `DesignSystemShowcase` possui scroll vertical no Compose, enquanto a responsabilidade de viewport continua compatível com `overflow: hidden` no HTML. A W1.5.3 adicionou ações explícitas aos placeholders, nomes acessíveis aos controles acionáveis, navegação com ícones compartilhados, chip informativo sem ação fictícia, cursor nos controles habilitados e semântica para loading e progresso. O showcase técnico é selecionado no entrypoint Web por `?design-system-showcase=true`, com precedência de `?network-smoke=true`; `App()` aplica `AppTheme` e `Surface` na raiz compartilhada. A indicação de foco usa os estados cromáticos nativos de cada componente, respeitando seus shapes e tokens, sem moldura externa. A W1.5.4 validou de forma consolidada o comportamento dessa estrutura em JS e WasmJS, sem introduzir nova arquitetura. O refinamento visual do foco escuro permanece reservado à revisão de UX da Sprint 16.
+
+A W1.6 confirmou distribuições de produção independentes em `composeApp/build/dist/wasmJs/productionExecutable` e `composeApp/build/dist/js/productionExecutable`, servidas por HTTP estático. WasmJS contém o binário Wasm da aplicação; a distribuição JS mantém a aplicação em JavaScript e inclui o runtime Skiko Wasm. Não existe seleção automática entre os artefatos. Fragment routing permite servir os arquivos sem fallback de paths para SPA; PWA, service worker, offline, deploy e hospedagem definitiva não fazem parte da estrutura implementada.
 
 ---
 
@@ -837,7 +839,7 @@ Este documento deve ser mantido em conjunto com:
 ## Planejado
 
 - Consumidores de `AnimeRepository` guiados por pesquisa e detalhes;
-- Fundação Web: acessibilidade, PWA e persistência;
+- PWA, service worker, offline e persistência Web;
 - Estados de `LibraryEntry`;
 - Persistência e biblioteca local-first;
 - Fluxos verticais entre UI, ViewModel, Repository e fontes de dados;
