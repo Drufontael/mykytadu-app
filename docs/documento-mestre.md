@@ -237,7 +237,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints funcionais** e uma 
 | 4 | Camada de Comunicação | ✅ Concluída |
 | 5 | Domínio do Catálogo | ✅ Concluída |
 | W1 | Fundação Web | ✅ Concluída |
-| 6 | Busca de Animes End-to-End | ⏳ Planejada |
+| 6 | Busca de Animes End-to-End | 🟡 Em andamento |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
 | 9 | Biblioteca End-to-End | ⏳ Planejada |
@@ -633,6 +633,18 @@ Como fotografia dos artefatos avaliados, a distribuição JS possuía 23 arquivo
 
 ---
 
+## 17.7 S6.1 — Auditoria e plano da Busca de Animes
+
+✅ **CONCLUÍDA E ACEITA**
+
+A S6.1 confirmou que `AnimeRepository`, os modelos do catálogo, a paginação, o Design System, o shell responsivo e a navegação compartilhada formam a base da busca, enquanto `SearchScreen` e `AnimeDetailsScreen` ainda são placeholders. A Sprint 6 foi iniciada e dividida operacionalmente em S6.2 a S6.6, cobrindo estado e primeira pesquisa, transporte do ID AniList, resultados com imagens, paginação e validação consolidada.
+
+O plano determina que a consulta anterior seja invalidada e cancelada assim que a consulta normalizada mudar; o debounce atrasará somente a nova requisição. O retorno dos detalhes deverá verificar separadamente a preservação do `SearchViewModel`, dos resultados e da posição de scroll. Lifecycle, integração Koin e Coil permanecem propostas sujeitas à comprovação de compatibilidade, e nenhum comportamento de cache HTTP será prometido sem evidência por target.
+
+A Sprint 6 será responsável por transportar e restaurar o `AniListAnimeId` na navegação. A Sprint 7 consumirá esse ID para carregar e apresentar os detalhes. Busca funcional, ViewModel, carregamento de imagens e rota parametrizada ainda não foram implementados. O próximo passo é a **S6.2 — Estado e primeira pesquisa funcional**.
+
+---
+
 # 18. Diretrizes Gerais do Projeto
 
 - Componentes reutilizáveis antes de componentes específicos;
@@ -781,7 +793,8 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
 - Sprint 5 — Domínio do Catálogo: ✅ Concluída — S5.1 a S5.5 concluídas
 - Sprint W1 — Fundação Web: ✅ Concluída — W1.1 a W1.6 aceitas
-- Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
+- Sprint 6 — Busca de Animes End-to-End: 🟡 Em andamento — S6.1 concluída e S6.2 a S6.6 planejadas
+- Sprints 7–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
 
@@ -806,7 +819,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a Sprint 6 — Busca de Animes End-to-End.**
+> **Prosseguir para a S6.2 — Estado e primeira pesquisa funcional.**
 
 ## Filosofia
 

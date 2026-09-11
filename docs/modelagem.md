@@ -683,7 +683,11 @@ sequenceDiagram
     VM-->>UI: atualizar estado
 ```
 
-> Diagrama conceitual da Sprint 6. Nomes finais de métodos e estados serão definidos durante a implementação da busca.
+> **Planejamento aceito na S6.1 — ainda não implementado.** O fluxo continuará específico da busca, sem antecipar uma arquitetura assíncrona genérica. A consulta ativa deverá ser invalidada e cancelada assim que a consulta normalizada mudar; o debounce atrasará somente a nova requisição. Paginação usará `PageInfo.hasNextPage`, bloqueará concorrência e preservará os resultados diante de loading ou falha incremental.
+
+Lifecycle, integração Koin para ViewModel e carregamento de imagens com Coil permanecem propostas sujeitas à comprovação de compatibilidade nos targets atuais. O comportamento de cache, inclusive HTTP, só poderá ser documentado após evidência por plataforma.
+
+A Sprint 6 transportará e restaurará o `AniListAnimeId` na rota de detalhes. A Sprint 7 consumirá o ID recebido para carregar e apresentar `AnimeDetails`. O retorno dos detalhes deverá validar separadamente a preservação do ViewModel da busca, dos resultados e da posição de scroll.
 
 ---
 
@@ -838,7 +842,8 @@ Este documento deve ser mantido em conjunto com:
 
 ## Planejado
 
-- Consumidores de `AnimeRepository` guiados por pesquisa e detalhes;
+- Estado, ViewModel, interface, imagens e paginação da busca planejados pela S6.1, ainda não implementados;
+- Rota de detalhes com transporte e restauração do `AniListAnimeId` na Sprint 6 e consumo desse ID na Sprint 7;
 - PWA, service worker, offline e persistência Web;
 - Estados de `LibraryEntry`;
 - Persistência e biblioteca local-first;

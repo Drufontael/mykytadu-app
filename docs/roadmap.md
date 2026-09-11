@@ -303,15 +303,55 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 
 # Sprint 6 — Busca de Animes End-to-End
 
-**Status:** Planejada
+**Status:** Em andamento — S6.1 concluída e aceita
 
 ## Objetivo
 
 Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na AniList e navegar para o item selecionado.
 
+## Decomposição operacional
+
+### S6.1 — Auditoria e plano de implementação
+
+- [x] Base de domínio, repository, navegação, UI e dependências auditada
+- [x] Estado, paginação, imagens e navegação com ID planejados
+- [x] Divisão entre S6.2 e S6.6 definida e aceita
+
+### S6.2 — Estado e primeira pesquisa funcional
+
+- [ ] Comprovar lifecycle e integração Koin nos targets atuais
+- [ ] Implementar estado específico da busca e `SearchViewModel`
+- [ ] Entregar consulta inicial observável com debounce, cancelamento, estados e retry
+- [ ] Invalidar e cancelar a consulta anterior assim que a consulta normalizada mudar; o debounce atrasa somente a nova requisição
+
+### S6.3 — Navegação de detalhes com ID AniList
+
+- [ ] Transportar e restaurar o `AniListAnimeId` na rota de detalhes
+- [ ] Atualizar serialização, callbacks, deep links e histórico Web
+- [ ] Validar IDs ausentes, inválidos ou fora do intervalo sem criar IDs fictícios
+
+### S6.4 — Resultados responsivos e imagens
+
+- [ ] Implementar cards e grade responsiva com títulos e capas
+- [ ] Comprovar a compatibilidade do carregador de imagens antes de consolidar a dependência
+- [ ] Definir cache básico somente a partir do comportamento comprovado por target, sem presumir cache HTTP
+
+### S6.5 — Paginação e recuperação incremental
+
+- [ ] Paginar por `PageInfo.hasNextPage`
+- [ ] Bloquear concorrência, deduplicar por `AniListAnimeId` e repetir a página que falhou
+- [ ] Preservar resultados em loading e erro incrementais e rejeitar respostas de consultas anteriores
+
+### S6.6 — Validação End-to-End
+
+- [ ] Consolidar testes e smoke tests reais nos targets aplicáveis
+- [ ] Validar pesquisa, imagens, paginação, responsividade, teclado e navegação
+- [ ] Verificar separadamente `SearchViewModel`, resultados e posição de scroll ao retornar dos detalhes
+- [ ] Encerrar documentalmente a Sprint 6 após aceite
+
 ### Escopo
 
-- [ ] Padrão compartilhado de estado assíncrono
+- [ ] Estado assíncrono específico da busca
 - [ ] `SearchViewModel`
 - [ ] Campo de pesquisa
 - [ ] Normalização da consulta
@@ -340,6 +380,12 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 - [ ] Nenhum DTO remoto chega à UI.
 - [ ] O comportamento é validado nos targets disponíveis.
 
+### Divisão com a Sprint 7
+
+A Sprint 6 transportará e restaurará o ID AniList selecionado na navegação. A Sprint 7 consumirá o ID recebido para carregar e apresentar os detalhes completos do anime.
+
+Lifecycle, integração Koin e Coil são propostas da auditoria e permanecem pendentes de comprovação de compatibilidade. O alcance do cache de imagens será registrado somente após evidência nos targets; cache HTTP não é pressuposto.
+
 ---
 
 # Sprint 7 — Detalhes do Anime End-to-End
@@ -352,7 +398,7 @@ Transformar a rota de detalhes em uma funcionalidade completa baseada no anime s
 
 ### Escopo
 
-- [ ] ID obrigatório na rota de detalhes
+- [ ] Consumo do ID obrigatório transportado pela rota implementada na Sprint 6
 - [ ] Deep Link de detalhes, caso seja tecnicamente apropriado
 - [ ] `AnimeDetailsViewModel`
 - [ ] Carregamento pelo `AnimeRepository`
