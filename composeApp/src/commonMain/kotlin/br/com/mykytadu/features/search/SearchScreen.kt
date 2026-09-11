@@ -9,6 +9,7 @@ fun SearchScreen(
 ) {
     NavigationPlaceholder(
         text = "Pesquisa",
-        onClick = onNavigateToAnimeDetails
+        onClick = onNavigateToAnimeDetails,
+        actionText = "Abrir detalhes"
     )
 }

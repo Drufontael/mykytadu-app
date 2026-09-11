@@ -263,7 +263,7 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 - [x] W1.2 — Targets, infraestrutura mínima e shell Web, aceita pelo usuário
 - [x] W1.3 — Comunicação Web e CORS, aceita pelo usuário
 - [x] W1.4 — Navegação Web, URL e histórico, aceita pelo usuário
-- [ ] W1.5 — Shell responsivo e acessível
+- [ ] W1.5 — Shell responsivo e acessível (W1.5.1–W1.5.3 concluídas e aceitas; W1.5.4 planejada)
 - [ ] W1.6 — Testes, distribuição e documentação
 
 ### Escopo das tasks
@@ -275,7 +275,7 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 - W1.5: preparar responsividade, mouse, hover, teclado, foco, scroll e acessibilidade. A execução foi decomposta operacionalmente em:
   - [x] W1.5.1 — Auditoria do shell responsivo e acessível, concluída e aceita; diagnóstico estático das lacunas e planejamento, sem entrega de capacidades visuais ou acessíveis.
   - [x] W1.5.2 — Layout responsivo, concluída e aceita; shell adaptativo por largura, `NavigationBar`/`NavigationRail`, largura máxima, centralização, scroll, altura reduzida e redimensionamento.
-  - [ ] W1.5.3 — Interação e acessibilidade: nomes acessíveis, foco, teclado, placeholders com ações explícitas, distinção entre informação e ação, hover, cursor e semântica de estados e dialogs.
+  - [x] W1.5.3 — Interação e acessibilidade, concluída e aceita; ações explícitas nos placeholders, navegação com ícones e labels, nomes acessíveis, chip informativo, cursor, semântica de estados, showcase técnico e foco integrado aos estados visuais dos componentes. O foco dos botões no tema escuro foi considerado sutil, mas aceito no escopo; refinamento futuro fica para a revisão de UX da Sprint 16 — Preparação para Lançamento.
   - [ ] W1.5.4 — Validação consolidada: JS e WasmJS, matriz de viewports, zoom, temas, teclado, foco, mouse, árvore de acessibilidade e regressões multiplataforma.
 - W1.6: consolidar testes Web, distribuições Wasm/JS e documentação após aceite.
 
@@ -287,7 +287,7 @@ Preparar o módulo `:composeApp` para executar no navegador com Compose Multipla
 - [x] Engine HTTP e logging possuem implementações Web.
 - [x] Comunicação AniList no navegador, CORS e preflight são validados em JS e WasmJS.
 - [x] URL, reload, back e forward permanecem consistentes com o back stack.
-- [ ] Shell Web atende critérios básicos de responsividade e acessibilidade.
+- [ ] Shell Web atende critérios básicos de responsividade e acessibilidade (W1.5.4 ainda pendente).
 - [x] Testes e distribuições Web são validados.
 
 ### Fora do escopo

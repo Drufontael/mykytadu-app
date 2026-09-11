@@ -9,6 +9,8 @@ import br.com.mykytadu.domain.model.PagedResult
 import br.com.mykytadu.domain.repository.AnimeRepository
 import br.com.mykytadu.domain.result.RepositoryFailure
 import br.com.mykytadu.domain.result.RepositoryResult
+import br.com.mykytadu.web.WebEntryMode
+import br.com.mykytadu.web.resolveWebEntryMode
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.NonCancellable
@@ -32,6 +34,21 @@ class WebNetworkDiagnosticRunnerTest {
         assertFalse(isWebNetworkSmokeEnabled("?network-smoke=true%20"))
         assertTrue(isWebNetworkSmokeEnabled("?network-smoke=true"))
         assertTrue(isWebNetworkSmokeEnabled("?source=test&network-smoke=true"))
+    }
+
+    @Test
+    fun `showcase exige valor true exato`() {
+        assertEquals(WebEntryMode.NORMAL, resolveWebEntryMode("?design-system-showcase=false"))
+        assertEquals(WebEntryMode.NORMAL, resolveWebEntryMode("?design-system-showcase=true%20"))
+        assertEquals(WebEntryMode.DESIGN_SYSTEM_SHOWCASE, resolveWebEntryMode("?design-system-showcase=true"))
+    }
+
+    @Test
+    fun `network smoke tem precedencia sobre showcase`() {
+        assertEquals(
+            WebEntryMode.NETWORK_SMOKE,
+            resolveWebEntryMode("?design-system-showcase=true&network-smoke=true"),
+        )
     }
 
     @Test

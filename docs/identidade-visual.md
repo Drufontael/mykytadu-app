@@ -56,6 +56,7 @@ A proposta é criar uma identidade sofisticada, tecnológica e adequada tanto ao
 | `primary` | `#8B7CFF` | Ações principais |
 | `primaryVariant` | `#6C5CE7` | Estados secundários |
 | `secondary` | `#45D6C8` | Progresso e destaques |
+| `focusIndicator` | `#45D6C8` | Realce de foco nos estados nativos dos controles |
 | `textPrimary` | `#F4F4F7` | Texto principal |
 | `textSecondary` | `#A7A9B4` | Texto secundário |
 | `divider` | `#292D38` | Separadores |
@@ -78,6 +79,7 @@ O Light Mode não deve ser uma simples inversão das cores do Dark Mode.
 | `primary` | `#6355D9` | Ações principais |
 | `primaryVariant` | `#5144C4` | Estados secundários |
 | `secondary` | `#159E94` | Progresso e destaques |
+| `focusIndicator` | `#5144C4` | Realce de foco nos estados nativos dos controles |
 | `textPrimary` | `#171820` | Texto principal |
 | `textSecondary` | `#656875` | Texto secundário |
 | `divider` | `#E2E3EA` | Separadores |

@@ -22,9 +22,13 @@ fun AppTextField(
     isError: Boolean = false,
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
-    onTrailingIconClick: (() -> Unit)? = null
+    onTrailingIconClick: (() -> Unit)? = null,
+    trailingIconContentDescription: String? = null,
 
 ) {
+    require(onTrailingIconClick == null || !trailingIconContentDescription.isNullOrBlank()) {
+        "An actionable trailing icon requires a non-blank description"
+    }
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -34,7 +38,8 @@ fun AppTextField(
         shape = RoundedCornerShape(AppShapes.radius.input),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            focusedBorderColor = MaterialTheme.colorScheme.primary
+            focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
         ),
         label = label?.let { { Text(it) } },
         placeholder = placeholder?.let { { Text(it) } },
@@ -43,7 +48,9 @@ fun AppTextField(
             {
                 if (onTrailingIconClick != null) {
                     AppIconButton(
-                        onClick = onTrailingIconClick
+                        onClick = onTrailingIconClick,
+                        contentDescription = trailingIconContentDescription!!,
+                        enabled = enabled,
                     ) {
                         Icon(
                             imageVector = icon,

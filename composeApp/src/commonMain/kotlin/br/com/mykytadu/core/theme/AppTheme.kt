@@ -15,6 +15,7 @@ private val DarkColorScheme = darkColorScheme(
 
     secondary = AppColors.dark.secondary,
     onSecondary = AppColors.dark.textPrimary,
+    tertiary = AppColors.dark.focusIndicator,
 
     background = AppColors.dark.background,
     onBackground = AppColors.dark.textPrimary,
@@ -34,6 +35,7 @@ private val LightColorScheme = lightColorScheme(
 
     secondary = AppColors.light.secondary,
     onSecondary = AppColors.light.textPrimary,
+    tertiary = AppColors.light.focusIndicator,
 
     background = AppColors.light.background,
     onBackground = AppColors.light.textPrimary,

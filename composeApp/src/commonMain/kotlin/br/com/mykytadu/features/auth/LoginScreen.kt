@@ -9,6 +9,7 @@ fun LoginScreen(
 ) {
     NavigationPlaceholder(
         text = "Login",
-        onClick = onLoginSuccess
+        onClick = onLoginSuccess,
+        actionText = "Entrar"
     )
 }

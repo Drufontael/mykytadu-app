@@ -55,6 +55,7 @@ fun AppDialog(
             {
                 TextButton(
                     onClick = onDismissRequest,
+                    modifier = Modifier.appInteractivePointer(true),
                     shape = RoundedCornerShape(AppShapes.radius.button)
                 ) {
                     Text(text = it)

@@ -9,6 +9,7 @@ fun SplashScreen(
 ) {
     NavigationPlaceholder(
         text = "Splash",
-        onClick = onNavigateToLogin
+        onClick = onNavigateToLogin,
+        actionText = "Continuar para o login"
     )
 }

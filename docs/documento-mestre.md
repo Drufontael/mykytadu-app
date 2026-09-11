@@ -607,7 +607,7 @@ Os testes cobrem sucessos, entradas inválidas, falhas remotas, mapeamento, canc
 
 ## 17.6 Sprint W1 — Fundação Web
 
-🚧 **EM ANDAMENTO — W1.1 a W1.4 e W1.5.1–W1.5.2 concluídas e aceitas pelo usuário**
+🚧 **EM ANDAMENTO — W1.1 a W1.4 e W1.5.1–W1.5.3 concluídas e aceitas pelo usuário**
 
 A Sprint W1 prepara o mesmo módulo `:composeApp` para execução no navegador, com `wasmJs` como target principal e `js` como fallback de compatibilidade. Ela é uma sprint técnica inserida entre as Sprints 5 e 6, sem renumerar as 16 sprints funcionais existentes.
 
@@ -623,7 +623,7 @@ CIO compilava para os targets Web, mas falhava no navegador ao tentar usar `node
 
 A W1.4 integrou Navigation 3 ao histórico do navegador por fragment routing, sem expor APIs de DOM ao código compartilhado. O codec centralizado mapeia as oito `AppRoute` atuais para fragmentos, canonicaliza URLs vazias, inválidas ou desconhecidas para `#/splash` e preserva `?network-smoke=true`. Entradas que limpam a pilha usam substituição; navegação entre destinos e rotas secundárias cria entradas; restaurações por back/forward não escrevem novo histórico. Reload, deep links e a navegação nos dois targets Web foram validados. `AnimeDetails` continua sem ID na URL porque seu contrato ainda não possui parâmetro.
 
-O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. A auditoria W1.5.1 foi concluída e aceita sem alterações de código: confirmou a `NavigationBar` fixa, a ausência de adaptação por largura, contenção centralizada e scroll explícito, além de lacunas de semântica, foco, teclado, hover e cursor. A W1.5.2 foi concluída e aceita: o shell agora classifica a largura em `600.dp`, usa `NavigationBar` no modo compacto e `NavigationRail` no expandido, limita e centraliza o conteúdo em `1200.dp` e fornece scroll vertical ao showcase. A validação manual em JS e WasmJS e as validações automatizadas foram aprovadas. A W1.5 permanece em andamento; nomes acessíveis, foco, teclado, hover, cursor e semântica continuam planejados para W1.5.3, com validação consolidada em W1.5.4.
+O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. A auditoria W1.5.1 foi concluída e aceita sem alterações de código. A W1.5.2 entregou o shell adaptativo por largura, com `NavigationBar` abaixo de `600.dp`, `NavigationRail` a partir desse limite, conteúdo centralizado até `1200.dp` e scroll vertical no showcase. A W1.5.3 foi concluída e aceita no escopo validado: placeholders usam botões explícitos, a navegação compartilha ícones, labels e seleção, controles acionáveis possuem nomes acessíveis, chips informativos não simulam ações, cursores e semântica de loading/progresso foram ajustados, e o showcase técnico é ativado por `?design-system-showcase=true`, com precedência de `?network-smoke=true`. `App()` agora aplica `AppTheme` e uma `Surface` raiz, alinhando o tema da aplicação ao showcase. O foco utiliza os estados visuais nativos de cada componente e seus shapes, sem o contorno retangular rejeitado. O usuário considerou o foco dos botões no tema escuro ainda sutil, mas aceitou o comportamento para o escopo da W1.5.3. O refinamento visual será reavaliado na Sprint 16 — Preparação para Lançamento. A W1.5 permanece em andamento, com validação consolidada em W1.5.4.
 
 ---
 

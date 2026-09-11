@@ -1,12 +1,15 @@
 package br.com.mykytadu.presentation.components
 
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import br.com.mykytadu.core.theme.AppColors
+import br.com.mykytadu.core.theme.AppDimensions
+import br.com.mykytadu.core.theme.AppShapes
 import br.com.mykytadu.domain.AnimeStatus
 
 private fun semanticColor(status: AnimeStatus) = when (status) {
@@ -23,19 +26,19 @@ fun AppChip(
     status: AnimeStatus? = null,
     modifier: Modifier = Modifier,
 ) {
-    AssistChip(
-        onClick = {},
-        label = {
-            Text(text = label)
-        },
+    Surface(
         modifier = modifier,
-        colors = AssistChipDefaults.assistChipColors(
-            containerColor = status?.let { semanticColor(it)} ?: MaterialTheme.colorScheme.surfaceVariant,
-            labelColor = if(status != null) {
-                MaterialTheme.colorScheme.onPrimary
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            }
+        shape = RoundedCornerShape(AppShapes.radius.chip),
+        color = status?.let { semanticColor(it) } ?: MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = if (status != null) {
+            MaterialTheme.colorScheme.onPrimary
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        },
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(horizontal = AppDimensions.padding.md, vertical = AppDimensions.padding.sm),
         )
-    )
+    }
 }

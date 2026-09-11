@@ -6,10 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import br.com.mykytadu.core.navigation.AppRoute
 import br.com.mykytadu.core.navigation.MainDestination
 import androidx.compose.material3.Icon
 import br.com.mykytadu.presentation.components.icons.AppIcons
+import br.com.mykytadu.presentation.components.appInteractivePointer
 
 @Composable
 fun MainNavigationBar(
@@ -23,7 +25,8 @@ fun MainNavigationBar(
                 onClick = {
                     onNavigate(destination.route)
                 },
-                icon = {},
+                modifier = Modifier.appInteractivePointer(true),
+                icon = { Icon(destination.icon, contentDescription = null) },
                 label = {
                     Text(destination.label)
                 }
@@ -42,6 +45,7 @@ fun MainNavigationRail(
             NavigationRailItem(
                 selected = currentRoute == destination.route,
                 onClick = { onNavigate(destination.route) },
+                modifier = Modifier.appInteractivePointer(true),
                 icon = { Icon(destination.icon, contentDescription = null) },
                 label = { Text(destination.label) }
             )

@@ -9,6 +9,7 @@ fun ProfileScreen(
 ) {
     NavigationPlaceholder(
         text = "Perfil",
-        onClick = onNavigateToSettings
+        onClick = onNavigateToSettings,
+        actionText = "Abrir configurações"
     )
 }

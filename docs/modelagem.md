@@ -567,7 +567,7 @@ Com o domínio, mapeadores e repository aceitos, as próximas sprints deverão i
 
 ## 5.8 Sprint W1 — Fundação Web
 
-> **Status:** W1.1 a W1.4 e W1.5.1–W1.5.2 concluídas e aceitas. A infraestrutura, a comunicação, a navegação Web e o shell responsivo estão implementados; acessibilidade permanece planejada.
+> **Status:** W1.1 a W1.4 e W1.5.1–W1.5.3 concluídas e aceitas. A infraestrutura, a comunicação, a navegação Web, o shell responsivo e a interação acessível validada estão implementados; a validação consolidada permanece planejada.
 
 A W1 adicionou suporte Web ao mesmo módulo, sem alterar o compartilhamento de domínio, repositories, UI ou Navigation 3. `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack permanecem em `commonMain`. O entrypoint Web inicializa Koin uma vez antes de `ComposeViewport`; `webMain` fornece a engine Ktor `Js`, baseada em Fetch, e logging HTTP desabilitado. CIO permanece uma escolha do Desktop.
 
@@ -588,7 +588,7 @@ commonTest
 
 A W1.4 adicionou uma fronteira Web entre Navigation 3 e a History API: um codec em `webMain` converte as oito `AppRoute` atuais em fragmentos e um controlador sincroniza a pilha compartilhada com `pushState`, `replaceState`, `popstate` e `hashchange`. O mapeamento atual é `Splash → #/splash`, `Login → #/login`, `Home → #/home`, `Search → #/search`, `AnimeDetails → #/anime-details`, `Library → #/library`, `Profile → #/profile` e `Settings → #/settings`. As adaptações de `window`, `location` e `history` permanecem em `jsMain` e `wasmJsMain`. Fragment routing (`#/…`) foi adotado por não haver fallback de SPA no servidor comprovado; URLs inválidas são canonicalizadas para `#/splash`, e deep links de detalhes e configurações formam pilhas mínimas determinísticas. `AnimeDetails` não contém ID na URL até a Sprint 6.
 
-A W1.5.2 adicionou a classificação compartilhada de layout por largura: abaixo de `600.dp`, o shell usa `NavigationBar`; a partir de `600.dp`, usa `NavigationRail`. O conteúdo expandido é centralizado e limitado a `1200.dp`, com `innerPadding` aplicado uma única vez. O `DesignSystemShowcase` possui scroll vertical no Compose, enquanto a responsabilidade de viewport continua compatível com `overflow: hidden` no HTML. Acessibilidade, interação e validação consolidada permanecem planejadas para W1.5.3 e W1.5.4.
+A W1.5.2 adicionou a classificação compartilhada de layout por largura: abaixo de `600.dp`, o shell usa `NavigationBar`; a partir de `600.dp`, usa `NavigationRail`. O conteúdo expandido é centralizado e limitado a `1200.dp`, com `innerPadding` aplicado uma única vez. O `DesignSystemShowcase` possui scroll vertical no Compose, enquanto a responsabilidade de viewport continua compatível com `overflow: hidden` no HTML. A W1.5.3 adicionou ações explícitas aos placeholders, nomes acessíveis aos controles acionáveis, navegação com ícones compartilhados, chip informativo sem ação fictícia, cursor nos controles habilitados e semântica para loading e progresso. O showcase técnico é selecionado no entrypoint Web por `?design-system-showcase=true`, com precedência de `?network-smoke=true`; `App()` aplica `AppTheme` e `Surface` na raiz compartilhada. A indicação de foco usa os estados cromáticos nativos de cada componente, respeitando seus shapes e tokens, sem moldura externa. O refinamento visual do foco escuro permanece reservado à revisão de UX da Sprint 16; W1.5.4 continua planejada para a validação consolidada.
 
 ---
 
@@ -823,6 +823,8 @@ Este documento deve ser mantido em conjunto com:
 - Contratos fundamentais, modelos, mapeadores e repository do catálogo das S5.2 a S5.5, independentes de infraestrutura;
 - Targets `wasmJs` e `js`, `webMain`, `webTest`, entrypoint Web, engine HTTP `Js` baseada em Fetch e logging Web implementados; `App` e Navigation 3 permanecem compartilhados;
 - Shell responsivo implementado com classificação em `600.dp`, `NavigationBar` compacto, `NavigationRail` expandido, conteúdo centralizado com largura máxima de `1200.dp` e scroll vertical do showcase;
+- Interação acessível validada com ações explícitas, nomes de controles, semântica de estados, navegação compartilhada e foco integrado aos estados visuais nativos;
+- Composição raiz compartilhada com `AppTheme` e `Surface`, além da seleção Web dos modos técnicos `network-smoke` e `design-system-showcase`;
 - Fragment routing e integração da History API com Navigation 3, incluindo canonicalização, reload, deep links, back e forward em JS e WasmJS;
 - Sprint 3 concluída e diagrama atualizado para a implementação real;
 - oito rotas tipadas e serializáveis;

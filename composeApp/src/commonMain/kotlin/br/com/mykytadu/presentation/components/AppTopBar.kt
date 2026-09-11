@@ -16,8 +16,13 @@ fun AppTopBar(
     title: String,
     navigationIcon: ImageVector? = null,
     onNavigationClick: (() -> Unit)? = null,
+    navigationContentDescription: String? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
+    require(
+        (navigationIcon == null && onNavigationClick == null && navigationContentDescription == null) ||
+            (navigationIcon != null && onNavigationClick != null && !navigationContentDescription.isNullOrBlank())
+    ) { "An actionable navigation icon requires a non-blank description" }
     TopAppBar(
         title = {
             Text(
@@ -29,6 +34,7 @@ fun AppTopBar(
             if (navigationIcon != null && onNavigationClick != null) {
                 AppIconButton(
                     onClick = onNavigationClick,
+                    contentDescription = navigationContentDescription!!,
                     content = {
                         Icon(
                             imageVector = navigationIcon,

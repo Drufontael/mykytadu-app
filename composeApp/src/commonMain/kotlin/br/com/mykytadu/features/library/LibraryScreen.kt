@@ -9,6 +9,7 @@ fun LibraryScreen(
 ) {
     NavigationPlaceholder(
         text = "Biblioteca",
-        onClick = onNavigateToAnimeDetails
+        onClick = onNavigateToAnimeDetails,
+        actionText = "Abrir detalhes"
     )
 }

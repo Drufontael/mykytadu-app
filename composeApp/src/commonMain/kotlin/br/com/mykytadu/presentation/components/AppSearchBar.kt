@@ -22,6 +22,7 @@ fun AppSearchBar(
     leadingIcon: ImageVector? = AppIcons.Actions.Search,
     trailingIcon: ImageVector? = null,
     onTrailingIconClick: (() -> Unit)? = null,
+    trailingIconContentDescription: String? = null,
     content: @Composable ColumnScope.() -> Unit = {}
 ) {
     SearchBar(
@@ -32,7 +33,8 @@ fun AppSearchBar(
                 placeholder = placeholder,
                 leadingIcon = leadingIcon,
                 trailingIcon = trailingIcon,
-                onTrailingIconClick = onTrailingIconClick
+                onTrailingIconClick = onTrailingIconClick,
+                trailingIconContentDescription = trailingIconContentDescription
         )},
         expanded = expanded,
         modifier = modifier,
