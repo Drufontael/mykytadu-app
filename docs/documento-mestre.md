@@ -236,7 +236,7 @@ O roadmap oficial organiza o desenvolvimento em **16 sprints funcionais** e uma 
 | 3 | Navegação | ✅ Concluída |
 | 4 | Camada de Comunicação | ✅ Concluída |
 | 5 | Domínio do Catálogo | ✅ Concluída |
-| W1 | Fundação Web | 🚧 Em andamento — W1.1 a W1.4 e W1.5.1–W1.5.2 concluídas |
+| W1 | Fundação Web | 🚧 Em andamento — W1.1 a W1.5 concluídas; W1.6 planejada |
 | 6 | Busca de Animes End-to-End | ⏳ Planejada |
 | 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
 | 8 | Persistência e Biblioteca Local | ⏳ Planejada |
@@ -607,7 +607,7 @@ Os testes cobrem sucessos, entradas inválidas, falhas remotas, mapeamento, canc
 
 ## 17.6 Sprint W1 — Fundação Web
 
-🚧 **EM ANDAMENTO — W1.1 a W1.4 e W1.5.1–W1.5.3 concluídas e aceitas pelo usuário**
+🚧 **EM ANDAMENTO — W1.1 a W1.5 concluídas e aceitas pelo usuário; W1.6 planejada**
 
 A Sprint W1 prepara o mesmo módulo `:composeApp` para execução no navegador, com `wasmJs` como target principal e `js` como fallback de compatibilidade. Ela é uma sprint técnica inserida entre as Sprints 5 e 6, sem renumerar as 16 sprints funcionais existentes.
 
@@ -623,7 +623,9 @@ CIO compilava para os targets Web, mas falhava no navegador ao tentar usar `node
 
 A W1.4 integrou Navigation 3 ao histórico do navegador por fragment routing, sem expor APIs de DOM ao código compartilhado. O codec centralizado mapeia as oito `AppRoute` atuais para fragmentos, canonicaliza URLs vazias, inválidas ou desconhecidas para `#/splash` e preserva `?network-smoke=true`. Entradas que limpam a pilha usam substituição; navegação entre destinos e rotas secundárias cria entradas; restaurações por back/forward não escrevem novo histórico. Reload, deep links e a navegação nos dois targets Web foram validados. `AnimeDetails` continua sem ID na URL porque seu contrato ainda não possui parâmetro.
 
-O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. A auditoria W1.5.1 foi concluída e aceita sem alterações de código. A W1.5.2 entregou o shell adaptativo por largura, com `NavigationBar` abaixo de `600.dp`, `NavigationRail` a partir desse limite, conteúdo centralizado até `1200.dp` e scroll vertical no showcase. A W1.5.3 foi concluída e aceita no escopo validado: placeholders usam botões explícitos, a navegação compartilha ícones, labels e seleção, controles acionáveis possuem nomes acessíveis, chips informativos não simulam ações, cursores e semântica de loading/progresso foram ajustados, e o showcase técnico é ativado por `?design-system-showcase=true`, com precedência de `?network-smoke=true`. `App()` agora aplica `AppTheme` e uma `Surface` raiz, alinhando o tema da aplicação ao showcase. O foco utiliza os estados visuais nativos de cada componente e seus shapes, sem o contorno retangular rejeitado. O usuário considerou o foco dos botões no tema escuro ainda sutil, mas aceitou o comportamento para o escopo da W1.5.3. O refinamento visual será reavaliado na Sprint 16 — Preparação para Lançamento. A W1.5 permanece em andamento, com validação consolidada em W1.5.4.
+O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. A auditoria W1.5.1 foi concluída e aceita sem alterações de código. A W1.5.2 entregou o shell adaptativo por largura, com `NavigationBar` abaixo de `600.dp`, `NavigationRail` a partir desse limite, conteúdo centralizado até `1200.dp` e scroll vertical no showcase. A W1.5.3 foi concluída e aceita no escopo validado: placeholders usam botões explícitos, a navegação compartilha ícones, labels e seleção, controles acionáveis possuem nomes acessíveis, chips informativos não simulam ações, cursores e semântica de loading/progresso foram ajustados, e o showcase técnico é ativado por `?design-system-showcase=true`, com precedência de `?network-smoke=true`. `App()` agora aplica `AppTheme` e uma `Surface` raiz, alinhando o tema da aplicação ao showcase. O foco utiliza os estados visuais nativos de cada componente e seus shapes, sem o contorno retangular rejeitado. O usuário considerou o foco dos botões no tema escuro ainda sutil, mas aceitou o comportamento para o escopo da W1.5.3. O refinamento visual será reavaliado na Sprint 16 — Preparação para Lançamento.
+
+A W1.5.4 consolidou e validou a integração do shell em JS e WasmJS. A bateria final terminou com sucesso, com 11 tasks executadas e 109 `UP-TO-DATE`; a compilação de metadata iOS não substitui build nativo com Xcode. A validação visual cobriu a fronteira de `599/600` px, tamanhos compacto, reduzido e amplo, zoom de 200%, tema claro, scroll, centralização e preservação de rota e seleção. As evidências já aceitas de navegação, histórico, modos técnicos, comunicação AniList, teclado, foco, dialogs e semântica foram reaproveitadas. Com isso, a W1.5 está concluída e aceita; a W1.6 — Testes, distribuição e documentação — é o próximo passo.
 
 ---
 
@@ -774,7 +776,7 @@ Ao continuar o desenvolvimento em um novo chat:
 - Sprint 3 — Navegação: ✅ Concluída
 - Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
 - Sprint 5 — Domínio do Catálogo: ✅ Concluída — S5.1 a S5.5 concluídas
-- Sprint W1 — Fundação Web: 🚧 Em andamento — W1.1 a W1.4 e W1.5.1–W1.5.2 concluídas e aceitas
+- Sprint W1 — Fundação Web: 🚧 Em andamento — W1.1 a W1.5 concluídas e aceitas; W1.6 planejada
 - Sprints 6–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
 
 ## Componentes do roadmap concluídos na Sprint 2
@@ -800,7 +802,7 @@ Ao continuar o desenvolvimento em um novo chat:
 
 ## Próximo passo
 
-> **Prosseguir para a W1.5.3 — Interação e acessibilidade.**
+> **Prosseguir para a W1.6 — Testes, distribuição e documentação.**
 
 ## Filosofia
 

@@ -22,7 +22,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 3 — Navegação | Concluída |
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
-| Sprint W1 — Fundação Web | Em andamento — W1.1 a W1.4 concluídas |
+| Sprint W1 — Fundação Web | Em andamento — W1.1 a W1.5 concluídas; W1.6 planejada |
 | Sprints 6 a 16 | Planejadas |
 
 Já estão disponíveis:
