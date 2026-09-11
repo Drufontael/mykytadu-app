@@ -1,826 +1,283 @@
-# MykytaDu — Documento Mestre do Projeto
+# MykytaDu — Documento Mestre
 
-> Documento central de contexto, decisões técnicas, identidade visual, roadmap e estado de desenvolvimento.
->
-> Este documento deve ser atualizado conforme o projeto evoluir e servir como referência para novos chats, sessões de desenvolvimento e documentação futura.
+> Especificação central de produto, direção arquitetural e princípios duráveis.
+> Planejamento, execução e histórico possuem documentos próprios.
 
----
+## 1. Propósito
 
-# 1. Visão Geral
+MykytaDu é uma aplicação multiplataforma para controle e acompanhamento de
+animes. O produto combina catálogo, biblioteca pessoal e progresso em uma
+experiência organizada, moderna e coerente entre plataformas.
 
-## Nome
-
-**MykytaDu**
-
-## Propósito
-
-MykytaDu é um aplicativo multiplataforma para **controle e acompanhamento de animes**.
-
-O conceito do produto combina:
-
-> **Anime moderno + tecnologia + organização pessoal**
-
-A experiência deve funcionar como um espaço pessoal onde o usuário acompanha sua jornada pelos animes, sua biblioteca e seu progresso.
-
-A filosofia central da interface é:
+A filosofia central é:
 
 > **Anime na personalidade, produto de software na execução.**
 
----
+Este documento define o que deve permanecer estável enquanto o projeto evolui.
+Ele não registra o diário das sprints nem substitui código, builds, testes,
+modelagem ou contratos técnicos.
 
-# 2. Visão do Produto
+## 2. Visão do produto
 
-A aplicação deve permitir ao usuário acompanhar sua experiência com animes de maneira organizada e pessoal.
+A aplicação deve permitir:
 
-A experiência deve transmitir:
+- pesquisar e descobrir animes;
+- consultar informações relevantes sobre cada obra;
+- manter uma biblioteca pessoal;
+- registrar estado e progresso;
+- continuar utilizável localmente sem autenticação;
+- sincronizar dados quando autenticação e backend estiverem disponíveis;
+- preservar uma experiência consistente em Android, Desktop, iOS e Web.
 
-- Biblioteca pessoal;
-- Organização;
-- Acompanhamento de progresso;
-- Continuidade do que está sendo assistido;
-- Facilidade para encontrar novos títulos;
-- Personalização da experiência.
+O conteúdo é o protagonista. Capas, títulos, informações e progresso devem ter
+mais destaque que elementos decorativos.
 
-O conteúdo deve ser o protagonista da interface. Capas, títulos, informações e progresso dos animes devem receber mais destaque do que elementos puramente decorativos.
+## 3. Direção de experiência
 
----
+O MykytaDu deve ser organizado, moderno, imersivo e pessoal. Referências ao
+universo de anime devem ser sutis e não comprometer clareza ou usabilidade.
 
-# 3. Direção de UX e Identidade
+Evitar:
 
-## Personalidade
+- excesso de neon ou decoração;
+- fundos completamente pretos;
+- gradientes indiscriminados;
+- tipografia temática em excesso;
+- aparência de portal genérico;
+- cópia visual de serviços existentes;
+- regras de negócio ou detalhes técnicos expostos na interface.
 
-O MykytaDu deve ser:
+Dark Mode é a principal referência visual, e Light Mode deve preservar a mesma
+identidade. Cores, tipografia, shapes, componentes e critérios visuais vigentes
+pertencem à [`identidade-visual.md`](identidade-visual.md).
 
-- Otaku — referências sutis ao universo dos animes;
-- Organizado — hierarquia visual clara e interface limpa;
-- Moderno — linguagem tecnológica e contemporânea;
-- Imersivo — experiência dark forte;
-- Pessoal — sensação de biblioteca própria.
+## 4. Plataformas
 
-A interface deve ser:
+O projeto usa Kotlin Multiplatform e Compose Multiplatform para compartilhar a
+aplicação entre:
 
-> Geek, moderna, elegante e pessoal.
+- Android;
+- Desktop/JVM;
+- iOS Arm64;
+- iOS Simulator Arm64;
+- JavaScript;
+- WasmJS.
 
-## Evitar
+WasmJS é o target Web principal. JavaScript é uma alternativa de compatibilidade
+com distribuição separada; não existe seleção automática de fallback.
 
-- Excesso de neon;
-- Fundos completamente pretos;
-- Gradientes em todos os componentes;
-- Tipografia excessivamente temática de anime;
-- Elementos decorativos em excesso;
-- Aparência de portal genérico de animes;
-- Cópias visuais de serviços existentes.
+Compartilhar em `commonMain` tudo que não depender legitimamente da plataforma.
+Código específico permanece no source set mais estreito; `webMain` reúne o que é
+comum a JS e WasmJS.
 
----
+A decisão completa está no
+[`ADR-001`](adr/ADR-001-compartilhar-aplicacao-kotlin-multiplatform.md) e a
+estratégia Web no
+[`ADR-003`](adr/ADR-003-adotar-wasmjs-com-js-alternativo.md).
 
-# 4. Identidade Visual
+## 5. Arquitetura
 
-## 4.1 Dark Mode
-
-| Token | Cor | Uso |
-|---|---|---|
-| `background` | `#0B0D12` | Fundo principal |
-| `surface` | `#12151D` | Cards e superfícies |
-| `surfaceVariant` | `#191D27` | Superfícies secundárias |
-| `primary` | `#8B7CFF` | Ações principais |
-| `primaryVariant` | `#6C5CE7` | Estados secundários |
-| `secondary` | `#45D6C8` | Progresso e destaques |
-| `textPrimary` | `#F4F4F7` | Texto principal |
-| `textSecondary` | `#A7A9B4` | Texto secundário |
-| `divider` | `#292D38` | Separadores |
-
-O Dark Mode é a principal referência da marca.
-
-## 4.2 Light Mode
-
-| Token | Cor | Uso |
-|---|---|---|
-| `background` | `#F7F7FB` | Fundo principal |
-| `surface` | `#FFFFFF` | Cards e superfícies |
-| `surfaceVariant` | `#F0F0F6` | Elementos secundários |
-| `primary` | `#6355D9` | Ações principais |
-| `primaryVariant` | `#5144C4` | Estados secundários |
-| `secondary` | `#159E94` | Progresso e destaques |
-| `textPrimary` | `#171820` | Texto principal |
-| `textSecondary` | `#656875` | Texto secundário |
-| `divider` | `#E2E3EA` | Separadores |
-
-O Light Mode deve preservar a identidade visual e não ser apenas uma inversão do Dark Mode.
-
----
-
-# 5. Cores Semânticas
-
-| Status | Cor |
-|---|---|
-| Assistindo | `#8B7CFF` |
-| Concluído | `#3CCB7F` |
-| Pausado | `#E8B84A` |
-| Abandonado | `#E45B68` |
-| Planejado | `#55A8FF` |
-
-Cada status deve possuir significado visual consistente em todo o aplicativo.
-
----
-
-# 6. Tipografia
-
-## Fonte principal
-
-**Poppins**
-
-Uso planejado:
-
-- `Bold` — títulos principais;
-- `SemiBold` — títulos de cards e seções;
-- `Medium` — botões e labels;
-- `Regular` — corpo de texto;
-- `Light` — informações auxiliares.
-
-A Poppins já foi integrada aos recursos compartilhados do Compose Multiplatform.
-
----
-
-# 7. Design System
-
-O MykytaDu utiliza Kotlin Multiplatform, Compose Multiplatform e Material 3.
-
-A identidade é implementada através de um Design System baseado em tokens:
-
-```text
-Theme
-├── Colors
-├── Typography
-├── Shapes
-└── Dimensions
-    ├── Spacing
-    ├── Padding
-    └── Radius
-```
-
-As telas não devem definir diretamente cores, espaçamentos ou raios arbitrários.
-
-## 7.1 Material 3 e componentes próprios
-
-Preferir Material 3 quando ele já resolve corretamente o problema.
-
-Criar abstrações próprias quando elas:
-
-- Centralizam comportamento;
-- Centralizam tokens;
-- Garantem consistência visual;
-- Evitam duplicação;
-- Permitem evolução coerente da API do Design System.
-
----
-
-# 8. Arquitetura do Projeto
-
-A fonte oficial para a arquitetura e a modelagem do projeto é o documento [`modelagem.md`](modelagem.md).
-
-Estrutura conceitual principal:
-
-```text
-br/com/mykytadu/
-
-├── app/
-├── core/
-│   ├── common/
-│   ├── constants/
-│   ├── extensions/
-│   ├── navigation/
-│   ├── theme/
-│   └── utils/
-├── data/
-├── di/
-├── domain/
-├── features/
-│   ├── anime/
-│   ├── auth/
-│   ├── home/
-│   ├── library/
-│   ├── profile/
-│   ├── search/
-│   ├── settings/
-│   └── splash/
-└── presentation/
-```
-
-Regra: antes de criar estruturas paralelas, verificar o que já existe no código atual.
-
----
-
-# 9. Stack Técnica
-
-- Kotlin: **2.3.20**
-- JDK: **21**
-- Gradle Wrapper: **8.14**
-- Compose Multiplatform: **1.10.3**
-- Material 3
-- Koin: **4.2.2**
-- Ktor Client
-- Kotlinx Serialization
-
-As versões efetivamente utilizadas devem sempre ser verificadas no `libs.versions.toml`.
-
----
-
-# 11. Roadmap Geral do Frontend
-
-O roadmap oficial organiza o desenvolvimento em **16 sprints funcionais** e uma sprint técnica adicional, identificada como **W1**, sem renumerar as sprints existentes:
-
-| Sprint | Objetivo | Estado |
-|---|---|---|
-| 1 | Fundação do Projeto | ✅ Concluída |
-| 2 | Design System | ✅ Concluída |
-| 3 | Navegação | ✅ Concluída |
-| 4 | Camada de Comunicação | ✅ Concluída |
-| 5 | Domínio do Catálogo | ✅ Concluída |
-| W1 | Fundação Web | ✅ Concluída |
-| 6 | Busca de Animes End-to-End | 🟡 Em andamento |
-| 7 | Detalhes do Anime End-to-End | ⏳ Planejada |
-| 8 | Persistência e Biblioteca Local | ⏳ Planejada |
-| 9 | Biblioteca End-to-End | ⏳ Planejada |
-| 10 | Home | ⏳ Planejada |
-| 11 | Configurações e Preferências | ⏳ Planejada |
-| 12 | Backend e Autenticação | ⏳ Planejada |
-| 13 | Sincronização e Perfil | ⏳ Planejada |
-| 14 | Cache e Experiência Offline | ⏳ Planejada |
-| 15 | Localização e Tradução | ⏳ Planejada |
-| 16 | Preparação para Lançamento | ⏳ Planejada |
-
-O roadmap é a fonte de planejamento. O código atual e as implementações validadas determinam o estado real do projeto.
-
-A partir da Sprint 5, a evolução será feita por fatias verticais: cada funcionalidade incorpora somente os modelos, repositories, estados, ViewModels, interface e testes necessários para produzir um resultado observável. Abstrações sem consumidor real não devem ser antecipadas.
-
-A biblioteca seguirá uma estratégia local-first. Ela funcionará sem autenticação, persistirá alterações localmente e continuará utilizável quando o backend estiver indisponível. A autenticação futura habilitará sincronização, mantendo IDs locais, IDs externos da AniList e futuros IDs do backend conceitualmente separados.
-
----
-
-# 12. Sprint 1 — Fundação
-
-## Status
-
-✅ **CONCLUÍDA**
-
-Entregas consolidadas:
-
-- Compose Multiplatform;
-- Gradle e Version Catalog;
-- Estrutura multiplataforma;
-- Dependency Injection;
-- Cliente HTTP;
-- Serialização;
-- Engines HTTP por plataforma.
-
-## 12.1 Koin e Networking
-
-A infraestrutura de Dependency Injection foi validada em runtime.
+O projeto evolui por fatias verticais. Cada funcionalidade incorpora somente as
+camadas necessárias para produzir um resultado observável.
 
 Fluxo conceitual:
 
 ```text
-Application
-    ↓
-initializeKoin()
-    ↓
-NetworkModule
-    ↓
-HttpClient
+UI
+ ↓
+ViewModel / estado da funcionalidade
+ ↓
+Repository de domínio
+ ↓
+Fontes de dados
 ```
 
-O Ktor utiliza uma abstração de engine por plataforma através de `provideHttpClientEngine()`, com implementações específicas para Android, Desktop e iOS.
+Princípios:
 
-Não recriar essa abstração sem necessidade.
+- regras de negócio não pertencem à UI;
+- comunicação externa ocorre por repositories;
+- DTOs e protocolos remotos não atravessam a camada de dados;
+- estados e ViewModels surgem com consumidores reais;
+- `expect`/`actual` representa apenas fronteiras reais de plataforma;
+- abstrações existentes são verificadas antes da criação de alternativas;
+- cancelamentos de coroutines são preservados;
+- exceções inesperadas não são silenciosamente transformadas em resultado
+  esperado;
+- módulos adicionais exigem benefício concreto de isolamento.
 
----
+A arquitetura e os modelos vigentes estão em
+[`modelagem.md`](modelagem.md). Decisões com consequências duráveis são
+registradas em [`docs/adr/`](adr/README.md).
 
-# 13. Sprint 2 — Design System
+## 6. Domínio e identificadores
 
-## Status
+O domínio representa conceitos do MykytaDu e não o formato de uma API externa.
 
-✅ **CONCLUÍDA**
+- IDs locais, AniList e backend possuem significados distintos;
+- `AniListAnimeId` identifica obras no catálogo AniList;
+- um futuro ID local identifica registros persistidos pelo aplicativo;
+- um futuro ID do backend identifica recursos controlados pelo MykytaDu API;
+- ausência legítima permanece nula, sem sentinelas como zero ou texto de
+  interface;
+- coleções vazias são válidas quando o domínio permitir;
+- valores externos desconhecidos devem ser tratados explicitamente.
 
-## 13.1 Tema e tokens implementados
+Os contratos do catálogo são independentes de GraphQL, Ktor e DTOs. A decisão
+está no [`ADR-002`](adr/ADR-002-isolar-dominio-dos-contratos-anilist.md).
 
-- `AppColors.kt`;
-- `AppTypography.kt`;
-- `AppShapes.kt`;
-- `AppDimensions.kt`;
-- `AppTheme.kt`;
-- Tokens de spacing, padding, radius e ícones.
+## 7. Catálogo e apresentação
 
-Dark e Light Theme foram validados.
+A AniList é a fonte externa inicial para pesquisa e detalhes. Seus contratos são
+convertidos para modelos do domínio antes de chegarem aos consumidores.
 
-## 13.2 Componentes originalmente previstos no roadmap
+Quando a apresentação precisar escolher um título, a ordem é:
 
-| Componente | Estado |
+1. inglês;
+2. romaji;
+3. nativo;
+4. primeiro sinônimo;
+5. recurso localizado indicando título indisponível.
+
+Essa regra pertence à apresentação; os modelos preservam os títulos disponíveis
+sem selecionar um deles.
+
+O contrato técnico da integração está em
+[`api-externa-anilist.md`](api-externa-anilist.md). O acesso direto no Web e suas
+condições estão no
+[`ADR-005`](adr/ADR-005-consumir-anilist-diretamente-no-web.md).
+
+## 8. Navegação
+
+Navigation 3, `AppRoute`, `NavDisplay`, back stack e regras de navegação devem
+permanecer compartilhados sempre que possível.
+
+- rotas transportam somente dados necessários ao destino;
+- identificadores obrigatórios devem ser representados por contratos tipados;
+- restauração não deve inventar dados ausentes;
+- ações de retorno preservam a coerência do back stack;
+- classificação de acesso não substitui autenticação;
+- deep links devem validar parâmetros antes de construir rotas.
+
+No Web, uma fronteira específica sincroniza Navigation 3 com URL e History API.
+Fragment routing é a estratégia atual porque funciona em hospedagem estática sem
+rewrite de paths. A decisão e seus critérios de revisão estão no
+[`ADR-004`](adr/ADR-004-integrar-navigation3-ao-historico-com-fragmentos.md).
+
+## 9. Web
+
+O Web reutiliza a aplicação compartilhada e isola APIs do navegador.
+
+- `webMain` concentra entrypoint, engine HTTP e lógica Web compartilhável;
+- `jsMain` e `wasmJsMain` contêm somente interoperabilidade específica;
+- o transporte HTTP usa Fetch por meio da engine Ktor apropriada;
+- logging HTTP sensível permanece desabilitado;
+- CORS precisa ser comprovado em navegador real;
+- navegação interna e histórico do navegador são responsabilidades distintas;
+- tokens sensíveis não devem ser armazenados em `localStorage`;
+- modos de diagnóstico não se tornam funcionalidades de produto.
+
+PWA, service worker, offline, deploy, SSR e hospedagem definitiva exigem escopo e
+validação próprios.
+
+## 10. Biblioteca e persistência
+
+A biblioteca seguirá uma estratégia local-first:
+
+- funciona sem autenticação;
+- persiste alterações localmente;
+- permanece utilizável quando backend ou rede estiverem indisponíveis;
+- habilita sincronização somente quando houver sessão válida;
+- não confunde dados locais com dados externos ou remotos.
+
+Persistência deve ser modelada quando existirem casos de uso e consultas reais.
+Modelos persistidos não precisam reproduzir modelos de domínio nem DTOs.
+
+## 11. Backend e integrações futuras
+
+O `mykytadu-api` fornecerá capacidades que não devem residir exclusivamente no
+cliente, como identidade, autenticação, sincronização e tradução controlada.
+
+O frontend deve depender de contratos HTTP estáveis, não de classes internas do
+backend. Autenticação e tradução somente serão introduzidas quando os respectivos
+contratos estiverem disponíveis e validados.
+
+Credenciais, tokens, cookies e segredos nunca devem ser registrados em logs,
+documentação ou código-fonte.
+
+## 12. Design System e acessibilidade
+
+Material 3 é a base. Componentes próprios devem centralizar tokens,
+comportamento ou contratos compartilhados, e precisam de consumidor real.
+
+- telas não definem cores, espaçamentos ou raios arbitrários;
+- controles somente com ícone possuem nome acessível;
+- elementos informativos não simulam ações;
+- estados de loading, erro, progresso e vazio devem ser distinguíveis;
+- responsividade parte das constraints disponíveis;
+- teclado, foco, mouse e semântica são validados nos targets aplicáveis;
+- validação parcial não autoriza declarar conformidade WCAG completa.
+
+O foco de botões no tema escuro está funcional, porém seu refinamento visual foi
+reservado para a Sprint 16.
+
+## 13. Qualidade e validação
+
+Uma entrega requer evidência proporcional ao impacto:
+
+- testes determinísticos para regras e transições de estado;
+- builds dos targets afetados;
+- regressão compartilhada quando contratos comuns mudarem;
+- validação visual para alterações de interface;
+- testes reais no navegador para transporte, CORS, histórico e recursos Web;
+- build nativo iOS em macOS/Xcode quando essa evidência for necessária.
+
+Metadata iOS não equivale ao build nativo. Bundle gerado não comprova que a
+aplicação renderizou. Avisos devem ser separados de falhas.
+
+## 14. Stack e dependências
+
+O projeto utiliza Kotlin, Compose Multiplatform, Material 3, Navigation 3, Koin,
+Ktor, Kotlinx Serialization e Coroutines.
+
+Versões efetivas pertencem a `gradle/libs.versions.toml` e aos arquivos Gradle.
+Novas dependências exigem necessidade concreta, compatibilidade comprovada e
+versão centralizada. Upgrades não devem ser misturados com funcionalidades sem
+necessidade técnica.
+
+## 15. Fontes de verdade
+
+Use a prioridade definida no `AGENTS.md`:
+
+1. código atual;
+2. builds e testes efetivamente executados;
+3. implementações e validações recentemente aceitas;
+4. este Documento Mestre;
+5. modelagem;
+6. roadmap;
+7. documentação histórica.
+
+Responsabilidades documentais:
+
+| Documento | Responsabilidade |
 |---|---|
-| `AppButton` | ✅ Implementado |
-| `AppTextField` | ✅ Implementado e expandido |
-| `AppCard` | ✅ Implementado |
-| `AppTopBar` | ✅ Implementado |
-| `AppSearchBar` | ✅ Implementado |
-| `AppChip` | ✅ Implementado |
-| `AppIconButton` | ✅ Implementado |
-| `AppDialog` | ✅ Implementado |
-| `AppLoading` | ✅ Implementado |
-| `AppError` | ✅ Implementado |
-| `AppEmptyState` | ✅ Implementado |
-
-Os **11 componentes originalmente previstos no roadmap estão implementados**.
-
-## 13.3 Elementos adicionais surgidos durante a implementação
-
-| Elemento | Estado | Papel |
-|---|---|---|
-| `AppDivider` | ✅ Implementado | Padroniza divisores visuais |
-| `AppProgressBar` | ✅ Implementado | Padroniza a exibição de progresso determinado |
-| `AppIcons` | ✅ Implementado | Centraliza a linguagem iconográfica |
-| `DesignSystemShowcase` | ✅ Implementado | Validação visual dos componentes |
-
-`AppDivider` e `AppProgressBar` são componentes reutilizáveis adicionais que não estavam previstos originalmente na Sprint 2. `AppIcons` e `DesignSystemShowcase` também surgiram durante a implementação como infraestrutura complementar. Essas inclusões representam evoluções orgânicas do Design System e foram incorporadas sem alterar o escopo funcional das próximas sprints.
-
----
-
-## 13.4 Decisões Recentes do Design System
-
-### 13.4.1 AppDivider
-
-`AppDivider` foi criado durante a implementação para centralizar e padronizar divisores visuais.
-
-O componente foi validado visualmente quanto à linha e ao comportamento de padding.
-
-### 13.4.2 AppIcons
-
-Foi criada a abstração `AppIcons` para centralizar os ícones utilizados pelo Design System.
-
-Objetivos:
-
-- Evitar referências de ícones espalhadas pelos componentes;
-- Criar linguagem iconográfica consistente;
-- Facilitar substituições futuras;
-- Fazer com que componentes reutilizáveis dependam da abstração do projeto em vez de escolhas locais de ícones.
-
-### 13.4.3 AppTextField
-
-O `AppTextField` teve sua API expandida durante a evolução dos componentes.
-
-Essa decisão estabelece um princípio para o Design System:
-
-> Componentes existentes podem ser ampliados quando novas necessidades reutilizáveis surgirem, desde que a mudança preserve coerência, reutilização e baixo acoplamento.
-
-A preferência é evoluir uma abstração existente em vez de criar componentes redundantes.
-
-### 13.4.4 AppTopBar
-
-`AppTopBar` foi implementado e validado como parte da Sprint 2.
-
-Ele deixa de fazer parte das pendências do Design System.
-
-### 13.4.5 AppSearchBar
-
-`AppSearchBar` foi implementado sobre o `SearchBar` do Material 3, mantendo uma API alinhada ao Design System.
-
-Durante a validação visual, o shape precisou ser ajustado porque o radius inicialmente utilizado não correspondia ao esperado. A versão final utiliza o shape/radius definido pelo projeto.
-
-O componente utiliza `AppIcons.Actions.Search` como ícone de busca padrão.
-
-### 13.4.6 Componentes de feedback e estado
-
-Foram implementados os componentes previstos `AppLoading`, `AppError` e `AppEmptyState`, cobrindo feedback de carregamento, falha e ausência de conteúdo.
-
-Também foi criado `AppProgressBar`, não previsto originalmente, para representar progresso determinado de forma consistente com os tokens do tema. Com ele, o Design System diferencia carregamento indeterminado (`AppLoading`) de progresso mensurável (`AppProgressBar`).
-
-### 13.4.7 AppDialog
-
-`AppDialog` foi implementado como uma abstração reutilizável para confirmações e mensagens, com título, mensagem, ícone e ações configuráveis.
-
-## 13.5 Critérios de Aceite da Sprint 2
-
-Conforme o roadmap:
-
-- [x] Nenhuma cor fixa utilizada nas telas;
-- [x] Todos os componentes reutilizáveis;
-- [x] Tema aplicado globalmente.
-
-A revisão final confirmou que as telas não utilizam literais de cor, os componentes expõem APIs parametrizadas para reutilização e o tema está aplicado globalmente. A compilação e os testes do target Desktop foram executados com sucesso antes do encerramento da sprint.
-
-Além dos critérios formais, a implementação vem seguindo o ciclo:
-
-```text
-Implementar
-    ↓
-Compilar
-    ↓
-Validar visualmente
-    ↓
-Ajustar
-    ↓
-Avançar
-```
-
----
-
-# 15. Sprint 3 — Navegação
-
-## Status
-
-✅ **CONCLUÍDA**
-
-Entregas consolidadas:
-
-- oito rotas tipadas, serializáveis e centralizadas em `AppRoute`;
-- navegação compartilhada com Navigation 3, `rememberNavBackStack`, `NavDisplay` e `entryProvider`;
-- serialização polimórfica do back stack com `SavedStateConfiguration`;
-- fluxo de entrada `Splash → Login → Home`, removendo Splash e Login do histórico após o avanço;
-- destinos principais Home, Biblioteca, Pesquisa e Perfil centralizados em `MainDestination`;
-- `MainNavigationBar` exibida somente nos quatro destinos principais;
-- troca entre destinos principais sem acumular as abas visitadas no back stack;
-- transições Pesquisa → Detalhes do Anime, Biblioteca → Detalhes do Anime e Perfil → Configurações;
-- classificação declarativa de rotas públicas e protegidas em `RouteAccess`;
-- resolução compartilhada de Deep Links em `AppDeepLink`;
-- placeholders compartilhados por meio de `NavigationPlaceholder`.
-
-A classificação `PROTECTED` prepara a futura autenticação, mas não aplica validação de sessão ou regras de negócio. Essa responsabilidade permanece planejada para a Sprint 12.
-
-Os Deep Links compartilhados atualmente reconhecem Home, Pesquisa, Biblioteca, Perfil e Configurações. `AnimeDetails` permanece sem Deep Link até que exista um identificador definitivo de anime. Não foi adicionada integração específica por plataforma nesta sprint.
-
-O build completo do módulo e os testes Desktop foram executados com sucesso no encerramento da sprint.
-
----
-
-# 16. Sprint 4 — Camada de Comunicação
-
-## Status
-
-✅ **CONCLUÍDA**
-
-A Sprint 4 preparou a comunicação compartilhada e a integração inicial com a AniList. Os serviços dependentes do backend próprio foram realocados para as sprints em que poderão ser implementados com seus contratos reais.
-
-## 16.1 S4.1 — Auditoria da infraestrutura HTTP
-
-✅ **CONCLUÍDA**
-
-A auditoria confirmou que a infraestrutura HTTP básica está implementada de forma compartilhada e coerente com Kotlin Multiplatform:
-
-- `HttpClient` registrado como singleton no Koin;
-- `ContentNegotiation` configurado com Kotlinx Serialization e `ignoreUnknownKeys`;
-- engines OkHttp no Android, CIO no Desktop e Darwin no iOS;
-- configuração comum centralizada em `commonMain` por meio de `expect/actual`;
-- inicialização do Koin confirmada no Android e Desktop;
-- testes de registro, resolução e singleton do cliente aprovados.
-
-A compilação Desktop, os testes Desktop, o assemble Android e a compilação da metadata de iOS foram executados com sucesso. A compilação nativa de iOS não foi realizada por exigir macOS e Xcode.
-
-No momento da auditoria, ainda não estavam implementados:
-
-- tratamento global e padronizado de erros;
-- timeouts;
-- logging;
-- configuração comum de requisições;
-- preparação para autenticação;
-- `AnimeApi`, `AuthApi` e `TranslationApi`;
-- primeira chamada HTTP funcional.
-
-Também foram identificados os seguintes pontos de atenção:
-
-- ausência da permissão `INTERNET` no manifesto Android;
-- inicialização do Koin no iOS ainda não demonstrada pelo código existente;
-- ausência de encerramento explícito do `HttpClient`;
-- possível uso desnecessário da dependência `koin-android`;
-- testes atuais limitados ao registro e ciclo singleton do cliente.
-
-A infraestrutura existente pode ser preservada e o projeto está apto a avançar para a próxima task da Sprint 4, começando pela consolidação da configuração comum do cliente e do tratamento de comunicação.
-
-## 16.2 S4.2 — Seleção da API externa de animes
-
-✅ **CONCLUÍDA**
-
-A **AniList GraphQL API v2** foi escolhida como fonte principal do catálogo de animes. As consultas públicas utilizam `POST` no endpoint `https://graphql.anilist.co`, retornam JSON e não exigem autenticação.
-
-Foram definidas e validadas manualmente duas operações iniciais:
-
-- `SearchAnime`, para pesquisa paginada com `PageInfo`;
-- `GetAnimeDetails`, para obtenção dos dados previstos na tela de detalhes.
-
-O identificador externo principal será `Media.id`, com `Media.idMal` preservado como referência opcional. Os DTOs remotos deverão respeitar campos anuláveis, coleções vazias e datas parciais observadas nas respostas.
-
-A integração deverá distinguir falhas HTTP de erros GraphQL, inclusive respostas HTTP `200` com `errors` ou dados parciais. Também deverá tratar rate limit e HTTP `429`, respeitando `Retry-After` quando disponível.
-
-O futuro `AnimeApi` encapsulará queries, variables e envelopes GraphQL, sem expor tipos externos diretamente ao domínio. A implementação do serviço, dos DTOs Kotlin, repositories, modelos de domínio, cache, tradução e OAuth permanece fora do escopo desta decisão.
-
-A decisão completa, incluindo queries validadas, nulabilidade, alternativas avaliadas, riscos e condições de reavaliação, está registrada em [`api-externa-anilist.md`](api-externa-anilist.md).
-
-## 16.3 S4.3 — Robustez e padronização da comunicação HTTP
-
-✅ **CONCLUÍDA**
-
-O `HttpClient` compartilhado foi preparado para o consumo previsível de serviços HTTP sem antecipar APIs, domínio ou regras de negócio:
-
-- timeouts centralizados de 30 segundos para request, 10 segundos para conexão e 30 segundos para socket;
-- logging de desenvolvimento no nível `HEADERS`, sem corpos, desativado em builds móveis release e com sanitização de `Authorization`, `Cookie` e `Set-Cookie`;
-- headers globais `Accept: application/json` e `Content-Type: application/json`, sem URL-base fixa;
-- validação automática de status com `expectSuccess`;
-- fechamento do singleton `HttpClient` quando sua definição Koin for encerrada;
-- permissão `INTERNET` declarada no Android.
-
-Foi criado um contrato técnico compartilhado baseado em `NetworkResult` e `NetworkFailure`. O mecanismo `safeNetworkCall` converte timeouts, falhas de conexão, respostas HTTP não bem-sucedidas, falhas de serialização e erros desconhecidos, preservando a causa técnica e propagando cancelamentos de coroutines.
-
-Requisições públicas continuam sem `Authorization`. A autenticação futura poderá ser adicionada na configuração do Ktor ou por request sem reconstruir o cliente; nenhum token, armazenamento de sessão ou OAuth foi implementado.
-
-O tratamento global permanece restrito a transporte, protocolo HTTP e serialização. Respostas GraphQL HTTP `200` com `errors` ou dados parciais deverão ser interpretadas posteriormente pelo contrato do `AnimeApi`.
-
-Testes com `MockEngine` validam sucesso, erro HTTP, timeout, falha de conexão, serialização, falha desconhecida, ausência de `Authorization` e sanitização do logging. Foram validados commonMain, Desktop, Android e metadata iOS; a compilação nativa iOS permanece dependente de macOS e Xcode.
-
-Ao encerrar a S4.3, `AnimeApi`, a primeira chamada funcional, repositories, modelos de domínio e integrações com UI permaneciam pendentes. `AuthApi` e `TranslationApi` também aguardavam a definição do backend.
-
-## 16.4 S4.4 — Implementação do AnimeApi
-
-✅ **CONCLUÍDA**
-
-O contrato compartilhado `AnimeApi` e sua implementação `AniListAnimeApi` passaram a oferecer pesquisa paginada e consulta de detalhes por identificador. Queries, variables, envelopes GraphQL e DTOs remotos ficam isolados na camada `data/remote`, enquanto o serviço reutiliza o `HttpClient` singleton resolvido pelo Koin.
-
-A integração diferencia falhas de transporte e HTTP dos erros retornados no envelope GraphQL, rejeita respostas obrigatórias ausentes e valida argumentos antes de enviar uma requisição. Chamadas públicas permanecem sem `Authorization`.
-
-Testes com `MockEngine` cobrem pesquisa, detalhes, queries, variables, nulabilidade, validação de entrada, respostas incompletas e erros GraphQL. Smoke tests Desktop comprovaram chamadas reais de pesquisa e detalhes na AniList. Também foram aprovados commonMain, Desktop, Android e metadata iOS; a compilação nativa iOS continua dependente de macOS e Xcode.
-
-Por dependerem do backend próprio, ainda ausente nesta etapa, `AuthApi` e `TranslationApi` deixam oficialmente o escopo da Sprint 4. Na revisão atual do roadmap, passam para as Sprints 12 e 15, respectivamente. Nenhum fluxo de autenticação, tradução, repository, modelo de domínio ou integração com UI foi antecipado.
-
----
-
-# 17. Sprint 5 — Domínio do Catálogo
-
-## 17.1 S5.1 — Auditoria dos contratos e estrutura atuais
-
-✅ **CONCLUÍDA**
-
-A auditoria confirmou a fronteira remota existente: `AnimeApi` e `AniListAnimeApi` devolvem DTOs por meio de `NetworkResult`, encapsulam GraphQL e validam pesquisa, paginação e ID. Ainda não existem modelos de catálogo, mapeadores ou `AnimeRepository`; as telas de pesquisa e detalhes permanecem placeholders e a rota de detalhes ainda não transporta o ID AniList.
-
-A proposta para as próximas tasks recomenda `AnimeSummary` e `AnimeDetails` separados, modelos auxiliares somente quando houver semântica concreta, gêneros como `List<String>`, conversão de enums no mapper com fallback seguro, IDs externos semanticamente distintos e um resultado de repository independente do transporte. `NetworkFailure` deverá ser convertido sem expor GraphQL, HTTP ou mensagens técnicas aos futuros ViewModels, preservando cancelamentos e a causa para diagnóstico.
-
-O `AnimeStatus` já existente pertence ao vocabulário visual da futura biblioteca e não deve representar o status editorial retornado pela AniList. Modelos sem consumidor imediato — como personagens, episódios como entidades, usuário, biblioteca, cache e persistência — continuam fora do escopo.
-
-Nenhum arquivo de implementação foi alterado durante a auditoria.
-
-## 17.2 S5.2 — Contratos fundamentais do domínio
-
-✅ **CONCLUÍDA**
-
-Foram implementados `AniListAnimeId`, `RepositoryResult`, as categorias estáveis de `RepositoryFailure`, `PageInfo` e `PagedResult`. A camada de dados passou a converter exaustivamente `NetworkFailure` para falhas de repository, preservando a causa técnica sem expor detalhes de rede, GraphQL ou mensagens destinadas à interface no domínio.
-
-Os contratos protegem IDs e parâmetros de paginação inválidos, aceitam páginas vazias e mantêm `hasNextPage` como informação normativa. Os testes específicos, a suíte Desktop, a compilação compartilhada, o build e os testes Android e a metadata iOS foram aprovados, sem dependências novas ou serialização nos modelos de domínio.
-
----
-
-## 17.3 S5.3 — Modelos do Catálogo
-
-✅ **CONCLUÍDA — aceita pelo usuário**
-
-Foram implementados `AnimeSummary` e `AnimeDetails` como contratos independentes, acompanhados de títulos, imagens, datas parciais, estúdios, trailer, relações e cinco enums de domínio com `UNKNOWN`. Os modelos reutilizam `AniListAnimeId`, preservam `idMal` opcional, títulos alternativos e gêneros abertos, sem dependências de infraestrutura ou serialização.
-
-Campos opcionais e coleções vazias são aceitos; as listas recebidas mantêm snapshots. Datas validam somente os intervalos de mês e dia, e relações preservam dados resumidos sem recursividade. Os 15 novos testes passaram no Desktop e Android, assim como a compilação compartilhada, o assemble Android e a metadata iOS. A compilação nativa iOS permanece dependente de macOS e Xcode.
-
-Mapeadores, repository, regras de apresentação e campos deliberadamente adiados permanecem fora desta entrega.
-
----
-
-## 17.4 S5.4 — Mapeadores AniList → domínio
-
-✅ **CONCLUÍDA — aceita pelo usuário**
-
-A S5.4 implementou os mapeadores internos da camada `data.mapper` para títulos, imagens, datas parciais, estúdios, trailers, enums, pesquisa, paginação, detalhes e relações. As conversões preservam nulabilidade e coleções vazias, distinguem ausência de valores desconhecidos (`null` e `UNKNOWN`) e descartam individualmente dados estruturais inválidos. Relações permanecem resumidas e não recursivas; as subtasks S5.4.3 e S5.4.4 foram aceitas manualmente pelo usuário.
-
-O `AnimeRepository`, DI, consumidores de UI e campos deliberadamente adiados continuam fora desta entrega específica. O repository foi implementado na S5.5.
-
----
-
-## 17.5 S5.5 — AnimeRepository
-
-✅ **CONCLUÍDA — aceita pelo usuário**
-
-A S5.5 criou o contrato de domínio `AnimeRepository`, a implementação `AniListAnimeRepository`, a política de validação e falhas e o registro singleton no Koin. A pesquisa normaliza a consulta, valida paginação e retorna resultados paginados; a consulta de detalhes utiliza `AniListAnimeId`. Falhas remotas são convertidas para o resultado de repository, erros de mapeamento tornam-se `InvalidData` e cancelamentos e exceções inesperadas são preservados.
-
-Os testes cobrem sucessos, entradas inválidas, falhas remotas, mapeamento, cancelamento e DI. A metadata compartilhada, os testes Desktop e o build Android foram aprovados. A Sprint 5 está concluída; os consumidores de pesquisa e detalhes serão implementados nas sprints seguintes.
-
----
-
-## 17.6 Sprint W1 — Fundação Web
-
-✅ **CONCLUÍDA — W1.1 a W1.6 aceitas pelo usuário**
-
-A Sprint W1 preparou o mesmo módulo `:composeApp` para execução no navegador, com `wasmJs` como target principal e `js` como fallback de compatibilidade. Ela é uma sprint técnica inserida entre as Sprints 5 e 6, sem renumerar as 16 sprints funcionais existentes.
-
-A W1.1 confirmou que `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack podem permanecer compartilhados em `commonMain`; a configuração polimórfica atual é a base adequada para targets não JVM.
-
-A W1.2 implementou `wasmJs` e `js`, com `webMain` e `webTest`, entrypoint que inicializa o Koin antes de renderizar `App()` por `ComposeViewport` e logging Web desabilitado. `AppNavigation` e Navigation 3 permaneceram compartilhados; SVGs, fontes Poppins, distribuições e testes Web foram validados, e os shells renderizaram a aplicação compartilhada no navegador com navegação interna para frente funcional.
-
-A política de repositórios passou a `PREFER_PROJECT` porque o plugin Kotlin Web adiciona, durante a configuração, o repositório necessário à distribuição Node. Essa decisão é restrita a essa necessidade técnica e poderá ser reavaliada se o tooling ou a configuração Gradle mudarem.
-
-A W1.3 validou comunicação real em JS e WasmJS por meio de um diagnóstico técnico isolado em `?network-smoke=true`. Ele resolve `AnimeRepository` pelo Koin, consulta `Naruto` e apresenta somente dados de domínio, preservando cancelamento, proteção contra concorrência e resultados obsoletos. O diagnóstico sanitiza detalhes técnicos e sonda a capa remota; não é funcionalidade de usuário.
-
-CIO compilava para os targets Web, mas falhava no navegador ao tentar usar `node:net` antes do transporte. A engine Web foi substituída explicitamente por `Js` de `ktor-client-js`, baseada em Fetch; CIO permanece restrita ao Desktop. Em ambos os targets, a AniList respondeu ao preflight `OPTIONS` e ao `POST` com `200 OK`, `Access-Control-Allow-Origin: *`, métodos `GET, POST, OPTIONS`, `Content-Type: application/json` e sem `Authorization`. A resposta foi convertida em modelos de domínio e a capa carregou no navegador.
-
-A W1.4 integrou Navigation 3 ao histórico do navegador por fragment routing, sem expor APIs de DOM ao código compartilhado. O codec centralizado mapeia as oito `AppRoute` atuais para fragmentos, canonicaliza URLs vazias, inválidas ou desconhecidas para `#/splash` e preserva `?network-smoke=true`. Entradas que limpam a pilha usam substituição; navegação entre destinos e rotas secundárias cria entradas; restaurações por back/forward não escrevem novo histórico. Reload, deep links e a navegação nos dois targets Web foram validados. `AnimeDetails` continua sem ID na URL porque seu contrato ainda não possui parâmetro.
-
-O Console Web apresentou somente um aviso não bloqueante da camada gráfica WebGL/CanvasKit sobre `WEBGL_debug_renderer_info`, sem impacto visual ou funcional observado. A auditoria W1.5.1 foi concluída e aceita sem alterações de código. A W1.5.2 entregou o shell adaptativo por largura, com `NavigationBar` abaixo de `600.dp`, `NavigationRail` a partir desse limite, conteúdo centralizado até `1200.dp` e scroll vertical no showcase. A W1.5.3 foi concluída e aceita no escopo validado: placeholders usam botões explícitos, a navegação compartilha ícones, labels e seleção, controles acionáveis possuem nomes acessíveis, chips informativos não simulam ações, cursores e semântica de loading/progresso foram ajustados, e o showcase técnico é ativado por `?design-system-showcase=true`, com precedência de `?network-smoke=true`. `App()` agora aplica `AppTheme` e uma `Surface` raiz, alinhando o tema da aplicação ao showcase. O foco utiliza os estados visuais nativos de cada componente e seus shapes, sem o contorno retangular rejeitado. O usuário considerou o foco dos botões no tema escuro ainda sutil, mas aceitou o comportamento para o escopo da W1.5.3. O refinamento visual será reavaliado na Sprint 16 — Preparação para Lançamento.
-
-A W1.5.4 consolidou e validou a integração do shell em JS e WasmJS. A bateria final terminou com sucesso, com 11 tasks executadas e 109 `UP-TO-DATE`; a compilação de metadata iOS não substitui build nativo com Xcode. A validação visual cobriu a fronteira de `599/600` px, tamanhos compacto, reduzido e amplo, zoom de 200%, tema claro, scroll, centralização e preservação de rota e seleção. As evidências já aceitas de navegação, histórico, modos técnicos, comunicação AniList, teclado, foco, dialogs e semântica foram reaproveitadas. Com isso, a W1.5 foi concluída e aceita.
-
-A W1.6 gerou e validou por HTTP estático as distribuições de produção separadas em `composeApp/build/dist/wasmJs/productionExecutable` e `composeApp/build/dist/js/productionExecutable`. Os builds JS e WasmJS terminaram com sucesso em 2m08s e 4m01s, com 6 e 7 tasks executadas, respectivamente. Ambas as distribuições incluem `index.html`, fontes Poppins, dez SVGs compartilhados e recursos Compose. O smoke test nos dois targets comprovou o fluxo principal, fragmentos, histórico, reload, deep links, canonicalização, modos técnicos, comunicação pelo `AnimeRepository` e carregamento da capa. No WasmJS, HTML, JavaScript, Wasm, fonte e SVG responderam com status `200`, e o binário foi servido como `application/wasm`. Na rodada observada, o Console não apresentou avisos ou erros; os avisos de tamanho dos bundles e tooling ocorreram durante o build e não impediram as distribuições.
-
-Como fotografia dos artefatos avaliados, a distribuição JS possuía 23 arquivos e 28,03 MiB, enquanto a WasmJS possuía 19 arquivos e 14,93 MiB. O Wasm da aplicação media 4,39 MiB e o runtime Skiko Wasm, também presente na distribuição JS, 8,24 MiB. Esses valores não representam limites nem tamanhos de download comprimido. O fechamento automatizado do dialog não foi conclusivo nessa rodada; confirmar, cancelar, Escape e retorno do foco permanecem sustentados pela validação manual aceita da W1.5.4. WasmJS permanece o target principal e JS uma alternativa com distribuição própria, sem seleção automática de fallback. A Sprint W1 está concluída; PWA, service worker, offline, deploy e hospedagem definitiva não foram implementados, e não há declaração de conformidade WCAG completa.
-
----
-
-## 17.7 S6.1 — Auditoria e plano da Busca de Animes
-
-✅ **CONCLUÍDA E ACEITA**
-
-A S6.1 confirmou que `AnimeRepository`, os modelos do catálogo, a paginação, o Design System, o shell responsivo e a navegação compartilhada formam a base da busca, enquanto `SearchScreen` e `AnimeDetailsScreen` ainda são placeholders. A Sprint 6 foi iniciada e dividida operacionalmente em S6.2 a S6.6, cobrindo estado e primeira pesquisa, transporte do ID AniList, resultados com imagens, paginação e validação consolidada.
-
-O plano determina que a consulta anterior seja invalidada e cancelada assim que a consulta normalizada mudar; o debounce atrasará somente a nova requisição. O retorno dos detalhes deverá verificar separadamente a preservação do `SearchViewModel`, dos resultados e da posição de scroll. Lifecycle, integração Koin e Coil permanecem propostas sujeitas à comprovação de compatibilidade, e nenhum comportamento de cache HTTP será prometido sem evidência por target.
-
-A Sprint 6 será responsável por transportar e restaurar o `AniListAnimeId` na navegação. A Sprint 7 consumirá esse ID para carregar e apresentar os detalhes. Busca funcional, ViewModel, carregamento de imagens e rota parametrizada ainda não foram implementados. O próximo passo é a **S6.2 — Estado e primeira pesquisa funcional**.
-
----
-
-# 18. Diretrizes Gerais do Projeto
-
-- Componentes reutilizáveis antes de componentes específicos;
-- Nenhuma regra de negócio dentro da UI;
-- Toda comunicação externa passa pelos Repositories;
-- Estados padronizados em todas as telas;
-- Código desacoplado e testável;
-- Commits pequenos e descritivos;
-- Uma responsabilidade por classe;
-- Evitar duplicação;
-- Evolução incremental;
-- Não antecipar funcionalidades futuras;
-- Verificar a estrutura existente antes de criar novos arquivos ou abstrações.
-
----
-
-# 19. Fontes Oficiais do Projeto
-
-## 19.1 Identidade Visual
-
-**[`identidade-visual.md`](identidade-visual.md)**
-
-Fonte para:
-
-- Conceito;
-- Personalidade da marca;
-- Dark/Light Mode;
-- Cores semânticas;
-- Tipografia;
-- Cards;
-- Navegação;
-- Ícones;
-- Microinterações;
-- Princípios de UX;
-- Direção do Design System.
-
-## 19.2 Roadmap do Frontend
-
-**[`roadmap.md`](roadmap.md)**
-
-Fonte para:
-
-- Estrutura das 16 sprints;
-- Objetivos;
-- Entregas;
-- Critérios de aceite;
-- Diretrizes gerais;
-- Visão de longo prazo.
-
-## 19.3 Arquitetura e Modelagem
-
-**[`modelagem.md`](modelagem.md)**
-
-Fonte para:
-
-- Arquitetura do projeto;
-- Organização das camadas;
-- Modelagem das entidades;
-- Relações e responsabilidades entre os componentes.
-
-## 19.4 API Externa de Animes
-
-**[`api-externa-anilist.md`](api-externa-anilist.md)**
-
-Fonte para:
-
-- escolha da AniList GraphQL API v2;
-- endpoint, protocolo e autenticação;
-- operações de pesquisa e detalhes;
-- paginação, nulabilidade e envelopes GraphQL;
-- limites de uso, riscos e critérios de reavaliação;
-- fronteiras arquiteturais da integração externa.
-
-## 19.5 Histórico Técnico de Desenvolvimento
-
-Conversas e registros de implementação do projeto.
-
-Fonte para:
-
-- Estado real dos componentes;
-- Decisões tomadas durante a implementação;
-- Problemas encontrados e soluções;
-- Validações de compilação e runtime;
-- Evoluções que não estavam previstas originalmente no roadmap.
-
----
-
-# 20. Regra de Prioridade das Fontes
-
-Quando houver divergência sobre o estado do projeto:
-
-```text
-Código atual
-    ↓
-Implementações e validações recentes
-    ↓
-Documento Mestre
-    ↓
-Roadmap
-    ↓
-Documentos históricos
-```
-
-O roadmap define **para onde vamos**.
-
-O Documento Mestre registra **onde estamos e por quê**.
-
-O código determina **o que realmente existe**.
-
----
-
-# 21. Regra para Novos Chats
-
-Ao continuar o desenvolvimento em um novo chat:
-
-- Utilizar este documento como contexto principal;
-- Não reiniciar sprints concluídas;
-- Verificar o código atual antes de alterar arquivos;
-- Trabalhar incrementalmente;
-- Compilar frequentemente;
-- Validar visualmente os componentes;
-- Não antecipar funcionalidades futuras;
-- Atualizar este Documento Mestre após decisões relevantes.
-
----
-
-# 22. Resumo Executivo
-
-## Produto
-
-**MykytaDu — Sua jornada pelos animes.**
-
-## Stack
-
-**Kotlin Multiplatform + Compose Multiplatform**
-
-## Roadmap
-
-**16 Sprints funcionais + W1 técnica**
-
-## Estado atual
-
-- Sprint 1 — Fundação: ✅ Concluída
-- Sprint 2 — Design System: ✅ Concluída
-- Sprint 3 — Navegação: ✅ Concluída
-- Sprint 4 — Camada de Comunicação: ✅ Concluída — S4.1 a S4.4 concluídas
-- Sprint 5 — Domínio do Catálogo: ✅ Concluída — S5.1 a S5.5 concluídas
-- Sprint W1 — Fundação Web: ✅ Concluída — W1.1 a W1.6 aceitas
-- Sprint 6 — Busca de Animes End-to-End: 🟡 Em andamento — S6.1 concluída e S6.2 a S6.6 planejadas
-- Sprints 7–16: ⏳ Planejadas, organizadas em fatias verticais, com biblioteca local-first, `AuthApi` na Sprint 12 e `TranslationApi` na Sprint 15
-
-## Componentes do roadmap concluídos na Sprint 2
-
-- `AppButton`
-- `AppTextField`
-- `AppCard`
-- `AppTopBar`
-- `AppSearchBar`
-- `AppChip`
-- `AppIconButton`
-- `AppDialog`
-- `AppLoading`
-- `AppError`
-- `AppEmptyState`
-
-## Adições ao Design System
-
-- `AppDivider`
-- `AppProgressBar`
-- `AppIcons`
-- `DesignSystemShowcase`
-
-## Próximo passo
-
-> **Prosseguir para a S6.2 — Estado e primeira pesquisa funcional.**
-
-## Filosofia
-
-> **Anime na personalidade, produto de software na execução.**
+| [`README.md`](../README.md) | entrada, execução e visão resumida |
+| este documento | produto, especificações e direção estável |
+| [`roadmap.md`](roadmap.md) | planejamento e estado consolidado |
+| [`modelagem.md`](modelagem.md) | arquitetura e modelos vigentes ou propostos |
+| [`identidade-visual.md`](identidade-visual.md) | identidade e Design System |
+| [`api-externa-anilist.md`](api-externa-anilist.md) | contrato da integração AniList |
+| [`sprints/`](sprints/README.md) | execução, evidências e encerramentos |
+| [`adr/`](adr/README.md) | decisões arquiteturais e consequências |
+
+Quando documentos divergirem, corrigir a fonte responsável. Não duplicar
+informação apenas para manter arquivos aparentemente completos.
+
+## 16. Limites de manutenção
+
+- este documento não recebe status de sprint, checklists ou próximo passo;
+- resultados de execução pertencem ao registro da sprint;
+- decisões arquiteturais relevantes apontam para ADR;
+- modelagem descreve o estado vigente e identifica propostas;
+- roadmap não funciona como diário de implementação;
+- documentação técnica acompanha contratos reais;
+- planejamento nunca é descrito como capacidade implementada.

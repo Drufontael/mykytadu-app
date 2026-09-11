@@ -561,19 +561,11 @@ Cores, contraste, tamanho de texto e áreas de toque devem ser pensados para uso
 
 ---
 
-# 15. Próximas etapas do Design System
+# 15. Aplicação da identidade
 
-A evolução recomendada para o projeto é:
+Cada funcionalidade deve aplicar e validar o Design System durante sua própria
+implementação. Qualidade visual, temas e acessibilidade não devem ser adiados até
+uma tela posterior.
 
-1. [x] Definir o conceito final do logo
-2. Validar a paleta Dark/Light
-3. Definir tokens de Design System
-4. Implementar `MykytaDuDarkColorScheme`
-5. Implementar `MykytaDuLightColorScheme`
-6. Definir tipografia
-7. Criar componentes base
-8. Criar a Home como tela de referência na Sprint 10
-9. Validar a experiência em Dark e Light
-10. Expandir o Design System para as demais telas
-
-A Home deve funcionar como uma **tela de consolidação da identidade visual** na Sprint 10. As funcionalidades end-to-end anteriores devem aplicar e validar o Design System incrementalmente, sem adiar qualidade visual, temas ou acessibilidade até a Home.
+A Home funcionará como uma tela de consolidação da identidade visual, sem
+substituir a evolução incremental dos componentes e fluxos anteriores.

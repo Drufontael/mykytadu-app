@@ -1,306 +1,74 @@
-# MykytaDu — Roadmap de Desenvolvimento (Frontend)
+# MykytaDu — Roadmap de Desenvolvimento
 
 ## Objetivo
 
-Construir o frontend do **MykytaDu** de forma incremental, priorizando uma arquitetura sólida, reutilização de componentes e baixo acoplamento.
+Organizar a evolução funcional do MykytaDu em fatias verificáveis. Este
+documento contém planejamento e estado consolidado. Execução, evidências,
+bloqueios e encerramentos ficam nos registros em
+[`docs/sprints/`](sprints/README.md).
 
-Cada sprint deve entregar uma funcionalidade completa ou uma evolução da infraestrutura do projeto. Nenhuma sprint deve depender de soluções improvisadas ou gerar dívida técnica desnecessária.
+## Princípios de planejamento
 
----
+- cada sprint entrega um resultado observável;
+- infraestrutura surge junto de um consumidor real;
+- critérios de aceite não são relaxados silenciosamente;
+- planejamento não comprova implementação;
+- alterações de escopo são registradas no arquivo da sprint;
+- decisões arquiteturais relevantes apontam para ADRs;
+- biblioteca e persistência seguem direção local-first;
+- IDs locais, AniList e backend permanecem distintos;
+- autenticação habilita sincronização, mas não condiciona o uso local.
 
-# Sprint 1 — Fundação do Projeto
+## Estado consolidado
 
-**Status:** Concluída
+O roadmap possui 16 sprints funcionais e uma sprint técnica adicional, W1,
+inserida entre as Sprints 5 e 6 sem renumeração.
 
-## Objetivo
+| Sprint | Objetivo | Estado | Registro |
+|---|---|---|---|
+| S1 | Fundação do Projeto | Concluída | [S1](sprints/S1.md) |
+| S2 | Design System | Concluída | [S2](sprints/S2.md) |
+| S3 | Navegação | Concluída | [S3](sprints/S3.md) |
+| S4 | Camada de Comunicação | Concluída | [S4](sprints/S4.md) |
+| S5 | Domínio do Catálogo | Concluída | [S5](sprints/S5.md) |
+| W1 | Fundação Web | Concluída | [W1](sprints/W1.md) |
+| S6 | Busca de Animes End-to-End | Em andamento | [S6](sprints/S6.md) |
+| S7 | Detalhes do Anime End-to-End | Planejada | a criar |
+| S8 | Persistência e Biblioteca Local | Planejada | a criar |
+| S9 | Biblioteca End-to-End | Planejada | a criar |
+| S10 | Home | Planejada | a criar |
+| S11 | Configurações e Preferências | Planejada | a criar |
+| S12 | Backend e Autenticação | Planejada | a criar |
+| S13 | Sincronização e Perfil | Planejada | a criar |
+| S14 | Cache e Experiência Offline | Planejada | a criar |
+| S15 | Localização e Tradução | Planejada | a criar |
+| S16 | Preparação para Lançamento | Planejada | a criar |
 
-Preparar toda a infraestrutura necessária para o desenvolvimento do aplicativo.
+## Diretrizes transversais
 
-### Entregas
+### Fatias verticais
 
-- [x] Configuração do projeto Compose Multiplatform
-- [x] Organização do Gradle
-- [x] Version Catalog (`libs.versions.toml`)
-- [x] Configuração das bibliotecas principais
-- [x] Estrutura de pacotes
-- [x] Configuração de DI
-- [x] Configuração do cliente HTTP
-- [x] Configuração da serialização
-- [x] Configuração do projeto para múltiplas plataformas
+Uma funcionalidade incorpora somente os modelos, repositories, estados,
+ViewModels, interface e testes necessários para produzir seu resultado. Não se
+preparam camadas completas sem consumidor.
 
-### Critérios de aceite
+### Modelagem sob demanda
 
-- [x] O projeto compila.
-- [x] Não existe código de negócio.
-- [x] Não existe tela funcional.
-- [x] Todas as dependências estão centralizadas.
+Modelos nascem de casos de uso concretos. Campos de provedores externos não são
+copiados automaticamente para o domínio.
 
----
+### Repositories por funcionalidade
 
-# Sprint 2 — Design System
+A UI consome contratos de domínio. Detalhes de rede, cache e persistência ficam
+atrás dos repositories correspondentes.
 
-**Status:** Concluída
+### Biblioteca local-first
 
-## Objetivo
-
-Criar a identidade visual do aplicativo.
-
-### Entregas
-
-### Tema
-
-- [x] Colors
-- [x] Typography
-- [x] Shapes
-- [x] Dimensions
-- [x] Spacing
-- [x] Elevations
-
-### Componentes reutilizáveis
-
-- [x] AppButton
-- [x] AppTextField
-- [x] AppCard
-- [x] AppTopBar
-- [x] AppSearchBar
-- [x] AppChip
-- [x] AppDivider
-- [x] AppDialog
-- [x] AppLoading
-- [x] AppProgressBar
-- [x] AppError
-- [x] AppEmptyState
-- [x] AppIconButton
-
-### Critérios de aceite
-
-- [x] Nenhuma cor fixa utilizada nas telas.
-- [x] Todos os componentes reutilizáveis.
-- [x] Tema aplicado globalmente.
+A biblioteca funciona e persiste localmente sem autenticação. O backend adiciona
+sincronização quando existir sessão válida, sem substituir o estado local como
+base da experiência.
 
 ---
-
-# Sprint 3 — Navegação
-
-**Status:** Concluída
-
-## Objetivo
-
-Definir toda a navegação do aplicativo.
-
-### Rotas
-
-- [x] Splash
-- [x] Login
-- [x] Home
-- [x] Pesquisa
-- [x] Detalhes do Anime
-- [x] Biblioteca
-- [x] Perfil
-- [x] Configurações
-
-### Entregas
-
-- [x] Navegação configurada
-- [x] Rotas protegidas preparadas
-- [x] Estrutura para Deep Links
-
-### Critérios de aceite
-
-- [x] Navegação funcionando entre todas as telas.
-- [x] Cada tela pode conter apenas um texto identificando seu nome.
-
----
-
-# Sprint 4 — Camada de Comunicação
-
-**Status:** Concluída
-
-## Objetivo
-
-Preparar toda a comunicação com o backend e APIs externas.
-
-### Entregas
-
-- [x] Cliente HTTP
-- [x] Configuração de Serialização
-- [x] Tratamento global de erros
-- [x] Timeouts
-- [x] Logging
-- [x] Interceptadores
-- [x] Configuração de autenticação futura
-
-### Serviços
-
-- [x] AnimeApi
-
-`AuthApi` e `TranslationApi` foram retiradas desta sprint porque dependem do backend ainda indisponível nesta etapa. Na revisão atual do roadmap, suas entregas estão planejadas para as Sprints 12 e 15, respectivamente.
-
-### Critérios de aceite
-
-- [x] Primeira chamada HTTP funcionando.
-- [x] Erros tratados de forma padronizada.
-
----
-
-# Princípios para as Próximas Sprints
-
-## Fatias verticais
-
-A partir da Sprint 5, cada funcionalidade deve incluir somente as camadas necessárias para produzir um resultado observável:
-
-```text
-API ou fonte de dados
-    ↓
-Repository
-    ↓
-ViewModel e estado
-    ↓
-Interface
-    ↓
-Testes e validação
-```
-
-Repositories, ViewModels e modelos não devem ser planejados antecipadamente para funcionalidades futuras. O padrão compartilhado de estado será definido na primeira funcionalidade e reutilizado incrementalmente.
-
-## Modelagem sob demanda
-
-Os modelos devem surgir quando houver um caso de uso concreto. DTOs da AniList permanecem na camada de dados e não são modelos de domínio.
-
-## Repositories por funcionalidade
-
-- `AnimeRepository` surge com o catálogo.
-- `LibraryRepository` surge com a biblioteca.
-- `AuthRepository` surge com a autenticação.
-
-## Biblioteca local-first
-
-A biblioteca deve funcionar localmente antes da existência do backend:
-
-- funciona sem autenticação;
-- persiste alterações localmente;
-- autenticação futura habilita sincronização;
-- indisponibilidade do backend não bloqueia a funcionalidade principal;
-- IDs locais, IDs externos da AniList e futuros IDs do backend permanecem conceitualmente separados.
-
----
-
-# Sprint 5 — Domínio do Catálogo
-
-**Status:** Concluída
-
-## Objetivo
-
-Criar somente os modelos, conversões e abstrações necessários para pesquisa e detalhes de animes, estabelecendo a separação entre a AniList e o domínio do MykytaDu.
-
-### Progresso
-
-- [x] S5.1 — Auditar contratos e estrutura atuais
-- [x] S5.2 — Implementar contratos fundamentais do domínio
-- [x] S5.3 — Modelos do Catálogo
-- [x] S5.4 — Mapeadores AniList → domínio
-- [x] S5.5 — AnimeRepository
-
-A auditoria confirmou que `AnimeApi`, `AniListAnimeApi`, os DTOs, o tratamento de falhas e o registro no Koin estão implementados. A S5.2 estabeleceu o identificador tipado da AniList, resultado e falhas independentes da rede, paginação genérica e a conversão interna de `NetworkFailure`. A S5.3 implementou os modelos independentes de pesquisa e detalhes, seus tipos auxiliares e enums de domínio. A S5.4 implementou e testou os mapeadores auxiliares, as conversões explícitas de enums e os mapeamentos de pesquisa, paginação, detalhes e relações. A S5.5 implementou o contrato e a integração do `AnimeRepository`, com política de validação, falhas e registro no Koin.
-
-### Escopo
-
-- [x] Modelos de resultado de pesquisa
-- [x] Modelo de detalhes
-- [x] Títulos alternativos
-- [x] Capas, banners e imagens
-- [x] Gêneros
-- [x] Estúdios
-- [x] Datas parciais
-- [x] Trailer
-- [x] Relações entre obras
-- [x] Paginação
-- [x] Enums do domínio
-- [x] Mapeadores de DTOs AniList para domínio
-- [x] Contrato e implementação inicial de `AnimeRepository`
-
-A inclusão de modelos auxiliares deve ser guiada pelos casos de uso existentes, não pela antiga lista de entidades.
-
-### Fora do escopo
-
-- `Character`
-- `User`
-- `LibraryEntry`
-- `Review`
-- Autenticação
-- Persistência local
-- ViewModels
-- Telas
-- Cache de catálogo
-- Regras completas de episódios ou temporadas sem consumidor atual
-
-### Critérios de aceite
-
-- [x] DTOs da AniList permanecem restritos à camada de dados.
-- [x] O repository devolve modelos de domínio.
-- [x] Pesquisa e detalhes podem ser representados sem perda indevida de dados.
-- [x] Campos opcionais e coleções vazias são preservados corretamente.
-- [x] Enums externos são convertidos explicitamente.
-- [x] Valores externos desconhecidos possuem tratamento seguro.
-- [x] Modelos são imutáveis sempre que possível.
-- [x] Mapeadores possuem testes.
-- [x] Serialização é aplicada somente onde existir necessidade técnica concreta.
-- [x] Nenhum modelo sem caso de uso atual é criado apenas para completar o roadmap.
-
----
-
-# Sprint W1 — Fundação Web
-
-**Status:** Concluída e aceita
-
-## Objetivo
-
-Preparar o módulo `:composeApp` para executar no navegador com Compose Multiplatform, usando `wasmJs` como target principal e `js` como fallback de compatibilidade. A W1 é uma sprint técnica adicional entre as Sprints 5 e 6; as 16 sprints funcionais existentes não são renumeradas.
-
-### Progresso
-
-- [x] W1.1 — Auditoria de compatibilidade Web, aceita pelo usuário
-- [x] W1.2 — Targets, infraestrutura mínima e shell Web, aceita pelo usuário
-- [x] W1.3 — Comunicação Web e CORS, aceita pelo usuário
-- [x] W1.4 — Navegação Web, URL e histórico, aceita pelo usuário
-- [x] W1.5 — Shell responsivo e acessível, concluída e aceita
-- [x] W1.6 — Testes, distribuição e documentação, concluída e aceita
-
-### Escopo das tasks
-
-- W1.1: auditar compatibilidade, fronteiras de plataforma, Navigation 3, rede e baseline dos targets existentes.
-- W1.2: declarar `wasmJs` e `js`, criar shell/entrypoint Web, `webMain`, `webTest` e os `actual` mínimos de engine HTTP e logging; validar `AppNavigation` e `NavDisplay` compartilhados.
-- W1.3: validou a engine `Js` baseada em Fetch, comunicação real com a AniList, CORS/preflight, cancelamento, timeout, logging, `MockEngine` e uma imagem AniList nos dois targets Web. O diagnóstico `network-smoke` permanece isolado como ferramenta técnica.
-- W1.4: implementou fragment routing, codec centralizado de `AppRoute`, History API, canonicalização, reload, deep links e restauração por back/forward sem duplicar o back stack; `?network-smoke=true` permanece compatível.
-- W1.5: implementou e validou responsividade, mouse, hover, teclado, foco, scroll e acessibilidade no escopo definido. A execução foi decomposta operacionalmente em:
-  - [x] W1.5.1 — Auditoria do shell responsivo e acessível, concluída e aceita; diagnóstico estático das lacunas e planejamento, sem entrega de capacidades visuais ou acessíveis.
-  - [x] W1.5.2 — Layout responsivo, concluída e aceita; shell adaptativo por largura, `NavigationBar`/`NavigationRail`, largura máxima, centralização, scroll, altura reduzida e redimensionamento.
-  - [x] W1.5.3 — Interação e acessibilidade, concluída e aceita; ações explícitas nos placeholders, navegação com ícones e labels, nomes acessíveis, chip informativo, cursor, semântica de estados, showcase técnico e foco integrado aos estados visuais dos componentes. O foco dos botões no tema escuro foi considerado sutil, mas aceito no escopo; refinamento futuro fica para a revisão de UX da Sprint 16 — Preparação para Lançamento.
-  - [x] W1.5.4 — Validação consolidada, concluída e aceita: JS e WasmJS, matriz de viewports, zoom, temas, integração de navegação, interação e regressões multiplataforma. A bateria final teve 11 tasks executadas e 109 `UP-TO-DATE`; as evidências manuais anteriores de teclado, foco, dialogs e semântica foram reaproveitadas.
-- W1.6: consolidou as evidências de testes, gerou e validou por HTTP estático as distribuições de produção separadas de WasmJS e JS e encerrou a documentação da Fundação Web. WasmJS permanece o target principal e JS a alternativa de compatibilidade, sem seleção automática de fallback.
-
-### Critérios gerais de aceite
-
-- [x] `wasmJs` executa como target Web principal e `js` como alternativa de compatibilidade com distribuição separada, sem seleção automática de fallback.
-- [x] `webMain` e `webTest` compartilham o código Web aplicável.
-- [x] `App`, Navigation 3 e o back stack continuam compartilhados em `commonMain`.
-- [x] Engine HTTP e logging possuem implementações Web.
-- [x] Comunicação AniList no navegador, CORS e preflight são validados em JS e WasmJS.
-- [x] URL, reload, back e forward permanecem consistentes com o back stack.
-- [x] Shell Web atende critérios básicos de responsividade e acessibilidade no escopo validado, sem declaração de conformidade WCAG completa.
-- [x] Testes e distribuições Web são validados.
-
-### Fora do escopo
-
-- Busca funcional da Sprint 6;
-- persistência local;
-- autenticação;
-- PWA, service worker e cache offline;
-- proxy no backend;
-- CI, deploy e hospedagem definitiva.
-
----
-
 # Sprint 6 — Busca de Animes End-to-End
 
 **Status:** Em andamento — S6.1 concluída e aceita

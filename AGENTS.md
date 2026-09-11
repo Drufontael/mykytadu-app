@@ -140,10 +140,10 @@ Respostas afirmativas inequívocas constituem aceite. Observações com defeitos
 pedidos de correção não constituem aceite. Após o aceite, atualize somente os
 documentos realmente afetados.
 
-O Documento Mestre recebe resumo sucinto. O roadmap recebe estado, escopo ou
-critérios alterados. A modelagem muda apenas diante de alteração estrutural. A
-documentação técnica deve acompanhar contratos reais, sem se tornar cópia dos
-relatórios. Intenções futuras devem permanecer marcadas como planejadas.
+Após o aceite, registre execução, evidências e encerramento em `docs/sprints/`. O Documento Mestre muda somente diante de especificação ou direcionamento durável,
+sem receber diário de sprints. O roadmap recebe estado, escopo ou critérios; a
+modelagem, alterações estruturais; e `docs/adr/`, decisões arquiteturais
+relevantes. Documentação técnica acompanha contratos reais sem copiar relatórios, e intenções futuras permanecem marcadas como planejadas.
 
 ## Git e ações externas
 

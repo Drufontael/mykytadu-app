@@ -1,8 +1,10 @@
-# MykytaDu — Escolha da API Externa de Animes
+# MykytaDu — Contrato da Integração AniList
 
-> Registro da decisão arquitetural da Sprint 4.2 — Seleção e documentação da API pública de animes.
+> Especificação vigente das operações externas de catálogo. A escolha do
+> provedor está registrada no
+> [`ADR-006`](adr/ADR-006-adotar-anilist-como-fonte-do-catalogo.md).
 
-## 1. Status da decisão
+## 1. Resumo do contrato
 
 | Item | Valor |
 |---|---|
@@ -44,52 +46,7 @@ A decisão foi baseada em:
 
 Foram realizados testes manuais no Apollo Studio com as duas operações inicialmente necessárias. Os resultados confirmaram a disponibilidade dos campos esperados e também demonstraram que diversos campos podem ser nulos ou vazios.
 
-## 4. Alternativas consideradas
-
-### 4.1 Jikan
-
-A Jikan oferece uma API REST não oficial baseada em dados públicos do MyAnimeList.
-
-Vantagens consideradas:
-
-- consumo REST simples;
-- ausência de autenticação;
-- respostas diretas e documentação ampla;
-- grande cobertura de dados do MyAnimeList.
-
-Motivos para não ser escolhida como principal:
-
-- uma tela detalhada pode exigir várias requisições;
-- dependência indireta do MyAnimeList e de sua disponibilidade;
-- limites por segundo mais relevantes para carregamentos compostos;
-- menor controle sobre os campos devolvidos;
-- ausência de benefício decisivo diante da flexibilidade da AniList.
-
-### 4.2 Kitsu
-
-A Kitsu oferece uma API REST baseada no padrão JSON:API.
-
-Motivos para não ser escolhida:
-
-- respostas e relacionamentos mais verbosos;
-- paginação normalmente limitada a grupos pequenos;
-- documentação distribuída entre versões e formatos;
-- ausência de vantagem funcional clara sobre a AniList.
-
-### 4.3 MyAnimeList API oficial
-
-A API oficial do MyAnimeList exige registro de aplicação e credenciais, além de OAuth para operações relacionadas ao usuário.
-
-Motivos para não ser escolhida neste momento:
-
-- introdução prematura de credenciais;
-- maior acoplamento com contas MyAnimeList;
-- conflito com o planejamento de uma biblioteca e autenticação próprias;
-- nenhuma vantagem necessária para as Sprints 6 e 7.
-
-Ela poderá ser reavaliada futuramente como integração opcional de importação ou sincronização.
-
-## 5. Escopo inicial da integração
+## 4. Escopo atual da integração
 
 Foram definidas duas operações:
 
@@ -103,13 +60,13 @@ GetAnimeDetails(id)
 
 Operações de tendências, temporada atual, lançamentos futuros ou calendário não fazem parte desta decisão inicial. Elas poderão ser adicionadas quando a Home possuir requisitos consolidados.
 
-## 6. Operação de pesquisa
+## 5. Operação de pesquisa
 
-### 6.1 Objetivo
+### 5.1 Objetivo
 
 Pesquisar títulos de anime e devolver uma página de resultados com informações suficientes para identificação e exibição em lista ou grade.
 
-### 6.2 Query validada
+### 5.2 Query validada
 
 ```graphql
 query SearchAnime(
@@ -156,7 +113,7 @@ query SearchAnime(
 }
 ```
 
-### 6.3 Variables utilizadas no teste
+### 5.3 Variables utilizadas no teste
 
 ```json
 {
@@ -166,7 +123,7 @@ query SearchAnime(
 }
 ```
 
-### 6.4 Estrutura observada da resposta
+### 5.4 Estrutura observada da resposta
 
 ```json
 {
@@ -226,7 +183,7 @@ query SearchAnime(
 
 O teste completo retornou dez resultados, incluindo séries, filmes, especiais e OVA. O recorte acima preserva os casos relevantes para documentar o contrato e sua nulabilidade.
 
-### 6.5 Decisões da pesquisa
+### 5.5 Decisões da pesquisa
 
 - `Media.id` será usado para abrir a consulta de detalhes.
 - `idMal` será preservado como referência externa opcional.
@@ -239,7 +196,7 @@ O teste completo retornou dez resultados, incluindo séries, filmes, especiais e
 - a pesquisa não deve inferir existência de próxima página pelo tamanho da lista;
 - strings vazias não devem gerar requisição.
 
-### 6.6 Nulabilidade observada
+### 5.6 Nulabilidade observada
 
 O teste comprovou que podem ser nulos:
 
@@ -250,13 +207,13 @@ O teste comprovou que podem ser nulos:
 
 Outros campos também deverão respeitar a nulabilidade declarada pelo schema da AniList. DTOs remotos não devem tornar obrigatórios campos que a API declara ou demonstra como opcionais.
 
-## 7. Operação de detalhes
+## 6. Operação de detalhes
 
-### 7.1 Objetivo
+### 6.1 Objetivo
 
 Obter pelo identificador AniList os dados necessários para a tela de detalhes prevista na Sprint 7.
 
-### 7.2 Query validada
+### 6.2 Query validada
 
 ```graphql
 query GetAnimeDetails($id: Int!) {
@@ -361,7 +318,7 @@ query GetAnimeDetails($id: Int!) {
 }
 ```
 
-### 7.3 Variables utilizadas no teste
+### 6.3 Variables utilizadas no teste
 
 ```json
 {
@@ -369,7 +326,7 @@ query GetAnimeDetails($id: Int!) {
 }
 ```
 
-### 7.4 Resultado observado
+### 6.4 Resultado observado
 
 O teste retornou o especial `BORUTO: NARUTO THE MOVIE - Naruto ga Hokage ni Natta Hi`.
 
@@ -400,7 +357,7 @@ O teste retornou o especial `BORUTO: NARUTO THE MOVIE - Naruto ga Hokage ni Natt
 | Relações | sequência, prequela, adaptação e alternativa |
 | Links externos | lista vazia |
 
-### 7.5 Exemplo das relações retornadas
+### 6.5 Exemplo das relações retornadas
 
 ```json
 {
@@ -457,7 +414,7 @@ O teste retornou o especial `BORUTO: NARUTO THE MOVIE - Naruto ga Hokage ni Natt
 }
 ```
 
-### 7.6 Nulabilidade e coleções vazias
+### 6.6 Nulabilidade e coleções vazias
 
 O resultado demonstra que uma resposta válida pode conter:
 
@@ -471,7 +428,7 @@ Essas situações não devem ser tratadas automaticamente como erro de comunica�
 
 Datas da AniList também podem ser parciais. `year`, `month` e `day` deverão permanecer opcionais no DTO remoto.
 
-## 8. Correspondência com a Sprint 7
+## 7. Correspondência com a Sprint 7
 
 | Requisito | Campo AniList | Observação |
 |---|---|---|
@@ -485,7 +442,7 @@ Datas da AniList também podem ser parciais. `year`, `month` e `day` deverão pe
 | Temporada | `season`, `seasonYear` | Ambos podem ser nulos |
 | Trailer | `trailer` | Pode ser nulo; `site` não deve ser presumido |
 
-## 9. Títulos
+## 8. Títulos
 
 Os três títulos serão preservados no contrato remoto:
 
@@ -505,7 +462,7 @@ native
 
 A regra definitiva deverá considerar futuramente a preferência de idioma do usuário.
 
-## 10. Descrição e tradução
+## 9. Descrição e tradução
 
 A busca inicial não solicitará `description`.
 
@@ -519,7 +476,7 @@ O texto pode conter marcação própria da AniList, quebras de linha, spoilers o
 
 A tradução permanece planejada para a Sprint 15 e não deve alterar o contrato externo original.
 
-## 11. Envelope GraphQL e erros
+## 10. Envelope GraphQL e erros
 
 As respostas GraphQL podem possuir:
 
@@ -550,9 +507,11 @@ A política inicial proposta é:
 - não transformar campos opcionais nulos ou coleções vazias em erro;
 - preservar mensagens GraphQL para diagnóstico sem expor detalhes técnicos diretamente à UI.
 
-A implementação do resultado padronizado pertence às tasks posteriores da Sprint 4.
+`NetworkResult` representa o resultado remoto e distingue falhas HTTP, GraphQL,
+serialização, timeout e indisponibilidade. A conversão para falhas de domínio
+ocorre dentro da camada de dados.
 
-## 12. Paginação
+## 11. Paginação
 
 A paginação seguirá `PageInfo`:
 
@@ -565,7 +524,7 @@ A paginação seguirá `PageInfo`:
 
 Debounce, cancelamento de pesquisa anterior e estados da interface pertencem à Sprint 6.
 
-## 13. Autenticação
+## 12. Autenticação
 
 Consultas públicas de catálogo não exigem autenticação.
 
@@ -573,7 +532,7 @@ OAuth somente será considerado se o projeto passar a acessar dados particulares
 
 A preparação genérica do cliente para autenticação futura não deve introduzir uma dependência obrigatória de OAuth da AniList.
 
-## 14. Limites e uso responsável
+## 13. Limites e uso responsável
 
 A documentação da AniList informa um limite regular de requisições e prevê redução temporária durante instabilidade.
 
@@ -594,7 +553,7 @@ Referências:
 - [Rate Limiting](https://docs.anilist.co/guide/rate-limiting)
 - [GraphQL Reference](https://docs.anilist.co/reference/)
 
-## 15. Impacto arquitetural
+## 14. Limites arquiteturais
 
 A escolha da AniList implica:
 
@@ -604,28 +563,25 @@ A escolha da AniList implica:
 - tipos remotos específicos para pesquisa e detalhes;
 - tratamento simultâneo de erros HTTP e GraphQL;
 - enums externos que não devem vazar diretamente para o domínio;
-- separação entre DTO remoto e modelo de domínio nas sprints posteriores;
+- separação entre DTO remoto e modelo de domínio;
 - preservação da configuração compartilhada do Ktor em `commonMain`;
 - nenhuma necessidade imediata de uma biblioteca GraphQL dedicada.
 
-O `AnimeApi` deverá encapsular GraphQL. Repositories, domínio e UI não deverão conhecer queries, variables ou o envelope da AniList.
+`AnimeApi` encapsula GraphQL. Repositories, domínio e UI não conhecem queries,
+variables ou o envelope da AniList.
 
-## 16. Fora do escopo desta decisão
+## 15. Fora do contrato atual
 
-- implementação do `AnimeApi`;
-- criação definitiva dos DTOs Kotlin;
-- modelos de domínio;
-- repositories;
 - ViewModels;
 - estados de UI;
-- cache;
+- cache persistente de catálogo;
 - tradução;
 - OAuth AniList;
 - sincronização com listas AniList;
 - fallback para outro provedor;
 - integração simultânea com Jikan.
 
-## 17. Riscos aceitos
+## 16. Riscos aceitos
 
 | Risco | Impacto | Mitigação planejada |
 |---|---|---|
@@ -637,21 +593,7 @@ O `AnimeApi` deverá encapsular GraphQL. Repositories, domínio e UI não dever�
 | Conteúdo textual com marcação | Sinopse pode exigir limpeza | Normalização em camada apropriada |
 | Uso indevido como base própria | Possível violação dos termos | Cache limitado e revisão periódica dos termos |
 
-## 18. Critérios de aceite da Sprint 4.2
-
-- [x] Provedor escolhido.
-- [x] Endpoint e protocolo identificados.
-- [x] Necessidade de autenticação compreendida.
-- [x] Operação de pesquisa definida e testada.
-- [x] Operação de detalhes definida e testada.
-- [x] Paginação definida.
-- [x] Campos das atuais Sprints 6 e 7 localizados.
-- [x] Nulabilidade observada registrada.
-- [x] Particularidades de erros GraphQL identificadas.
-- [x] Restrições de uso e cache reconhecidas.
-- [x] Alternativas avaliadas e justificadamente rejeitadas.
-
-## 19. Condições para reavaliação
+## 17. Condições para reavaliação
 
 A escolha deverá ser reavaliada se:
 
@@ -662,17 +604,3 @@ A escolha deverá ser reavaliada se:
 - o projeto passar a exigir sincronização nativa com outro provedor;
 - a monetização ultrapassar as condições de uso permitidas;
 - o custo de manutenção do GraphQL superar seus benefícios observados.
-
-## 20. Próximo passo
-
-Com a escolha consolidada, a próxima task deverá configurar a comunicação operacional necessária para GraphQL:
-
-- headers comuns;
-- timeouts;
-- logging seguro;
-- envelope de requisição;
-- envelope de resposta;
-- tratamento de erros HTTP e GraphQL;
-- testes determinísticos com engine mockado.
-
-Não implementar as funcionalidades completas das atuais Sprints 6 e 7 durante a configuração da camada de comunicação.

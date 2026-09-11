@@ -23,7 +23,8 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprint W1 — Fundação Web | Concluída |
-| Sprints 6 a 16 | Planejadas |
+| Sprint 6 — Busca de Animes | Em andamento — S6.1 concluída |
+| Sprints 7 a 16 | Planejadas |
 
 Já estão disponíveis:
 
@@ -194,18 +195,20 @@ W1. Fundação Web;
 
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
-A próxima etapa funcional é a **Sprint 6 — Busca de Animes End-to-End**.
+A próxima etapa é a **S6.2 — Estado e primeira pesquisa funcional**.
 
 ## Documentação
 
 - [`docs/README.md`](docs/README.md): índice da documentação;
-- [`docs/documento-mestre.md`](docs/documento-mestre.md): visão consolidada, decisões técnicas e estado do projeto;
+- [`docs/documento-mestre.md`](docs/documento-mestre.md): especificações de produto e direção arquitetural estável;
 - [`docs/api-externa-anilist.md`](docs/api-externa-anilist.md): decisão arquitetural e contrato inicial da integração com a AniList;
 - [`docs/identidade-visual.md`](docs/identidade-visual.md): identidade, cores, tipografia e princípios de UX;
-- [`docs/modelagem.md`](docs/modelagem.md): diagramas e propostas de navegação, domínio e fluxos entre camadas;
-- [`docs/roadmap.md`](docs/roadmap.md): planejamento completo das sprints.
+- [`docs/modelagem.md`](docs/modelagem.md): arquitetura, modelos e fluxos vigentes ou explicitamente propostos;
+- [`docs/roadmap.md`](docs/roadmap.md): planejamento e estado consolidado das sprints;
+- [`docs/sprints/`](docs/sprints/README.md): execução, evidências e encerramentos;
+- [`docs/adr/`](docs/adr/README.md): decisões arquiteturais e consequências.
 
-Quando houver divergências, o código atual representa a fonte de verdade, seguido pelas decisões validadas e pelo Documento Mestre.
+Quando houver divergências, aplique a prioridade definida no `AGENTS.md` e corrija a fonte documental responsável pela informação.
 
 ## Princípios de desenvolvimento
 

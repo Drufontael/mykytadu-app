@@ -1,16 +1,16 @@
 # MykytaDu — Modelagem
 
-> Documento vivo de modelagem do projeto MykytaDu.
+> Arquitetura, modelos e fluxos vigentes ou explicitamente propostos.
 >
 > Este arquivo concentra os diagramas do sistema utilizando **Mermaid**, acompanhados de explicações sobre decisões de domínio, navegação, arquitetura e fluxos.
 >
-> O documento deve evoluir junto com as sprints, registrando apenas decisões suficientemente consolidadas para evitar antecipação desnecessária de arquitetura ou regras de negócio.
+> Histórico de execução e evidências pertencem aos registros em `docs/sprints/`.
 
 ---
 
 # 1. Objetivo
 
-Este documento tem como objetivo registrar visualmente a evolução estrutural do **MykytaDu**, um aplicativo multiplataforma para controle e acompanhamento de animes.
+Este documento registra visualmente a estrutura do **MykytaDu**, um aplicativo multiplataforma para controle e acompanhamento de animes.
 
 Os diagramas aqui presentes devem servir como apoio para:
 
@@ -20,9 +20,10 @@ Os diagramas aqui presentes devem servir como apoio para:
 - documentar fluxos importantes;
 - visualizar estados e transições;
 - manter alinhamento entre UI, domínio, dados e navegação;
-- facilitar a retomada do projeto em novas sessões de desenvolvimento.
+- distinguir arquitetura implementada de propostas ainda não comprovadas.
 
-A modelagem deve acompanhar a evolução real do código e do roadmap.
+A modelagem acompanha o código vigente. Mudanças históricas pertencem ao registro
+da sprint e decisões arquiteturais duráveis apontam para ADRs.
 
 ---
 
@@ -45,6 +46,8 @@ Quando houver divergência entre modelagem e implementação, a ordem de priorid
 ```text
 Código atual
     ↓
+Builds e testes executados
+    ↓
 Implementações e validações recentes
     ↓
 Documento Mestre
@@ -66,7 +69,7 @@ Os diagramas deste documento utilizam **Mermaid**.
 
 ## 3.1 Tipos previstos
 
-Ao longo das sprints, poderão ser utilizados:
+Conforme a necessidade da representação, podem ser utilizados:
 
 - `flowchart` — navegação e fluxos;
 - `classDiagram` — modelos e relações de domínio;
@@ -88,13 +91,13 @@ Cada diagrama deve:
 
 ---
 
-# 4. Sprint 3 — Navegação
+# 4. Navegação compartilhada
 
-> **Status:** Concluída.
+> **Estado:** Implementado.
 
-## 4.1 Objetivo
+## 4.1 Contrato atual
 
-A Sprint 3 tem como objetivo definir a navegação do aplicativo.
+A navegação compartilhada define as seguintes rotas:
 
 As rotas implementadas são:
 
@@ -107,7 +110,7 @@ As rotas implementadas são:
 - Perfil;
 - Configurações.
 
-Também fazem parte da sprint:
+Também fazem parte do contrato:
 
 - preparação de rotas protegidas;
 - estrutura para Deep Links.
@@ -173,7 +176,7 @@ Home
 
 Após o acionamento do placeholder de Login, o usuário entra na área principal do aplicativo.
 
-Nesta sprint, o avanço é apenas um gatilho de navegação do placeholder. Não existe autenticação, validação de sessão ou regra de negócio. A infraestrutura apenas classifica as rotas para preparar a autenticação, atualmente planejada para a Sprint 12.
+No estado atual, o avanço é apenas um gatilho de navegação do placeholder. Não existe autenticação, validação de sessão ou regra de negócio. A infraestrutura apenas classifica as rotas para preparar a autenticação, atualmente planejada para a Sprint 12.
 
 ---
 
@@ -285,17 +288,17 @@ mykytadu://app/profile
 mykytadu://app/settings
 ```
 
-Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetails` não possui Deep Link porque ainda não existe um identificador definitivo de anime. Integrações de entrada específicas para Android e iOS não fazem parte desta sprint.
+Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetails` não possui Deep Link porque ainda não existe um identificador definitivo de anime. Integrações de entrada específicas para Android e iOS ainda não foram implementadas.
 
 ---
 
-# 5. Sprint 5 — Domínio do Catálogo
+# 5. Domínio do Catálogo
 
-> **Status:** Concluída — S5.1 a S5.5 concluídas.
+> **Estado:** Implementado.
 
-A Sprint 5 modelará somente os conceitos exigidos pelos casos de uso de pesquisa e detalhes. O domínio do MykytaDu será separado dos DTOs da AniList, com conversões explícitas para campos opcionais, coleções vazias e enums externos desconhecidos.
+O domínio contém somente os conceitos exigidos pelos casos de uso de pesquisa e detalhes. Ele permanece separado dos DTOs da AniList, com conversões explícitas para campos opcionais, coleções vazias e enums externos desconhecidos.
 
-O escopo previsto inclui:
+O escopo implementado inclui:
 
 - resultados de pesquisa;
 - detalhes de anime;
@@ -312,23 +315,21 @@ O escopo previsto inclui:
 
 Não fazem parte desta modelagem inicial `Character`, `User`, `LibraryEntry`, `Review` ou regras detalhadas de temporadas e episódios sem consumidor atual. Esses conceitos deverão surgir somente nas sprints em que forem necessários.
 
-## 5.1 Auditoria dos contratos atuais
+## 5.1 Fronteiras do catálogo
 
-A S5.1 confirmou que a camada remota já encapsulava GraphQL, DTOs, validações de entrada e falhas de rede, mas naquela etapa ainda não existiam modelos de catálogo, mapeadores ou `AnimeRepository`. O único tipo no pacote `domain` era o `AnimeStatus` usado pelo Design System para estados da futura biblioteca; ele não deve ser reutilizado como status editorial do catálogo.
-
-A direção proposta para as próximas tasks é:
+As fronteiras vigentes são:
 
 - separar `AnimeSummary` de `AnimeDetails`;
 - preservar títulos e campos opcionais sem escolher idioma no mapper;
 - manter gêneros como `List<String>`;
 - converter enums remotos no mapper, com fallback seguro para valores desconhecidos;
-- distinguir semanticamente IDs AniList e MyAnimeList, sem antecipar IDs locais ou de backend;
+- distinguir semanticamente IDs AniList e MyAnimeList, sem confundi-los com IDs locais ou de backend;
 - manter `NetworkResult` na camada remota e expor pelo repository um resultado independente de transporte;
-- adiar campos e modelos sem consumidor comprovado nas Sprints 6 e 7.
+- adiar campos e modelos sem consumidor comprovado.
 
 ## 5.2 Contratos fundamentais
 
-A S5.2 implementou `AniListAnimeId` como identificador positivo e semanticamente específico, além de `RepositoryResult` e sete categorias de `RepositoryFailure` independentes da infraestrutura. `NetworkFailure` é convertido internamente na camada de dados, com preservação opcional da causa técnica.
+`AniListAnimeId` é um identificador positivo e semanticamente específico. `RepositoryResult` e sete categorias de `RepositoryFailure` permanecem independentes da infraestrutura. `NetworkFailure` é convertido internamente na camada de dados, com preservação opcional da causa técnica.
 
 `PageInfo` valida página atual, tamanho da página, última página e total. `PagedResult<T>` aceita páginas vazias, preserva `hasNextPage` sem inferência pelo número de itens e mantém um snapshot da lista recebida. Esses tipos não são serializáveis e o domínio não depende de rede, GraphQL, Ktor ou DTOs.
 
@@ -336,7 +337,7 @@ A S5.2 implementou `AniListAnimeId` como identificador positivo e semanticamente
 
 ## 5.3 Modelos do catálogo
 
-A S5.3 implementou `AnimeSummary` e `AnimeDetails` independentes, sem herança nem composição entre eles. Ambos declaram seus próprios campos e reutilizam `AniListAnimeId`, `idMal: Int?`, `AnimeTitles` e `AnimeImages`.
+`AnimeSummary` e `AnimeDetails` são independentes, sem herança nem composição entre eles. Ambos declaram seus próprios campos e reutilizam `AniListAnimeId`, `idMal: Int?`, `AnimeTitles` e `AnimeImages`.
 
 - `AnimeTitles` preserva romaji, inglês, nativo e um snapshot dos sinônimos, sem selecionar o título exibido.
 - `AnimeImages` mantém capa large, extraLarge, banner e cor opcionais.
@@ -346,7 +347,7 @@ A S5.3 implementou `AnimeSummary` e `AnimeDetails` independentes, sem herança n
 - `AnimeRelation` mantém ID AniList, tipo da relação, tipo da mídia, títulos, formato, status e capa medium. Não referencia objetos completos e pode representar obras de mangá, reutilizando o identificador existente.
 - `AnimeFormat`, `AnimeReleaseStatus`, `AnimeSeason`, `MediaType` e `AnimeRelationType` possuem `UNKNOWN`. As propriedades de enum são anuláveis, distinguindo ausência de valor desconhecido.
 
-Os contratos não possuem serialização, dependências de infraestrutura ou regras de apresentação. A seleção futura de título pertence às Sprints 6 e 7: inglês, romaji, nativo, primeiro sinônimo e recurso localizado de título indisponível. As conversões remotas, o descarte de trailers incompletos e o descarte individual de relações inválidas foram implementados na S5.4.
+Os contratos não possuem serialização, dependências de infraestrutura ou regras de apresentação. A seleção de título na apresentação segue inglês, romaji, nativo, primeiro sinônimo e recurso localizado de título indisponível. Conversões remotas descartam trailers incompletos e relações sem nó ou ID válido individualmente.
 
 ## 5.4 Diagrama de Classes
 
@@ -549,27 +550,26 @@ classDiagram
 
 ## 5.5 Mapeadores AniList → domínio
 
-A S5.4 implementou mapeadores internos em `data.mapper` para os contratos remotos reais. A S5.4.1 cobre títulos, imagens, datas parciais, estúdios e trailers; a S5.4.2 converte explicitamente os cinco enums de domínio; a S5.4.3 mapeia pesquisa e paginação; e a S5.4.4 mapeia detalhes e relações resumidas.
+Mapeadores internos em `data.mapper` convertem os contratos remotos reais para títulos, imagens, datas parciais, estúdios, trailers, enums, pesquisa, paginação, detalhes e relações resumidas.
 
-Os mapeadores preservam nulabilidade e coleções vazias, mantêm valores desconhecidos como `UNKNOWN` e não expõem DTOs, GraphQL, Ktor ou tipos de rede ao domínio. Relações sem nó ou ID válido são descartadas individualmente, sem criar um grafo recursivo. As subtasks S5.4.3 e S5.4.4 foram aceitas manualmente pelo usuário.
-
-O `AnimeRepository` foi implementado na S5.5, permanecendo os consumidores de UI para as sprints seguintes.
+Os mapeadores preservam nulabilidade e coleções vazias, mantêm valores desconhecidos como `UNKNOWN` e não expõem DTOs, GraphQL, Ktor ou tipos de rede ao domínio. Relações sem nó ou ID válido são descartadas individualmente, sem criar um grafo recursivo.
 
 ## 5.6 AnimeRepository
 
-A S5.5 criou `AnimeRepository` no domínio com pesquisa paginada e consulta de detalhes por `AniListAnimeId`. `AniListAnimeRepository` permanece na camada de dados, depende de `AnimeApi` e dos mapeadores aceitos e converte falhas remotas para `RepositoryFailure`.
+`AnimeRepository` pertence ao domínio e oferece pesquisa paginada e consulta de detalhes por `AniListAnimeId`. `AniListAnimeRepository` permanece na camada de dados, depende de `AnimeApi` e dos mapeadores e converte falhas remotas para `RepositoryFailure`.
 
 A pesquisa normaliza a consulta com `trim` e rejeita consulta vazia, página ou tamanho inválidos. Falhas de mapeamento por `IllegalArgumentException` resultam em `InvalidData`; cancelamentos e exceções inesperadas não são interceptados. `RepositoryModule` registra uma instância singleton de `AnimeRepository` e reutiliza `AnimeApi` pelo Koin.
 
-## 5.7 Questões a validar
+## 5.7 Consumidores planejados
 
-Com o domínio, mapeadores e repository aceitos, as próximas sprints deverão integrar os consumidores de pesquisa e detalhes por meio de estado, ViewModel e UI.
+Pesquisa e detalhes integrarão esses contratos por meio de estados, ViewModels e UI quando as respectivas funcionalidades forem implementadas.
 
-## 5.8 Sprint W1 — Fundação Web
+# 6. Plataforma Web
 
-> **Status:** Sprint W1 concluída e aceita. W1.1 a W1.6 implementaram e validaram a Fundação Web no escopo definido.
+> **Estado:** Implementado.
 
-A W1 adicionou suporte Web ao mesmo módulo, sem alterar o compartilhamento de domínio, repositories, UI ou Navigation 3. `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack permanecem em `commonMain`. O entrypoint Web inicializa Koin uma vez antes de `ComposeViewport`; `webMain` fornece a engine Ktor `Js`, baseada em Fetch, e logging HTTP desabilitado. CIO permanece uma escolha do Desktop.
+O suporte Web permanece no módulo `:composeApp`, sem duplicar domínio,
+repositories, UI ou Navigation 3.
 
 ```text
 commonMain
@@ -584,19 +584,39 @@ commonTest
 └── webTest
 ```
 
-`wasmJs` é o target principal e `js` o fallback de compatibilidade. `webMain` e `webTest` compartilham o código Web aplicável; não existe motivo comprovado para modularização adicional. A W1.3 comprovou nos dois targets o fluxo `AnimeRepository → AnimeApi → Ktor → AniList`, preflight e `POST` diretos sem `Authorization`, conversão para domínio e carregamento de capa. O diagnóstico `?network-smoke=true` é uma ferramenta técnica isolada e sanitiza falhas sem expor contratos remotos à UI normal.
+WasmJS é o target principal e JavaScript é a alternativa de compatibilidade.
+`webMain` e `webTest` compartilham o código aplicável aos dois targets; não
+existe motivo comprovado para modularização adicional.
 
-A W1.4 adicionou uma fronteira Web entre Navigation 3 e a History API: um codec em `webMain` converte as oito `AppRoute` atuais em fragmentos e um controlador sincroniza a pilha compartilhada com `pushState`, `replaceState`, `popstate` e `hashchange`. O mapeamento atual é `Splash → #/splash`, `Login → #/login`, `Home → #/home`, `Search → #/search`, `AnimeDetails → #/anime-details`, `Library → #/library`, `Profile → #/profile` e `Settings → #/settings`. As adaptações de `window`, `location` e `history` permanecem em `jsMain` e `wasmJsMain`. Fragment routing (`#/…`) foi adotado por não haver fallback de SPA no servidor comprovado; URLs inválidas são canonicalizadas para `#/splash`, e deep links de detalhes e configurações formam pilhas mínimas determinísticas. `AnimeDetails` não contém ID na URL até a Sprint 6.
+O entrypoint Web inicializa Koin uma vez antes de `ComposeViewport`. A engine
+Ktor `Js`, baseada em Fetch, atende JS e WasmJS; logging HTTP permanece
+desabilitado. CIO é usado somente no Desktop.
 
-A W1.5.2 adicionou a classificação compartilhada de layout por largura: abaixo de `600.dp`, o shell usa `NavigationBar`; a partir de `600.dp`, usa `NavigationRail`. O conteúdo expandido é centralizado e limitado a `1200.dp`, com `innerPadding` aplicado uma única vez. O `DesignSystemShowcase` possui scroll vertical no Compose, enquanto a responsabilidade de viewport continua compatível com `overflow: hidden` no HTML. A W1.5.3 adicionou ações explícitas aos placeholders, nomes acessíveis aos controles acionáveis, navegação com ícones compartilhados, chip informativo sem ação fictícia, cursor nos controles habilitados e semântica para loading e progresso. O showcase técnico é selecionado no entrypoint Web por `?design-system-showcase=true`, com precedência de `?network-smoke=true`; `App()` aplica `AppTheme` e `Surface` na raiz compartilhada. A indicação de foco usa os estados cromáticos nativos de cada componente, respeitando seus shapes e tokens, sem moldura externa. A W1.5.4 validou de forma consolidada o comportamento dessa estrutura em JS e WasmJS, sem introduzir nova arquitetura. O refinamento visual do foco escuro permanece reservado à revisão de UX da Sprint 16.
+Navigation 3 permanece em `commonMain`. Um codec em `webMain` converte
+`AppRoute` em fragmentos, enquanto adapters de `jsMain` e `wasmJsMain`
+acessam History API, `location` e eventos do navegador. A integração cobre
+canonicalização, reload, deep links, Back e Forward sem criar um segundo sistema
+de navegação.
 
-A W1.6 confirmou distribuições de produção independentes em `composeApp/build/dist/wasmJs/productionExecutable` e `composeApp/build/dist/js/productionExecutable`, servidas por HTTP estático. WasmJS contém o binário Wasm da aplicação; a distribuição JS mantém a aplicação em JavaScript e inclui o runtime Skiko Wasm. Não existe seleção automática entre os artefatos. Fragment routing permite servir os arquivos sem fallback de paths para SPA; PWA, service worker, offline, deploy e hospedagem definitiva não fazem parte da estrutura implementada.
+O shell compartilhado usa `NavigationBar` abaixo de `600.dp` e
+`NavigationRail` a partir desse limite. O conteúdo expandido é centralizado e
+limitado a `1200.dp`; cada tela continua responsável pelo próprio scroll.
+`App()` aplica `AppTheme` e uma `Surface` raiz para que todos os entrypoints e
+modos técnicos usem os mesmos tokens visuais.
+
+Os parâmetros `network-smoke=true` e `design-system-showcase=true` selecionam
+modos técnicos no entrypoint, fora das rotas de produto. O diagnóstico de rede
+tem precedência. Esses modos não compõem funcionalidades do usuário.
+
+As distribuições JS e WasmJS são independentes e servidas por HTTP estático.
+Fragment routing não exige fallback de paths para SPA. PWA, service worker,
+offline, deploy e hospedagem definitiva permanecem fora da arquitetura atual.
 
 ---
 
-# 6. Sprint 8 — Estado da Biblioteca Local
+# 7. Biblioteca local
 
-> **Status:** Planejado.
+> **Estado:** Proposto.
 
 `LibraryEntry` será modelado quando a persistência local for implementada. Ele representa conceitualmente a relação local com um anime dentro da biblioteca pessoal e não depende da existência de usuário autenticado ou backend.
 
@@ -618,7 +638,7 @@ Estados previstos:
 
 ---
 
-## 6.1 Diagrama de Estados de LibraryEntry
+## 7.1 Diagrama de Estados de LibraryEntry
 
 ```mermaid
 stateDiagram-v2
@@ -642,9 +662,9 @@ stateDiagram-v2
 
 ---
 
-# 7. Fatias Verticais e Fluxos entre Camadas
+# 8. Fatias Verticais e Fluxos entre Camadas
 
-> **Status:** Planejado.
+> **Estado:** Proposto.
 
 Repositories, fontes de dados, ViewModels e estados serão criados por funcionalidade, quando necessários para entregar um resultado observável. Não serão preparados antecipadamente para todas as telas.
 
@@ -664,7 +684,7 @@ A UI não deverá acessar APIs diretamente.
 
 ---
 
-## 7.1 Pesquisa de Anime
+## 8.1 Pesquisa de Anime
 
 ```mermaid
 sequenceDiagram
@@ -683,7 +703,7 @@ sequenceDiagram
     VM-->>UI: atualizar estado
 ```
 
-> **Planejamento aceito na S6.1 — ainda não implementado.** O fluxo continuará específico da busca, sem antecipar uma arquitetura assíncrona genérica. A consulta ativa deverá ser invalidada e cancelada assim que a consulta normalizada mudar; o debounce atrasará somente a nova requisição. Paginação usará `PageInfo.hasNextPage`, bloqueará concorrência e preservará os resultados diante de loading ou falha incremental.
+> **Estado: Proposto — ainda não implementado.** O fluxo continuará específico da busca, sem antecipar uma arquitetura assíncrona genérica. A consulta ativa deverá ser invalidada e cancelada assim que a consulta normalizada mudar; o debounce atrasará somente a nova requisição. Paginação usará `PageInfo.hasNextPage`, bloqueará concorrência e preservará os resultados diante de loading ou falha incremental.
 
 Lifecycle, integração Koin para ViewModel e carregamento de imagens com Coil permanecem propostas sujeitas à comprovação de compatibilidade nos targets atuais. O comportamento de cache, inclusive HTTP, só poderá ser documentado após evidência por plataforma.
 
@@ -691,7 +711,7 @@ A Sprint 6 transportará e restaurará o `AniListAnimeId` na rota de detalhes. A
 
 ---
 
-## 7.2 Atualização da Biblioteca
+## 8.2 Atualização da Biblioteca
 
 ```mermaid
 sequenceDiagram
@@ -714,7 +734,7 @@ sequenceDiagram
 
 ---
 
-# 8. Arquitetura de Alto Nível
+# 9. Arquitetura de Alto Nível
 
 > **Status:** Conceitual.
 
@@ -758,7 +778,7 @@ Essa visão deve ser refinada apenas quando as responsabilidades reais das camad
 
 ---
 
-# 9. ERD / Persistência
+# 10. ERD / Persistência
 
 > **Status:** Não iniciado.
 
@@ -770,29 +790,6 @@ Não devemos assumir que o modelo persistido será idêntico ao modelo de domín
 erDiagram
     %% Estrutura será definida quando a camada de persistência for modelada.
 ```
-
----
-
-# 10. Evolução Prevista por Sprint
-
-| Sprint | Diagrama / Modelagem |
-|---|---|
-| 3 — Navegação | Diagrama de Navegação |
-| 4 — Comunicação | Fluxos HTTP, se necessário |
-| 5 — Domínio do Catálogo | Modelos e conversões necessários a pesquisa e detalhes |
-| 6 — Busca End-to-End | Sequência UI → ViewModel → AnimeRepository → AnimeApi |
-| 7 — Detalhes End-to-End | Fluxo de carregamento pelo ID AniList |
-| 8 — Persistência e Biblioteca Local | Estado de `LibraryEntry` e estrutura persistida |
-| 9 — Biblioteca End-to-End | Fluxos locais de alteração da biblioteca |
-| 10 — Home | Composição e independência dos estados por seção |
-| 11 — Configurações | Preferências locais e localização da interface |
-| 12 — Backend e Autenticação | Fluxo e estados da sessão, após contrato real |
-| 13 — Sincronização e Perfil | Sincronização, conflitos e vínculo local/remoto |
-| 14 — Cache e Offline | Estratégia Remote / Cache e políticas de validade |
-| 15 — Localização e Tradução | Separação entre interface e conteúdo externo |
-| 16 — Preparação para Lançamento | Revisão geral da documentação |
-
-Essa lista é orientativa e pode mudar de acordo com a evolução real do projeto.
 
 ---
 
@@ -815,44 +812,12 @@ Ao atualizar este documento:
 
 Este documento deve ser mantido em conjunto com:
 
-- [`documento-mestre.md`](documento-mestre.md) — contexto e decisões consolidadas;
+- [`documento-mestre.md`](documento-mestre.md) — especificações e direção estável;
 - [`identidade-visual.md`](identidade-visual.md) — direção de UX e Design System;
-- [`roadmap.md`](roadmap.md) — planejamento das sprints;
+- [`roadmap.md`](roadmap.md) — planejamento e estado consolidado;
+- [`sprints/`](sprints/README.md) — execução, evidências e histórico;
+- [`adr/`](adr/README.md) — decisões arquiteturais e consequências;
 - código atual do projeto — fonte definitiva do estado real da implementação.
-
----
-
-# 13. Estado Atual da Modelagem
-
-## Consolidado
-
-- Contratos fundamentais, modelos, mapeadores e repository do catálogo das S5.2 a S5.5, independentes de infraestrutura;
-- Targets `wasmJs` e `js`, `webMain`, `webTest`, entrypoint Web, engine HTTP `Js` baseada em Fetch e logging Web implementados; `App` e Navigation 3 permanecem compartilhados;
-- Shell responsivo implementado com classificação em `600.dp`, `NavigationBar` compacto, `NavigationRail` expandido, conteúdo centralizado com largura máxima de `1200.dp` e scroll vertical do showcase;
-- Interação acessível validada com ações explícitas, nomes de controles, semântica de estados, navegação compartilhada e foco integrado aos estados visuais nativos;
-- Composição raiz compartilhada com `AppTheme` e `Surface`, além da seleção Web dos modos técnicos `network-smoke` e `design-system-showcase`;
-- Fragment routing e integração da History API com Navigation 3, incluindo canonicalização, reload, deep links, back e forward em JS e WasmJS;
-- Sprint 3 concluída e diagrama atualizado para a implementação real;
-- oito rotas tipadas e serializáveis;
-- fluxo de entrada `Splash → Login → Home` com limpeza do histórico;
-- quatro destinos irmãos na navegação principal;
-- rotas secundárias e retorno pelo back stack;
-- classificação declarativa de acesso;
-- estrutura compartilhada e testada para Deep Links.
-
-## Planejado
-
-- Estado, ViewModel, interface, imagens e paginação da busca planejados pela S6.1, ainda não implementados;
-- Rota de detalhes com transporte e restauração do `AniListAnimeId` na Sprint 6 e consumo desse ID na Sprint 7;
-- PWA, service worker, offline e persistência Web;
-- Estados de `LibraryEntry`;
-- Persistência e biblioteca local-first;
-- Fluxos verticais entre UI, ViewModel, Repository e fontes de dados;
-- Arquitetura refinada;
-- autenticação e validação real de sessão;
-- sincronização posterior com o backend;
-- integração de Deep Links por plataforma, quando necessária;
-- fluxos de Home, cache, localização e tradução.
 
 ---
 
