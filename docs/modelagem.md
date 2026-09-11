@@ -567,7 +567,7 @@ Com o domínio, mapeadores e repository aceitos, as próximas sprints deverão i
 
 ## 5.8 Sprint W1 — Fundação Web
 
-> **Status:** W1.1 a W1.4 concluídas e aceitas. A infraestrutura, a comunicação e a navegação Web estão implementadas; responsividade permanece planejada.
+> **Status:** W1.1 a W1.4 e W1.5.1–W1.5.2 concluídas e aceitas. A infraestrutura, a comunicação, a navegação Web e o shell responsivo estão implementados; acessibilidade permanece planejada.
 
 A W1 adicionou suporte Web ao mesmo módulo, sem alterar o compartilhamento de domínio, repositories, UI ou Navigation 3. `App`, `AppNavigation`, `NavDisplay`, `NavKey`, rotas e back stack permanecem em `commonMain`. O entrypoint Web inicializa Koin uma vez antes de `ComposeViewport`; `webMain` fornece a engine Ktor `Js`, baseada em Fetch, e logging HTTP desabilitado. CIO permanece uma escolha do Desktop.
 
@@ -586,7 +586,9 @@ commonTest
 
 `wasmJs` é o target principal e `js` o fallback de compatibilidade. `webMain` e `webTest` compartilham o código Web aplicável; não existe motivo comprovado para modularização adicional. A W1.3 comprovou nos dois targets o fluxo `AnimeRepository → AnimeApi → Ktor → AniList`, preflight e `POST` diretos sem `Authorization`, conversão para domínio e carregamento de capa. O diagnóstico `?network-smoke=true` é uma ferramenta técnica isolada e sanitiza falhas sem expor contratos remotos à UI normal.
 
-A W1.4 adicionou uma fronteira Web entre Navigation 3 e a History API: um codec em `webMain` converte as oito `AppRoute` atuais em fragmentos e um controlador sincroniza a pilha compartilhada com `pushState`, `replaceState`, `popstate` e `hashchange`. O mapeamento atual é `Splash → #/splash`, `Login → #/login`, `Home → #/home`, `Search → #/search`, `AnimeDetails → #/anime-details`, `Library → #/library`, `Profile → #/profile` e `Settings → #/settings`. As adaptações de `window`, `location` e `history` permanecem em `jsMain` e `wasmJsMain`. Fragment routing (`#/…`) foi adotado por não haver fallback de SPA no servidor comprovado; URLs inválidas são canonicalizadas para `#/splash`, e deep links de detalhes e configurações formam pilhas mínimas determinísticas. `AnimeDetails` não contém ID na URL até a Sprint 6. Permanecem planejados: shell responsivo, PWA e persistência.
+A W1.4 adicionou uma fronteira Web entre Navigation 3 e a History API: um codec em `webMain` converte as oito `AppRoute` atuais em fragmentos e um controlador sincroniza a pilha compartilhada com `pushState`, `replaceState`, `popstate` e `hashchange`. O mapeamento atual é `Splash → #/splash`, `Login → #/login`, `Home → #/home`, `Search → #/search`, `AnimeDetails → #/anime-details`, `Library → #/library`, `Profile → #/profile` e `Settings → #/settings`. As adaptações de `window`, `location` e `history` permanecem em `jsMain` e `wasmJsMain`. Fragment routing (`#/…`) foi adotado por não haver fallback de SPA no servidor comprovado; URLs inválidas são canonicalizadas para `#/splash`, e deep links de detalhes e configurações formam pilhas mínimas determinísticas. `AnimeDetails` não contém ID na URL até a Sprint 6.
+
+A W1.5.2 adicionou a classificação compartilhada de layout por largura: abaixo de `600.dp`, o shell usa `NavigationBar`; a partir de `600.dp`, usa `NavigationRail`. O conteúdo expandido é centralizado e limitado a `1200.dp`, com `innerPadding` aplicado uma única vez. O `DesignSystemShowcase` possui scroll vertical no Compose, enquanto a responsabilidade de viewport continua compatível com `overflow: hidden` no HTML. Acessibilidade, interação e validação consolidada permanecem planejadas para W1.5.3 e W1.5.4.
 
 ---
 
@@ -820,6 +822,7 @@ Este documento deve ser mantido em conjunto com:
 
 - Contratos fundamentais, modelos, mapeadores e repository do catálogo das S5.2 a S5.5, independentes de infraestrutura;
 - Targets `wasmJs` e `js`, `webMain`, `webTest`, entrypoint Web, engine HTTP `Js` baseada em Fetch e logging Web implementados; `App` e Navigation 3 permanecem compartilhados;
+- Shell responsivo implementado com classificação em `600.dp`, `NavigationBar` compacto, `NavigationRail` expandido, conteúdo centralizado com largura máxima de `1200.dp` e scroll vertical do showcase;
 - Fragment routing e integração da History API com Navigation 3, incluindo canonicalização, reload, deep links, back e forward em JS e WasmJS;
 - Sprint 3 concluída e diagrama atualizado para a implementação real;
 - oito rotas tipadas e serializáveis;
@@ -832,7 +835,7 @@ Este documento deve ser mantido em conjunto com:
 ## Planejado
 
 - Consumidores de `AnimeRepository` guiados por pesquisa e detalhes;
-- Fundação Web: responsividade, PWA e persistência;
+- Fundação Web: acessibilidade, PWA e persistência;
 - Estados de `LibraryEntry`;
 - Persistência e biblioteca local-first;
 - Fluxos verticais entre UI, ViewModel, Repository e fontes de dados;

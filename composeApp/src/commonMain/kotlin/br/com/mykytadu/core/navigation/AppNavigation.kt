@@ -2,8 +2,12 @@ package br.com.mykytadu.core.navigation
 
 import br.com.mykytadu.features.profile.ProfileScreen
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -21,6 +25,10 @@ import br.com.mykytadu.features.search.SearchScreen
 import br.com.mykytadu.features.settings.SettingsScreen
 import br.com.mykytadu.features.splash.SplashScreen
 import br.com.mykytadu.presentation.MainNavigationBar
+import br.com.mykytadu.presentation.MainNavigationRail
+import br.com.mykytadu.core.layout.ResponsiveLayout
+import br.com.mykytadu.core.layout.ResponsiveLayoutTokens
+import br.com.mykytadu.core.layout.responsiveLayoutFor
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -67,29 +75,44 @@ fun AppNavigation(
         it.route == currentRoute
     }
 
-    Scaffold(
-        bottomBar = {
-            if (showMainNavigation) {
-                MainNavigationBar(
-                    currentRoute = currentRoute,
-                    onNavigate = { route ->
-                        if (route != currentRoute) {
-                            updateBackStack(NavigationMutation.PUSH) {
-                                backStack.removeLastOrNull()
-                                backStack.add(route)
-                            }
-                        }
-                    }
-                )
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val layout = responsiveLayoutFor(maxWidth)
+        val onMainDestination = { route: AppRoute ->
+            if (route != currentRoute) {
+                updateBackStack(NavigationMutation.PUSH) {
+                    backStack.removeLastOrNull()
+                    backStack.add(route)
+                }
             }
         }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            NavDisplay(
+
+        Scaffold(
+            bottomBar = {
+                if (showMainNavigation && layout == ResponsiveLayout.COMPACT) {
+                    MainNavigationBar(currentRoute = currentRoute, onNavigate = onMainDestination)
+                }
+            }
+        ) { innerPadding ->
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                if (showMainNavigation && layout == ResponsiveLayout.EXPANDED) {
+                    MainNavigationRail(currentRoute = currentRoute, onNavigate = onMainDestination)
+                }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    contentAlignment = androidx.compose.ui.Alignment.TopCenter
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .widthIn(max = ResponsiveLayoutTokens.contentMaxWidth)
+                    ) {
+                        NavDisplay(
                 backStack = backStack,
                 onBack = {
                     if (navigationHistoryBridge == null) {
@@ -165,7 +188,10 @@ fun AppNavigation(
                         SettingsScreen()
                     }
                 }
-            )
+                        )
+                    }
+                }
+            }
         }
     }
 }
