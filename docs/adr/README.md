@@ -59,3 +59,4 @@ ADR.
 | [ADR-004](ADR-004-integrar-navigation3-ao-historico-com-fragmentos.md) | Aprovado | Navigation 3 com History API e fragmentos |
 | [ADR-005](ADR-005-consumir-anilist-diretamente-no-web.md) | Aprovado | acesso direto à AniList enquanto CORS for viável |
 | [ADR-006](ADR-006-adotar-anilist-como-fonte-do-catalogo.md) | Aprovado | AniList como fonte externa inicial do catálogo |
+| [ADR-007](ADR-007-escopar-viewmodels-por-entrada-navigation3.md) | Aprovado | Lifecycle e Koin com ViewModelStore por entrada do Navigation 3 |

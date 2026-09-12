@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_title">Pesquisa</string>
+    <string name="search_field_placeholder">Digite o título de um anime</string>
+    <string name="search_clear">Limpar pesquisa</string>
+    <string name="search_initial_title">Encontre seu próximo anime</string>
+    <string name="search_initial_message">Digite ao menos três caracteres ou pressione Enter para pesquisar um título curto.</string>
+    <string name="search_debouncing">Preparando pesquisa…</string>
+    <string name="search_loading">Pesquisando animes</string>
+    <string name="search_rate_limit_cooldown">Limite temporário atingido. Nova tentativa em %1$d s.</string>
+    <string name="search_empty_title">Nenhum anime encontrado</string>
+    <string name="search_empty_message">Tente pesquisar com outro título.</string>
+    <string name="search_error_title">Não foi possível concluir a pesquisa</string>
+    <string name="search_error_generic">Tente novamente em alguns instantes.</string>
+    <string name="search_error_unavailable">Verifique sua conexão e tente novamente.</string>
+    <string name="search_error_timeout">A pesquisa demorou mais que o esperado. Tente novamente.</string>
+    <string name="search_error_rate_limited">Muitas pesquisas foram realizadas. Aguarde um pouco e tente novamente.</string>
+    <string name="search_retry">Tentar novamente</string>
+    <string name="search_title_unavailable">Título indisponível</string>
+</resources>

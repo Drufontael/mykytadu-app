@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList e domínio do catálogo. A aplicação apresenta placeholders conectados pelo Navigation 3; busca end-to-end, autenticação, biblioteca e as demais funcionalidades de produto ainda fazem parte das próximas sprints.
+Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList e domínio do catálogo. A primeira pesquisa funcional da S6.2 está aceita, com estados, debounce e lista de títulos conectados à AniList. A Sprint 6 segue em andamento; imagens, paginação incremental e navegação de detalhes com ID ainda estão planejadas, assim como autenticação e biblioteca.
 
 ## Plataformas
 
@@ -23,7 +23,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprint W1 — Fundação Web | Concluída |
-| Sprint 6 — Busca de Animes | Em andamento — S6.1 concluída |
+| Sprint 6 — Busca de Animes | Em andamento — S6.1 e S6.2 concluídas e aceitas |
 | Sprints 7 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -47,6 +47,9 @@ Já estão disponíveis:
 - navegação Web por fragmentos, integrada ao histórico do navegador em JS e WasmJS.
 - shell Web responsivo e acessível no escopo validado, com distribuições de produção separadas para WasmJS e JavaScript.
 
+A busca já apresenta a primeira página de títulos com debounce, cancelamento,
+estados e retry, usando ViewModel por entrada do Navigation 3.
+
 ## Stack
 
 - Kotlin 2.3.20
@@ -58,6 +61,7 @@ Já estão disponíveis:
 - Ktor Client 3.5.2
 - Kotlinx Serialization 1.11.0
 - Navigation 3
+- Lifecycle 2.10.0, com ViewModel e coleta de estado por lifecycle
 
 As versões efetivamente utilizadas são centralizadas em [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 
@@ -195,7 +199,7 @@ W1. Fundação Web;
 
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
-A próxima etapa é a **S6.2 — Estado e primeira pesquisa funcional**.
+A próxima etapa é a **S6.3 — Navegação de detalhes com ID AniList**.
 
 ## Documentação
 

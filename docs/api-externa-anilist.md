@@ -553,6 +553,14 @@ Referências:
 - [Rate Limiting](https://docs.anilist.co/guide/rate-limiting)
 - [GraphQL Reference](https://docs.anilist.co/reference/)
 
+Estado implementado na busca: HTTP `429` é convertido em
+`RepositoryFailure.RateLimited`. `Retry-After` e os headers de limite não são
+propagados pelo contrato tipado de falha nem considerados pelo ViewModel. O
+cooldown de 15 segundos é fixo e local, seguido de uma única tentativa
+automática; não representa prazo informado pelo servidor. Respeitar
+`Retry-After` permanece pendente em relação à intenção acima. Isso não afirma
+que o servidor omite o header. Consulte o [comportamento da busca](modelagem.md#limite-remoto-e-evolução-planejada).
+
 ## 14. Limites arquiteturais
 
 A escolha da AniList implica:

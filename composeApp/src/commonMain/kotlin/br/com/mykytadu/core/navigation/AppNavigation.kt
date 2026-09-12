@@ -14,8 +14,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.savedstate.serialization.SavedStateConfiguration
 import br.com.mykytadu.features.anime.AnimeDetailsScreen
 import br.com.mykytadu.features.auth.LoginScreen
@@ -114,6 +116,10 @@ fun AppNavigation(
                     ) {
                         NavDisplay(
                 backStack = backStack,
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator(),
+                ),
                 onBack = {
                     if (navigationHistoryBridge == null) {
                         backStack.removeLastOrNull()
@@ -151,13 +157,7 @@ fun AppNavigation(
                     }
 
                     entry<AppRoute.Search> {
-                        SearchScreen(
-                            onNavigateToAnimeDetails = {
-                                updateBackStack(NavigationMutation.PUSH) {
-                                    backStack.add(AppRoute.AnimeDetails)
-                                }
-                            }
-                        )
+                        SearchScreen()
                     }
 
                     entry<AppRoute.AnimeDetails> {

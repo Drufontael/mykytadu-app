@@ -7,6 +7,7 @@ fun initializeKoin() {
         modules(
             NetworkModule,
             RepositoryModule,
+            ViewModelModule,
         )
     }
 }

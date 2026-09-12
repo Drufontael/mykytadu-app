@@ -71,7 +71,7 @@ base da experiência.
 ---
 # Sprint 6 — Busca de Animes End-to-End
 
-**Status:** Em andamento — S6.1 concluída e aceita
+**Status:** Em andamento — S6.1 e S6.2 concluídas e aceitas
 
 ## Objetivo
 
@@ -87,12 +87,18 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 ### S6.2 — Estado e primeira pesquisa funcional
 
-- [ ] Comprovar lifecycle e integração Koin nos targets atuais
-- [ ] Implementar estado específico da busca e `SearchViewModel`
-- [ ] Entregar consulta inicial observável com debounce, cancelamento, estados e retry
-- [ ] Invalidar e cancelar a consulta anterior assim que a consulta normalizada mudar; o debounce atrasa somente a nova requisição
+**Estado:** Concluída e aceita
+
+- [x] Integrar lifecycle e Koin, com testes em Desktop, Android, JS e WasmJS; iOS nativo pendente
+- [x] Implementar estado específico da busca e `SearchViewModel`
+- [x] Entregar consulta inicial observável com debounce de 800 ms, cancelamento, estados e retry
+- [x] Invalidar e cancelar a consulta anterior ao mudar a consulta normalizada, exceto durante cooldown não vazio, que preserva o contador e usa o texto mais recente
+- [x] Pesquisa automática a partir de três caracteres e submissão explícita de consultas curtas não vazias
+- [x] Cooldown local de 15 segundos com uma tentativa automática, validado por tempo virtual
 
 ### S6.3 — Navegação de detalhes com ID AniList
+
+**Estado:** Planejada
 
 - [ ] Transportar e restaurar o `AniListAnimeId` na rota de detalhes
 - [ ] Atualizar serialização, callbacks, deep links e histórico Web
@@ -100,17 +106,23 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 ### S6.4 — Resultados responsivos e imagens
 
+**Estado:** Planejada
+
 - [ ] Implementar cards e grade responsiva com títulos e capas
 - [ ] Comprovar a compatibilidade do carregador de imagens antes de consolidar a dependência
 - [ ] Definir cache básico somente a partir do comportamento comprovado por target, sem presumir cache HTTP
 
 ### S6.5 — Paginação e recuperação incremental
 
+**Estado:** Planejada
+
 - [ ] Paginar por `PageInfo.hasNextPage`
 - [ ] Bloquear concorrência, deduplicar por `AniListAnimeId` e repetir a página que falhou
 - [ ] Preservar resultados em loading e erro incrementais e rejeitar respostas de consultas anteriores
 
 ### S6.6 — Validação End-to-End
+
+**Estado:** Planejada
 
 - [ ] Consolidar testes e smoke tests reais nos targets aplicáveis
 - [ ] Validar pesquisa, imagens, paginação, responsividade, teclado e navegação
@@ -119,40 +131,40 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 ### Escopo
 
-- [ ] Estado assíncrono específico da busca
-- [ ] `SearchViewModel`
-- [ ] Campo de pesquisa
-- [ ] Normalização da consulta
-- [ ] Debounce
-- [ ] Cancelamento ou invalidação da pesquisa anterior
-- [ ] Lista ou grade de resultados
+- [x] Estado assíncrono específico da busca
+- [x] `SearchViewModel`
+- [x] Campo de pesquisa
+- [x] Normalização da consulta
+- [x] Debounce
+- [x] Cancelamento ou invalidação da pesquisa anterior
+- [x] Lista de títulos da primeira página (capas e grade responsiva planejadas)
 - [ ] Carregamento de imagens
 - [ ] Cache básico de imagens
 - [ ] Paginação baseada em `PageInfo.hasNextPage`
-- [ ] Loading inicial
+- [x] Loading inicial
 - [ ] Loading incremental
-- [ ] Estado vazio
-- [ ] Erro com nova tentativa
+- [x] Estado vazio
+- [x] Erro com nova tentativa
 - [ ] Navegação com o ID AniList real
 
 ### Critérios de aceite
 
-- [ ] Consultas vazias não geram requisições.
-- [ ] Uma nova consulta não mistura resultados da anterior.
+- [x] Consultas vazias não geram requisições.
+- [x] Uma nova consulta não mistura resultados da anterior.
 - [ ] A paginação não duplica itens.
 - [ ] Falha ao carregar nova página não elimina resultados já exibidos.
 - [ ] Loading inicial e loading incremental são visualmente distintos.
-- [ ] Estados de erro e vazio utilizam o Design System.
-- [ ] O usuário consegue pesquisar e visualizar resultados.
+- [x] Estados de erro e vazio utilizam o Design System.
+- [x] O usuário consegue pesquisar e visualizar resultados.
 - [ ] O usuário consegue abrir a rota de detalhes com o ID correto.
-- [ ] Nenhum DTO remoto chega à UI.
+- [x] Nenhum DTO remoto chega à UI.
 - [ ] O comportamento é validado nos targets disponíveis.
 
 ### Divisão com a Sprint 7
 
 A Sprint 6 transportará e restaurará o ID AniList selecionado na navegação. A Sprint 7 consumirá o ID recebido para carregar e apresentar os detalhes completos do anime.
 
-Lifecycle, integração Koin e Coil são propostas da auditoria e permanecem pendentes de comprovação de compatibilidade. O alcance do cache de imagens será registrado somente após evidência nos targets; cache HTTP não é pressuposto.
+Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). Coil e cache de imagens permanecem planejados; cache HTTP não é pressuposto. A validação completa da Sprint 6 permanece em S6.6. O próximo passo é S6.3, ainda não iniciado.
 
 ---
 

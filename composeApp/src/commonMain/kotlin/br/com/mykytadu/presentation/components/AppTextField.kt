@@ -1,6 +1,8 @@
 package br.com.mykytadu.presentation.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -24,7 +26,9 @@ fun AppTextField(
     trailingIcon: ImageVector? = null,
     onTrailingIconClick: (() -> Unit)? = null,
     trailingIconContentDescription: String? = null,
-
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    singleLine: Boolean = false,
 ) {
     require(onTrailingIconClick == null || !trailingIconContentDescription.isNullOrBlank()) {
         "An actionable trailing icon requires a non-blank description"
@@ -35,6 +39,9 @@ fun AppTextField(
         modifier = modifier,
         enabled = enabled,
         isError = isError,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        singleLine = singleLine,
         shape = RoundedCornerShape(AppShapes.radius.input),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,

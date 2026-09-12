@@ -48,6 +48,7 @@ kotlin {
                 implementation(libs.jetbrains.compose.ui)
                 implementation(libs.jetbrains.compose.resources)
                 implementation(libs.koin.core)
+                implementation(libs.koin.compose.viewmodel)
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.client.logging)
@@ -55,6 +56,9 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.jetbrains.navigation3.ui)
                 implementation(libs.androidx.navigation3.runtime)
+                implementation(libs.jetbrains.lifecycle.viewmodel.compose)
+                implementation(libs.jetbrains.lifecycle.viewmodel.navigation3)
+                implementation(libs.jetbrains.lifecycle.runtime.compose)
             }
         }
 
@@ -89,6 +93,7 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
                 // Ktor Desktop engine
                 implementation(libs.ktor.client.cio)
             }

@@ -2,6 +2,8 @@ package br.com.mykytadu.presentation.components
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
@@ -23,6 +25,8 @@ fun AppSearchBar(
     trailingIcon: ImageVector? = null,
     onTrailingIconClick: (() -> Unit)? = null,
     trailingIconContentDescription: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     content: @Composable ColumnScope.() -> Unit = {}
 ) {
     SearchBar(
@@ -34,8 +38,12 @@ fun AppSearchBar(
                 leadingIcon = leadingIcon,
                 trailingIcon = trailingIcon,
                 onTrailingIconClick = onTrailingIconClick,
-                trailingIconContentDescription = trailingIconContentDescription
-        )},
+                trailingIconContentDescription = trailingIconContentDescription,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                singleLine = true,
+            )
+        },
         expanded = expanded,
         modifier = modifier,
         shape = RoundedCornerShape(AppShapes.radius.input),

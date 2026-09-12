@@ -664,7 +664,7 @@ stateDiagram-v2
 
 # 8. Fatias Verticais e Fluxos entre Camadas
 
-> **Estado:** Proposto.
+> **Estado:** Parcialmente implementado na busca; demais fluxos propostos.
 
 Repositories, fontes de dados, ViewModels e estados serão criados por funcionalidade, quando necessários para entregar um resultado observável. Não serão preparados antecipadamente para todas as telas.
 
@@ -686,6 +686,8 @@ A UI não deverá acessar APIs diretamente.
 
 ## 8.1 Pesquisa de Anime
 
+> **Estado:** Primeira página implementada. Imagens, paginação incremental e navegação de detalhes com ID permanecem planejadas.
+
 ```mermaid
 sequenceDiagram
     actor User as Usuário
@@ -694,20 +696,133 @@ sequenceDiagram
     participant Repo as AnimeRepository
     participant API as AnimeApi
 
-    User->>UI: pesquisa por anime
-    UI->>VM: enviar consulta
-    VM->>Repo: buscar animes
-    Repo->>API: requisitar dados
-    API-->>Repo: resultados
-    Repo-->>VM: modelos de domínio
-    VM-->>UI: atualizar estado
+    User->>UI: Alterar texto ou submeter pesquisa
+    UI->>VM: onQueryChange ou submit
+    Note over VM: trim e debounce de 800 ms para 3 ou mais caracteres
+    Note over VM: Submissão explícita aceita consulta curta não vazia
+    VM->>Repo: searchAnime(query, page = 1, perPage = 20)
+    Repo->>API: Requisitar dados
+    API-->>Repo: Resposta remota
+    Repo-->>VM: RepositoryResult com modelos de domínio
+    Note over VM: Verificar cancelamento, geração e consulta atual
+    VM-->>UI: Publicar SearchUiState via StateFlow
+    opt RateLimited na primeira tentativa
+        Note over VM: Cooldown local de 15 segundos
+        VM->>Repo: Uma tentativa com a consulta mais recente
+        Repo-->>VM: Resultado ou falha, sem novo retry automático
+        VM-->>UI: Atualizar estado
+    end
 ```
 
-> **Estado: Proposto — ainda não implementado.** O fluxo continuará específico da busca, sem antecipar uma arquitetura assíncrona genérica. A consulta ativa deverá ser invalidada e cancelada assim que a consulta normalizada mudar; o debounce atrasará somente a nova requisição. Paginação usará `PageInfo.hasNextPage`, bloqueará concorrência e preservará os resultados diante de loading ou falha incremental.
+A UI consome `AnimeSummary`, sem DTO remoto. A primeira página solicita até 20
+itens e apresenta títulos em lista, com prioridade inglês, romaji, nativo,
+sinônimos e texto de indisponibilidade. Não há imagens, carregamento incremental
+nem ação de navegação com ID nos resultados.
 
-Lifecycle, integração Koin para ViewModel e carregamento de imagens com Coil permanecem propostas sujeitas à comprovação de compatibilidade nos targets atuais. O comportamento de cache, inclusive HTTP, só poderá ser documentado após evidência por plataforma.
+### Lifecycle e escopo
 
-A Sprint 6 transportará e restaurará o `AniListAnimeId` na rota de detalhes. A Sprint 7 consumirá o ID recebido para carregar e apresentar `AnimeDetails`. O retorno dos detalhes deverá validar separadamente a preservação do ViewModel da busca, dos resultados e da posição de scroll.
+`SearchViewModel` pertence a `commonMain`, recebe `AnimeRepository` e executa
+trabalho em `viewModelScope`. `ViewModelModule` usa a definição `viewModel` do
+Koin, não singleton; `SearchScreen` resolve a instância com `koinViewModel()` e
+observa o estado com `collectAsStateWithLifecycle()`.
+
+`NavDisplay` aplica `rememberSaveableStateHolderNavEntryDecorator()` seguido de
+`rememberViewModelStoreNavEntryDecorator()`. O `ViewModelStore` é da entrada do
+Navigation 3: recompor a tela não cria uma instância global nem muda seu escopo;
+remover a entrada encerra esse escopo e cancela o trabalho do ViewModel. A troca
+atual entre destinos principais remove a entrada anterior, portanto não promete
+preservar a busca entre abas. Coleta condicionada ao lifecycle não significa que
+a requisição é cancelada apenas porque a tela deixou de estar ativa.
+
+A decisão está no [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md).
+Resta validar separadamente ViewModel, resultados e scroll no retorno dos
+futuros detalhes. Não há promessa de restauração da consulta após morte de
+processo ou reload. Build e execução nativos iOS exigem macOS com Xcode.
+
+### Estados da busca
+
+> **Estado:** Implementado para a primeira página; cooldown coberto com tempo virtual.
+
+```mermaid
+stateDiagram-v2
+    state "Inicial ou consulta curta" as Initial
+    state "Debounce de 800 ms" as Debouncing
+    state "Carregando" as Loading
+    state "Resultados" as Results
+    state "Sem resultados" as Empty
+    state "Falha" as Failure
+    state "Cooldown local de 15 s" as Cooldown
+    state "Única tentativa automática" as AutomaticRetry
+
+    [*] --> Initial
+    Initial --> Debouncing: Consulta com 3 ou mais caracteres
+    Initial --> Loading: Submeter consulta curta não vazia
+    Debouncing --> Debouncing: Alterar consulta com 3 ou mais caracteres
+    Debouncing --> Loading: Decorrer 800 ms ou submeter
+    Debouncing --> Initial: Limpar ou reduzir para menos de 3 caracteres
+    Loading --> Results: Sucesso com itens
+    Loading --> Empty: Sucesso sem itens
+    Loading --> Failure: Outra falha esperada
+    Loading --> Cooldown: RateLimited
+    Cooldown --> Cooldown: Alterar texto não vazio sem reiniciar contador
+    Cooldown --> Initial: Limpar e cancelar espera
+    Cooldown --> AutomaticRetry: Decorrer 15 s com consulta mais recente
+    AutomaticRetry --> Results: Sucesso com itens
+    AutomaticRetry --> Empty: Sucesso sem itens
+    AutomaticRetry --> Failure: Qualquer falha inclusive RateLimited
+    Failure --> Loading: Retry explícito da consulta atual
+    Loading --> Debouncing: Alterar para 3 ou mais caracteres
+    AutomaticRetry --> Debouncing: Alterar para 3 ou mais caracteres
+    Results --> Debouncing: Alterar para 3 ou mais caracteres
+    Empty --> Debouncing: Alterar para 3 ou mais caracteres
+    Failure --> Debouncing: Alterar para 3 ou mais caracteres
+    Loading --> Initial: Limpar ou reduzir para menos de 3 caracteres
+    AutomaticRetry --> Initial: Limpar ou reduzir para menos de 3 caracteres
+    Results --> Initial: Limpar ou reduzir para menos de 3 caracteres
+    Empty --> Initial: Limpar ou reduzir para menos de 3 caracteres
+    Failure --> Initial: Limpar ou reduzir para menos de 3 caracteres
+```
+
+- O texto digitado é preservado; a consulta efetiva recebe `trim`. Texto vazio
+  após normalização não gera requisição. Alterações equivalentes atualizam o
+  texto sem reiniciar a execução.
+- Fora do cooldown, mudar a consulta normalizada cancela o job e incrementa a
+  geração imediatamente; os resultados anteriores saem do estado. O debounce
+  atrasa somente a nova chamada e a pesquisa automática requer três caracteres.
+- `submit()` ignora o debounce ou envia uma consulta curta não vazia no estado
+  inicial. Não duplica chamadas em loading, resultados, vazio, falha ou cooldown.
+  A recuperação de falha ocorre por `retry()`.
+- Somente a geração e a consulta atuais podem publicar resultados. Após o
+  repository, `ensureActive()` preserva cancelamento, que não vira erro de UI.
+- `RateLimited` inicia contador de 15 segundos, atualizado a cada segundo.
+  Alterar para outro texto não vazio durante esse estado preserva job, geração
+  e contador; ao final usa a consulta mais recente **mesmo com um ou dois
+  caracteres**, sem novo debounce ou submissão. Esse caso curto decorre do
+  código; o teste de alteração durante cooldown usa uma consulta longa.
+- Limpar durante o cooldown cancela a espera e a tentativa pendente, retornando
+  ao inicial. Digitar novamente segue as regras normais: não existe bloqueio
+  global de rede que sobreviva à limpeza ou à remoção da entrada.
+- Há apenas uma tentativa automática após cada cooldown. Se ela receber outro
+  `RateLimited`, publica `Failure`, sem ciclo indefinido. Um retry explícito
+  posterior inicia uma nova execução e pode ter seu próprio cooldown.
+- `AutomaticRetry` no diagrama é uma fase comportamental; a UI usa `Loading`.
+  Falhas esperadas são apresentadas com mensagens seguras, sem causas técnicas.
+
+### Limite remoto e evolução planejada
+
+Os 15 segundos são uma política local fixa, não um prazo determinado pelo
+servidor. `NetworkFailure.Http` carrega status e causa, sem campo de headers;
+`NetworkFailureMapper` converte HTTP 429 em `RepositoryFailure.RateLimited`,
+que não transporta prazo. `Retry-After` não é considerado pela implementação
+atual e está indisponível no contrato tipado consumido pelo ViewModel. Isso não
+comprova ausência do header na resposta AniList nem restrição CORS a ele.
+Respeitá-lo continua uma intenção no [contrato AniList](api-externa-anilist.md#13-limites-e-uso-responsável).
+
+Paginação por `PageInfo.hasNextPage`, deduplicação e preservação de resultados
+em loading/falha incremental permanecem planejadas. Coil e cache de imagens,
+inclusive HTTP, dependem de comprovação por target. A Sprint 6 ainda deverá
+transportar e restaurar `AniListAnimeId` na rota; a Sprint 7 consumirá esse ID
+para carregar e apresentar detalhes.
 
 ---
 
