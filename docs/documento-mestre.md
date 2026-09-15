@@ -163,6 +163,11 @@ Fragment routing é a estratégia atual porque funciona em hospedagem estática 
 rewrite de paths. A decisão e seus critérios de revisão estão no
 [`ADR-004`](adr/ADR-004-integrar-navigation3-ao-historico-com-fragmentos.md).
 
+`AnimeDetails` recebe obrigatoriamente um `AniListAnimeId`. A rota compartilhada
+e o fragmento Web `#/anime/{id}` validam IDs positivos antes de criar o destino;
+endereços sem ID válido não fabricam identificadores. O retorno de detalhes
+mantém o contexto da entrada de pesquisa enquanto ela permanecer no back stack.
+
 ## 9. Web
 
 O Web reutiliza a aplicação compartilhada e isola APIs do navegador.

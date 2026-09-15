@@ -1,5 +1,6 @@
 package br.com.mykytadu.web.navigation
 
+import br.com.mykytadu.domain.model.AniListAnimeId
 import br.com.mykytadu.core.navigation.AppRoute
 import br.com.mykytadu.core.navigation.NavigationMutation
 import kotlin.test.Test
@@ -15,7 +16,7 @@ class WebNavigationHistoryTest {
         assertEquals("#/login", WebRouteCodec.encode(AppRoute.Login))
         assertEquals("#/home", WebRouteCodec.encode(AppRoute.Home))
         assertEquals("#/search", WebRouteCodec.encode(AppRoute.Search))
-        assertEquals("#/anime-details", WebRouteCodec.encode(AppRoute.AnimeDetails))
+        assertEquals("#/anime/20", WebRouteCodec.encode(AppRoute.AnimeDetails(AniListAnimeId(20))))
         assertEquals("#/library", WebRouteCodec.encode(AppRoute.Library))
         assertEquals("#/profile", WebRouteCodec.encode(AppRoute.Profile))
         assertEquals("#/settings", WebRouteCodec.encode(AppRoute.Settings))
@@ -27,7 +28,7 @@ class WebNavigationHistoryTest {
         assertEquals(listOf(AppRoute.Login), WebRouteCodec.decode("#/login").backStack)
         assertEquals(listOf(AppRoute.Home), WebRouteCodec.decode("#/home").backStack)
         assertEquals(listOf(AppRoute.Search), WebRouteCodec.decode("#/search").backStack)
-        assertEquals(listOf(AppRoute.Search, AppRoute.AnimeDetails), WebRouteCodec.decode("#/anime-details").backStack)
+        assertEquals(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20))), WebRouteCodec.decode("#/anime/20").backStack)
         assertEquals(listOf(AppRoute.Library), WebRouteCodec.decode("#/library").backStack)
         assertEquals(listOf(AppRoute.Profile), WebRouteCodec.decode("#/profile").backStack)
         assertEquals(listOf(AppRoute.Profile, AppRoute.Settings), WebRouteCodec.decode("#/settings").backStack)
@@ -35,7 +36,7 @@ class WebNavigationHistoryTest {
 
     @Test
     fun `fragmento vazio desconhecido ou com parametro inexistente usa splash canonico`() {
-        listOf("", "#", "#/unknown", "#/anime/20", "#/search?query=naruto").forEach { fragment ->
+        listOf("", "#", "#/unknown", "#/anime/invalid", "#/search?query=naruto").forEach { fragment ->
             val resolution = WebRouteCodec.decode(fragment)
 
             assertEquals(listOf(AppRoute.Splash), resolution.backStack)
@@ -86,12 +87,12 @@ class WebNavigationHistoryTest {
         val dispose = controller.bind(restored::add)
 
         controller.onAppNavigation(listOf(AppRoute.Search), NavigationMutation.PUSH)
-        controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails), NavigationMutation.PUSH)
+        controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20))), NavigationMutation.PUSH)
         port.emit("#/search")
         port.emit("#/search")
 
         assertEquals(listOf(AppRoute.Search), restored.single())
-        assertEquals(listOf("#/search", "#/anime-details"), port.pushed)
+        assertEquals(listOf("#/search", "#/anime/20"), port.pushed)
         assertTrue(port.replaced.isEmpty())
         dispose()
     }
@@ -104,13 +105,13 @@ class WebNavigationHistoryTest {
         controller.bind(restored::add)
 
         controller.onAppNavigation(listOf(AppRoute.Search), NavigationMutation.PUSH)
-        controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails), NavigationMutation.PUSH)
+        controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20))), NavigationMutation.PUSH)
         port.emit("#/search")
-        port.emit("#/anime-details")
+        port.emit("#/anime/20")
 
         val expected: List<List<AppRoute>> = listOf(
                 listOf(AppRoute.Search),
-                listOf(AppRoute.Search, AppRoute.AnimeDetails),
+                listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20))),
             )
         assertEquals(expected, restored)
         assertEquals(2, port.pushed.size)
@@ -187,6 +188,94 @@ class WebNavigationHistoryTest {
 
         assertTrue(restored.isEmpty())
         assertEquals(1, port.removedListeners)
+    }
+
+    @Test
+    fun `details IDs canonicalize and invalid IDs keep general fallback`() {
+        listOf("1" to 1, "00020" to 20, "2147483647" to Int.MAX_VALUE).forEach { (text, id) ->
+            val result = WebRouteCodec.decode("#/anime/$text")
+            assertEquals(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(id))), result.backStack)
+            assertEquals("#/anime/$id", result.canonicalFragment)
+            assertEquals(text == id.toString(), result.isCanonical)
+        }
+        listOf("#/anime", "#/anime/", "#/anime/0", "#/anime/-1", "#/anime/+1",
+            "#/anime/2147483648", "#/anime/no", "#/anime/20/extra", "#/anime/20/",
+            "#/anime/20?x=1", "#/anime/%32%30", "#/anime/ 20", "/anime/20",
+        ).forEach {
+            assertEquals(listOf(AppRoute.Splash), WebRouteCodec.decode(it).backStack, it)
+        }
+    }
+
+    @Test
+    fun `legacy details URL becomes search without fabricating ID or push`() {
+        val port = FakeHistoryPort("#/anime-details")
+        val controller = WebNavigationHistoryController(port)
+        assertEquals(listOf(AppRoute.Search), controller.initialBackStack)
+        assertEquals(listOf("#/search"), port.replaced)
+        assertTrue(port.pushed.isEmpty())
+    }
+
+    @Test
+    fun `two anime IDs survive back forward duplicate events and reload`() {
+        val port = FakeHistoryPort("#/search")
+        val controller = WebNavigationHistoryController(port)
+        val restored = mutableListOf<List<AppRoute>>()
+        controller.bind(restored::add)
+        val first = listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20)))
+        val second = listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(21)))
+        controller.onAppNavigation(first, NavigationMutation.PUSH)
+        controller.onAppNavigation(first, NavigationMutation.PUSH)
+        port.emit("#/search")
+        controller.onAppNavigation(second, NavigationMutation.PUSH)
+        controller.onAppNavigation(second, NavigationMutation.PUSH)
+        port.emit("#/search")
+        port.emit("#/anime/21")
+        port.emit("#/anime/21")
+        assertEquals(listOf(listOf(AppRoute.Search), listOf(AppRoute.Search), second), restored)
+        assertEquals(listOf("#/anime/20", "#/anime/21"), port.pushed)
+        assertTrue(port.replaced.isEmpty())
+        assertEquals(second, WebNavigationHistoryController(port).initialBackStack)
+    }
+
+    @Test
+    fun `adjacent different details IDs remain separate history entries`() {
+        val port = FakeHistoryPort("#/search")
+        val controller = WebNavigationHistoryController(port)
+        val restored = mutableListOf<List<AppRoute>>()
+        controller.bind(restored::add)
+        listOf(20, 21).forEach {
+            controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(it))), NavigationMutation.PUSH)
+        }
+        port.emit("#/anime/20")
+        port.emit("#/anime/21")
+        assertEquals(listOf(20, 21), restored.map { (it.last() as AppRoute.AnimeDetails).id.value })
+        assertEquals(2, port.pushed.size)
+    }
+
+    @Test
+    fun `deep link without managed predecessor returns by replacing with search`() {
+        val port = FakeHistoryPort("#/anime/20")
+        val controller = WebNavigationHistoryController(port)
+        assertFalse(controller.requestBrowserBack())
+        controller.onAppNavigation(listOf(AppRoute.Search), NavigationMutation.REPLACE)
+        assertEquals(listOf("#/search"), port.replaced)
+        assertTrue(port.pushed.isEmpty())
+    }
+
+    @Test
+    fun `equivalent hash and legacy hash are canonicalized even for current destination`() {
+        val port = FakeHistoryPort("#/anime/20")
+        val controller = WebNavigationHistoryController(port)
+        val restored = mutableListOf<List<AppRoute>>()
+        controller.bind(restored::add)
+        port.emit("#/anime/00020")
+        port.emit("#/anime/20")
+        assertEquals(listOf("#/anime/20"), port.replaced)
+        assertTrue(restored.isEmpty())
+        controller.onAppNavigation(listOf(AppRoute.Search), NavigationMutation.REPLACE)
+        port.emit("#/anime-details")
+        assertEquals("#/search", port.replaced.last())
+        assertTrue(restored.isEmpty())
     }
 
     private class FakeHistoryPort(

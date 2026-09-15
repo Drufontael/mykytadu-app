@@ -17,4 +17,6 @@
     <string name="search_error_rate_limited">Muitas pesquisas foram realizadas. Aguarde um pouco e tente novamente.</string>
     <string name="search_retry">Tentar novamente</string>
     <string name="search_title_unavailable">Título indisponível</string>
+    <string name="anime_details_placeholder">Detalhes do anime — ID AniList: %1$d</string>
+    <string name="anime_details_back">Voltar à pesquisa</string>
 </resources>

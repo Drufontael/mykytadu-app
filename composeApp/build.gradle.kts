@@ -100,6 +100,12 @@ kotlin {
         }
 
 
+        val desktopTest by getting {
+            dependencies {
+                implementation(libs.jetbrains.compose.ui.test.junit4)
+            }
+        }
+
         val iosMain by getting {
             dependencies {
                 // Ktor iOS engine

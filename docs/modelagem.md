@@ -150,13 +150,11 @@ flowchart TD
     MainNavigation -.-> Library
     MainNavigation -.-> Profile
 
-    Search --> AnimeDetails
-    Library --> AnimeDetails
+    Search -->|AniListAnimeId| AnimeDetails
 
     Profile --> Settings
 
     AnimeDetails -->|voltar| Search
-    AnimeDetails -->|voltar| Library
     Settings -->|voltar| Profile
 ```
 
@@ -207,7 +205,6 @@ Navegação raiz
     ├── Pesquisa
     │   └── Detalhes do Anime
     ├── Biblioteca
-    │   └── Detalhes do Anime
     └── Perfil
         └── Configurações
 ```
@@ -216,22 +213,11 @@ Navegação raiz
 
 ## 4.5 Detalhes do Anime
 
-`Detalhes do Anime` é uma rota secundária que pode ser acessada a partir de diferentes pontos da aplicação.
-
-Inicialmente:
-
-```text
-Pesquisa
-   ↓
-Detalhes do Anime
-```
-
-e:
+`Detalhes do Anime` é uma rota secundária da pesquisa e recebe um
+`AniListAnimeId` obrigatório:
 
 ```text
-Biblioteca
-    ↓
-Detalhes do Anime
+Pesquisa ── AniListAnimeId ──> Detalhes do Anime
 ```
 
 No futuro, outras áreas, como a Home, também poderão abrir diretamente os detalhes de um anime.
@@ -286,9 +272,14 @@ mykytadu://app/search
 mykytadu://app/library
 mykytadu://app/profile
 mykytadu://app/settings
+mykytadu://app/anime/20
 ```
 
-Trailing slash é aceito e endereços desconhecidos retornam `null`. `AnimeDetails` não possui Deep Link porque ainda não existe um identificador definitivo de anime. Integrações de entrada específicas para Android e iOS ainda não foram implementadas.
+Trailing slash é aceito nas rotas sem parâmetros e endereços desconhecidos
+retornam `null`. O caminho de detalhes aceita somente dígitos decimais ASCII que
+representem um inteiro positivo no intervalo de `Int`; zeros à esquerda são
+aceitos e canonicamente removidos na URL Web. Integrações de entrada específicas
+para Android e iOS ainda não foram implementadas.
 
 ---
 
@@ -686,7 +677,7 @@ A UI não deverá acessar APIs diretamente.
 
 ## 8.1 Pesquisa de Anime
 
-> **Estado:** Primeira página implementada. Imagens, paginação incremental e navegação de detalhes com ID permanecem planejadas.
+> **Estado:** Primeira página e navegação de detalhes com ID implementadas. Imagens e paginação incremental permanecem planejadas.
 
 ```mermaid
 sequenceDiagram
@@ -716,8 +707,9 @@ sequenceDiagram
 
 A UI consome `AnimeSummary`, sem DTO remoto. A primeira página solicita até 20
 itens e apresenta títulos em lista, com prioridade inglês, romaji, nativo,
-sinônimos e texto de indisponibilidade. Não há imagens, carregamento incremental
-nem ação de navegação com ID nos resultados.
+sinônimos e texto de indisponibilidade. Cada resultado selecionável encaminha
+seu `AniListAnimeId` à rota de detalhes. Não há imagens nem carregamento
+incremental.
 
 ### Lifecycle e escopo
 
@@ -735,9 +727,10 @@ preservar a busca entre abas. Coleta condicionada ao lifecycle não significa qu
 a requisição é cancelada apenas porque a tela deixou de estar ativa.
 
 A decisão está no [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md).
-Resta validar separadamente ViewModel, resultados e scroll no retorno dos
-futuros detalhes. Não há promessa de restauração da consulta após morte de
-processo ou reload. Build e execução nativos iOS exigem macOS com Xcode.
+No retorno dos detalhes pela navegação interna ou histórico Web, a entrada da
+pesquisa preserva ViewModel, resultados e posição de scroll. A entrada direta ou
+reload de detalhes reconstrói uma pilha com Pesquisa e Detalhes, sem prometer a
+consulta anterior. Build e execução nativos iOS exigem macOS com Xcode.
 
 ### Estados da busca
 
@@ -820,9 +813,8 @@ Respeitá-lo continua uma intenção no [contrato AniList](api-externa-anilist.m
 
 Paginação por `PageInfo.hasNextPage`, deduplicação e preservação de resultados
 em loading/falha incremental permanecem planejadas. Coil e cache de imagens,
-inclusive HTTP, dependem de comprovação por target. A Sprint 6 ainda deverá
-transportar e restaurar `AniListAnimeId` na rota; a Sprint 7 consumirá esse ID
-para carregar e apresentar detalhes.
+inclusive HTTP, dependem de comprovação por target. A Sprint 7 consumirá o ID
+já transportado pela rota para carregar e apresentar detalhes.
 
 ---
 

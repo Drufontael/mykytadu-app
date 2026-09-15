@@ -1,5 +1,6 @@
 package br.com.mykytadu.web.navigation
 
+import br.com.mykytadu.core.navigation.AnimeDetailsPath
 import br.com.mykytadu.core.navigation.AppRoute
 import br.com.mykytadu.core.navigation.NavigationHistoryBridge
 import br.com.mykytadu.core.navigation.NavigationMutation
@@ -14,23 +15,26 @@ internal object WebRouteCodec {
             AppRoute.Login -> "#/login"
             AppRoute.Home -> "#/home"
             AppRoute.Search -> "#/search"
-            AppRoute.AnimeDetails -> "#/anime-details"
+            is AppRoute.AnimeDetails -> "#/anime/${route.id.value}"
             AppRoute.Library -> "#/library"
             AppRoute.Profile -> "#/profile"
             AppRoute.Settings -> "#/settings"
         }
 
     fun decode(fragment: String?): WebRouteResolution {
-        val route = when (fragment?.trim()) {
+        val normalized = fragment?.trim()
+        val route = when (normalized) {
             "#/splash" -> AppRoute.Splash
             "#/login" -> AppRoute.Login
             "#/home" -> AppRoute.Home
             "#/search" -> AppRoute.Search
-            "#/anime-details" -> AppRoute.AnimeDetails
+            "#/anime-details" -> AppRoute.Search
             "#/library" -> AppRoute.Library
             "#/profile" -> AppRoute.Profile
             "#/settings" -> AppRoute.Settings
-            else -> null
+            else -> if (normalized?.startsWith("#/anime/") == true) {
+                AnimeDetailsPath.resolve(normalized.removePrefix("#"))
+            } else null
         }
 
         if (route == null) {
@@ -50,7 +54,7 @@ internal object WebRouteCodec {
 
     private fun AppRoute.toInitialBackStack(): List<AppRoute> =
         when (this) {
-            AppRoute.AnimeDetails -> listOf(AppRoute.Search, AppRoute.AnimeDetails)
+            is AppRoute.AnimeDetails -> listOf(AppRoute.Search, this)
             AppRoute.Settings -> listOf(AppRoute.Profile, AppRoute.Settings)
             else -> listOf(this)
         }
@@ -141,12 +145,12 @@ internal class WebNavigationHistoryController(
 
     private fun restoreFromBrowser() {
         val resolution = WebRouteCodec.decode(history.currentFragment())
-        if (resolution.canonicalFragment == lastObservedFragment) return
-
-        lastObservedFragment = resolution.canonicalFragment
         if (!resolution.isCanonical) {
             history.replace(resolution.canonicalFragment)
         }
+        if (resolution.canonicalFragment == lastObservedFragment) return
+
+        lastObservedFragment = resolution.canonicalFragment
 
         val existingIndex = entries.neighbouringIndexOf(resolution.canonicalFragment, cursor)
         if (existingIndex >= 0) {

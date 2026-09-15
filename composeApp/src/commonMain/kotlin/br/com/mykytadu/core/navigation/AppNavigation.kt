@@ -36,7 +36,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
 @OptIn(ExperimentalSerializationApi::class)
-private val navigationConfig = SavedStateConfiguration {
+internal val navigationConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
             subclassesOfSealed<AppRoute>()
@@ -62,10 +62,18 @@ fun AppNavigation(
         navigationHistoryBridge?.onAppNavigation(backStack.map { it as AppRoute }, mutation)
     }
 
+    fun navigateBack() {
+        if (backStack.size <= 1) return
+        if (navigationHistoryBridge == null || !navigationHistoryBridge.requestBrowserBack()) {
+            updateBackStack(NavigationMutation.REPLACE) {
+                backStack.removeLastOrNull()
+            }
+        }
+    }
+
     DisposableEffect(navigationHistoryBridge) {
         val dispose = navigationHistoryBridge?.bind { restoredBackStack ->
-            backStack.clear()
-            backStack.addAll(restoredBackStack)
+            backStack.restoreRoutes(restoredBackStack)
         }
 
         onDispose {
@@ -120,15 +128,7 @@ fun AppNavigation(
                     rememberSaveableStateHolderNavEntryDecorator(),
                     rememberViewModelStoreNavEntryDecorator(),
                 ),
-                onBack = {
-                    if (navigationHistoryBridge == null) {
-                        backStack.removeLastOrNull()
-                    } else if (!navigationHistoryBridge.requestBrowserBack() && backStack.size > 1) {
-                        updateBackStack(NavigationMutation.REPLACE) {
-                            backStack.removeLastOrNull()
-                        }
-                    }
-                },
+                onBack = ::navigateBack,
                 entryProvider = entryProvider {
                     entry<AppRoute.Splash> {
                         SplashScreen(
@@ -157,21 +157,25 @@ fun AppNavigation(
                     }
 
                     entry<AppRoute.Search> {
-                        SearchScreen()
+                        SearchScreen(
+                            isCurrentRoute = currentRoute == AppRoute.Search,
+                            onAnimeSelected = { id ->
+                                val route = AppRoute.AnimeDetails(id)
+                                if (backStack.lastOrNull() == AppRoute.Search) {
+                                    updateBackStack(NavigationMutation.PUSH) {
+                                        backStack.add(route)
+                                    }
+                                }
+                            },
+                        )
                     }
 
-                    entry<AppRoute.AnimeDetails> {
-                        AnimeDetailsScreen()
+                    entry<AppRoute.AnimeDetails> { route ->
+                        AnimeDetailsScreen(id = route.id, onBack = ::navigateBack)
                     }
 
                     entry<AppRoute.Library> {
-                        LibraryScreen(
-                            onNavigateToAnimeDetails = {
-                                updateBackStack(NavigationMutation.PUSH) {
-                                    backStack.add(AppRoute.AnimeDetails)
-                                }
-                            }
-                        )
+                        LibraryScreen()
                     }
 
                     entry<AppRoute.Profile> {

@@ -8,17 +8,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import br.com.mykytadu.domain.model.AniListAnimeId
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.currentStateAsState
 import br.com.mykytadu.composeapp.generated.resources.Res
 import br.com.mykytadu.composeapp.generated.resources.search_clear
 import br.com.mykytadu.composeapp.generated.resources.search_debouncing
@@ -51,9 +63,35 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SearchScreen(
+    onAnimeSelected: (AniListAnimeId) -> Unit,
+    isCurrentRoute: Boolean = true,
     viewModel: SearchViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val listState = key(state.normalizedQuery) { rememberLazyListState() }
+    var returnIndex by rememberSaveable(state.normalizedQuery) { mutableStateOf<Int?>(null) }
+    var returnOffset by rememberSaveable(state.normalizedQuery) { mutableStateOf(0) }
+    DisposableEffect(isCurrentRoute, listState) {
+        onDispose {
+            // Capture before the outgoing entry is measured without the main navigation.
+            // Browser forward leaves this screen without invoking the card callback.
+            if (isCurrentRoute) {
+                returnIndex = listState.firstVisibleItemIndex
+                returnOffset = listState.firstVisibleItemScrollOffset
+            }
+        }
+    }
+    val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateAsState()
+    LaunchedEffect(lifecycleState) {
+        // The outgoing transition can resize the list when the main navigation hides.
+        // Restore after the entry resumes, when its original viewport is available again.
+        if (lifecycleState == Lifecycle.State.RESUMED) {
+            returnIndex?.let { index ->
+                listState.scrollToItem(index, returnOffset)
+                returnIndex = null
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -85,6 +123,8 @@ fun SearchScreen(
         SearchFirstPageContent(
             content = state.content,
             onRetry = viewModel::retry,
+            onAnimeSelected = onAnimeSelected,
+            listState = listState,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
@@ -96,6 +136,8 @@ fun SearchScreen(
 private fun SearchFirstPageContent(
     content: SearchContent,
     onRetry: () -> Unit,
+    onAnimeSelected: (AniListAnimeId) -> Unit,
+    listState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -125,6 +167,8 @@ private fun SearchFirstPageContent(
 
             is SearchContent.Results -> SearchResults(
                 items = content.items,
+                onAnimeSelected = onAnimeSelected,
+                listState = listState,
                 modifier = Modifier.fillMaxSize(),
             )
 
@@ -171,11 +215,14 @@ private fun RateLimitCooldown(
 @Composable
 private fun SearchResults(
     items: List<AnimeSummary>,
+    onAnimeSelected: (AniListAnimeId) -> Unit,
+    listState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
     val unavailableTitle = stringResource(Res.string.search_title_unavailable)
 
     LazyColumn(
+        state = listState,
         modifier = modifier,
         contentPadding = PaddingValues(bottom = AppDimensions.padding.lg),
         verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
@@ -184,7 +231,10 @@ private fun SearchResults(
             items = items,
             key = { anime -> anime.id.value },
         ) { anime ->
-            AppCard(modifier = Modifier.fillMaxWidth()) {
+            AppCard(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onAnimeSelected(anime.id) },
+            ) {
                 Text(
                     text = anime.displayTitle(unavailableTitle),
                     style = MaterialTheme.typography.titleMedium,

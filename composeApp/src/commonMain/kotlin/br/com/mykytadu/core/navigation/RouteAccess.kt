@@ -12,7 +12,7 @@ val AppRoute.access: RouteAccess
 
         AppRoute.Home,
         AppRoute.Search,
-        AppRoute.AnimeDetails,
+        is AppRoute.AnimeDetails,
         AppRoute.Library,
         AppRoute.Profile,
         AppRoute.Settings -> RouteAccess.PROTECTED

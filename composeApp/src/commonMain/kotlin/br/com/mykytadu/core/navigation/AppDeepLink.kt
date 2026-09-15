@@ -7,8 +7,11 @@ object AppDeepLink {
 
     private const val BASE_URI = "$SCHEME://$HOST"
 
-    fun resolve(uri: String): AppRoute? =
-        when (uri.trimEnd('/')) {
+    fun resolve(uri: String): AppRoute? {
+        if (uri.startsWith("$BASE_URI/anime/")) {
+            return AnimeDetailsPath.resolve(uri.removePrefix(BASE_URI))
+        }
+        return when (uri.trimEnd('/')) {
             "$BASE_URI/home" -> AppRoute.Home
             "$BASE_URI/search" -> AppRoute.Search
             "$BASE_URI/library" -> AppRoute.Library
@@ -16,4 +19,5 @@ object AppDeepLink {
             "$BASE_URI/settings" -> AppRoute.Settings
             else -> null
         }
+    }
 }

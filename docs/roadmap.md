@@ -71,7 +71,7 @@ base da experiência.
 ---
 # Sprint 6 — Busca de Animes End-to-End
 
-**Status:** Em andamento — S6.1 e S6.2 concluídas e aceitas
+**Status:** Em andamento — S6.1, S6.2 e S6.3 concluídas e aceitas
 
 ## Objetivo
 
@@ -98,11 +98,11 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 ### S6.3 — Navegação de detalhes com ID AniList
 
-**Estado:** Planejada
+**Estado:** Concluída e aceita
 
-- [ ] Transportar e restaurar o `AniListAnimeId` na rota de detalhes
-- [ ] Atualizar serialização, callbacks, deep links e histórico Web
-- [ ] Validar IDs ausentes, inválidos ou fora do intervalo sem criar IDs fictícios
+- [x] Transportar e restaurar o `AniListAnimeId` na rota de detalhes
+- [x] Atualizar serialização, callbacks, deep links e histórico Web
+- [x] Validar IDs ausentes, inválidos ou fora do intervalo sem criar IDs fictícios
 
 ### S6.4 — Resultados responsivos e imagens
 
@@ -145,7 +145,7 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 - [ ] Loading incremental
 - [x] Estado vazio
 - [x] Erro com nova tentativa
-- [ ] Navegação com o ID AniList real
+- [x] Navegação com o ID AniList real
 
 ### Critérios de aceite
 
@@ -156,7 +156,7 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 - [ ] Loading inicial e loading incremental são visualmente distintos.
 - [x] Estados de erro e vazio utilizam o Design System.
 - [x] O usuário consegue pesquisar e visualizar resultados.
-- [ ] O usuário consegue abrir a rota de detalhes com o ID correto.
+- [x] O usuário consegue abrir a rota de detalhes com o ID correto.
 - [x] Nenhum DTO remoto chega à UI.
 - [ ] O comportamento é validado nos targets disponíveis.
 
@@ -164,7 +164,7 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 A Sprint 6 transportará e restaurará o ID AniList selecionado na navegação. A Sprint 7 consumirá o ID recebido para carregar e apresentar os detalhes completos do anime.
 
-Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). Coil e cache de imagens permanecem planejados; cache HTTP não é pressuposto. A validação completa da Sprint 6 permanece em S6.6. O próximo passo é S6.3, ainda não iniciado.
+Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura o ID AniList, inclusive no histórico Web, e preserva a pesquisa no retorno. Coil e cache de imagens permanecem planejados; cache HTTP não é pressuposto. A validação completa da Sprint 6 permanece em S6.6. O próximo passo é S6.4.
 
 ---
 

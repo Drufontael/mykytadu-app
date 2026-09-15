@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList e domínio do catálogo. A primeira pesquisa funcional da S6.2 está aceita, com estados, debounce e lista de títulos conectados à AniList. A Sprint 6 segue em andamento; imagens, paginação incremental e navegação de detalhes com ID ainda estão planejadas, assim como autenticação e biblioteca.
+Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList e domínio do catálogo. A pesquisa funcional da S6.2 e a navegação com ID AniList da S6.3 estão aceitas. A Sprint 6 segue em andamento; imagens e paginação incremental permanecem planejadas, assim como autenticação e biblioteca.
 
 ## Plataformas
 
@@ -23,7 +23,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprint W1 — Fundação Web | Concluída |
-| Sprint 6 — Busca de Animes | Em andamento — S6.1 e S6.2 concluídas e aceitas |
+| Sprint 6 — Busca de Animes | Em andamento — S6.1, S6.2 e S6.3 concluídas e aceitas |
 | Sprints 7 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -45,10 +45,13 @@ Já estão disponíveis:
 - modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes.
 - shell Web com transporte Ktor baseado em Fetch e comunicação direta validada com a AniList.
 - navegação Web por fragmentos, integrada ao histórico do navegador em JS e WasmJS.
+- rota de detalhes tipada com `AniListAnimeId`, deep link compartilhado e URL Web `#/anime/{id}`.
 - shell Web responsivo e acessível no escopo validado, com distribuições de produção separadas para WasmJS e JavaScript.
 
 A busca já apresenta a primeira página de títulos com debounce, cancelamento,
-estados e retry, usando ViewModel por entrada do Navigation 3.
+estados e retry, usando ViewModel por entrada do Navigation 3. O resultado
+selecionado abre o placeholder de detalhes com o ID AniList correto; retorno e
+histórico Web preservam o contexto da pesquisa enquanto a entrada existir.
 
 ## Stack
 
@@ -199,7 +202,7 @@ W1. Fundação Web;
 
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
-A próxima etapa é a **S6.3 — Navegação de detalhes com ID AniList**.
+A próxima etapa é a **S6.4 — Resultados responsivos e imagens**.
 
 ## Documentação
 
