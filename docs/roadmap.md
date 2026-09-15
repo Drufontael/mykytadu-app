@@ -71,7 +71,7 @@ base da experiência.
 ---
 # Sprint 6 — Busca de Animes End-to-End
 
-**Status:** Em andamento — S6.1, S6.2 e S6.3 concluídas e aceitas
+**Status:** Em andamento — S6.1 a S6.4 concluídas e aceitas
 
 ## Objetivo
 
@@ -106,11 +106,15 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 ### S6.4 — Resultados responsivos e imagens
 
-**Estado:** Planejada
+**Estado:** Concluída e aceita
 
-- [ ] Implementar cards e grade responsiva com títulos e capas
-- [ ] Comprovar a compatibilidade do carregador de imagens antes de consolidar a dependência
-- [ ] Definir cache básico somente a partir do comportamento comprovado por target, sem presumir cache HTTP
+- [x] Implementar cards e grade responsiva com títulos e capas
+- [x] Auditar o carregador: Coil 3 com Ktor 3 é o candidato para validação
+- [x] Consolidar Coil 3.4.0 com Ktor 3 após compilação Android, Desktop, metadata iOS, JS e WasmJS
+- [x] Criar componente específico de resultado com capa opcional e título
+- [x] Manter as políticas padrão habilitadas de memória e disco do Coil, sem cache HTTP próprio
+- [x] Cobrir URL de capa, grade compacta, seleção e restauração de scroll com testes automatizados
+- [x] Validar visualmente imagens, grade compacta e expandida, seleção e retorno no Web WasmJS
 
 ### S6.5 — Paginação e recuperação incremental
 
@@ -137,9 +141,9 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 - [x] Normalização da consulta
 - [x] Debounce
 - [x] Cancelamento ou invalidação da pesquisa anterior
-- [x] Lista de títulos da primeira página (capas e grade responsiva planejadas)
-- [ ] Carregamento de imagens
-- [ ] Cache básico de imagens
+- [x] Lista de títulos da primeira página com capa opcional
+- [x] Carregamento de imagens remotas
+- [x] Cache padrão de imagens do Coil, sem política HTTP ou offline
 - [ ] Paginação baseada em `PageInfo.hasNextPage`
 - [x] Loading inicial
 - [ ] Loading incremental
@@ -164,7 +168,7 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 A Sprint 6 transportará e restaurará o ID AniList selecionado na navegação. A Sprint 7 consumirá o ID recebido para carregar e apresentar os detalhes completos do anime.
 
-Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura o ID AniList, inclusive no histórico Web, e preserva a pesquisa no retorno. Coil e cache de imagens permanecem planejados; cache HTTP não é pressuposto. A validação completa da Sprint 6 permanece em S6.6. O próximo passo é S6.4.
+Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura o ID AniList, inclusive no histórico Web, e preserva a pesquisa no retorno. A S6.4 consolidou Coil 3.4.0 com rede Ktor 3 após compilar Android, Desktop, metadata iOS, JS e WasmJS. A grade usa duas ou quatro colunas conforme a largura disponível do conteúdo, com breakpoint de 600dp. Mantêm-se somente as políticas padrão habilitadas de memória e disco do Coil, sem cache HTTP, expiração, invalidação ou offline. A S6.4.5 cobriu URL de capa, grade compacta, seleção e restauração de scroll, e a S6.4.6 validou visualmente imagens, responsividade e navegação no Web WasmJS. A validação completa da Sprint 6 permanece em S6.6. O próximo passo é S6.5.
 
 ---
 

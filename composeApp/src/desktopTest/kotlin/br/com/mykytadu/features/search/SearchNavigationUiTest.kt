@@ -22,6 +22,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class SearchNavigationUiTest {
@@ -52,6 +53,10 @@ class SearchNavigationUiTest {
             compose.waitForIdle()
             val originalViewModel = created.single()
             val originalResults = originalViewModel.uiState.value.content
+            val firstResultBounds = compose.onNodeWithText("Example 0").fetchSemanticsNode().boundsInRoot
+            val secondResultBounds = compose.onNodeWithText("Example 1").fetchSemanticsNode().boundsInRoot
+            assertEquals(firstResultBounds.top, secondResultBounds.top)
+            assertTrue(firstResultBounds.left < secondResultBounds.left)
             compose.onNode(hasScrollToIndexAction()).performScrollToIndex(15)
             val item = compose.onNodeWithText("Example 15")
             item.assertIsDisplayed().assertHasClickAction()

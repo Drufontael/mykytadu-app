@@ -222,6 +222,9 @@ comportamento ou contratos compartilhados, e precisam de consumidor real.
 - teclado, foco, mouse e semântica são validados nos targets aplicáveis;
 - validação parcial não autoriza declarar conformidade WCAG completa.
 
+Resultados de pesquisa usam duas colunas em largura compacta e quatro em
+largura expandida, conforme o breakpoint compartilhado de 600dp.
+
 O foco de botões no tema escuro está funcional, porém seu refinamento visual foi
 reservado para a Sprint 16.
 
@@ -239,6 +242,9 @@ Uma entrega requer evidência proporcional ao impacto:
 Metadata iOS não equivale ao build nativo. Bundle gerado não comprova que a
 aplicação renderizou. Avisos devem ser separados de falhas.
 
+Os resultados de busca cobrem automaticamente a seleção da URL da capa e a
+grade compacta, além de seleção, teclado e restauração de scroll em Desktop.
+
 ## 14. Stack e dependências
 
 O projeto utiliza Kotlin, Compose Multiplatform, Material 3, Navigation 3, Koin,
@@ -248,6 +254,13 @@ Versões efetivas pertencem a `gradle/libs.versions.toml` e aos arquivos Gradle.
 Novas dependências exigem necessidade concreta, compatibilidade comprovada e
 versão centralizada. Upgrades não devem ser misturados com funcionalidades sem
 necessidade técnica.
+
+Imagens remotas multiplataforma usam Coil 3 com o artefato de rede Ktor 3 em
+`commonMain`. A resolução e compilação Android, Desktop, metadata iOS, JS e
+WasmJS foram comprovadas; a execução nativa iOS ainda exige macOS/Xcode. Cache
+de memória e disco permanece nas políticas padrão habilitadas do singleton do
+Coil. Cache HTTP, expiração, invalidação e offline não são presumidos por essa
+decisão.
 
 ## 15. Fontes de verdade
 

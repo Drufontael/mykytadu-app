@@ -706,10 +706,13 @@ sequenceDiagram
 ```
 
 A UI consome `AnimeSummary`, sem DTO remoto. A primeira página solicita até 20
-itens e apresenta títulos em lista, com prioridade inglês, romaji, nativo,
-sinônimos e texto de indisponibilidade. Cada resultado selecionável encaminha
-seu `AniListAnimeId` à rota de detalhes. Não há imagens nem carregamento
-incremental.
+itens e apresenta títulos em grade, com duas colunas quando a largura disponível
+do conteúdo fica abaixo de 600dp e quatro a partir desse limite, com prioridade inglês, romaji, nativo,
+sinônimos e texto de indisponibilidade. `AnimeSearchResultCard` exibe a capa
+remota com prioridade para `coverExtraLarge` e fallback para `coverLarge`; URL
+a ausência, vazia ou falha de imagem mantém uma superfície neutra. Cada resultado
+selecionável encaminha seu `AniListAnimeId` à rota de detalhes. Não há
+carregamento incremental.
 
 ### Lifecycle e escopo
 
@@ -812,9 +815,14 @@ comprova ausência do header na resposta AniList nem restrição CORS a ele.
 Respeitá-lo continua uma intenção no [contrato AniList](api-externa-anilist.md#13-limites-e-uso-responsável).
 
 Paginação por `PageInfo.hasNextPage`, deduplicação e preservação de resultados
-em loading/falha incremental permanecem planejadas. Coil e cache de imagens,
-inclusive HTTP, dependem de comprovação por target. A Sprint 7 consumirá o ID
-já transportado pela rota para carregar e apresentar detalhes.
+em loading/falha incremental permanecem planejadas. Coil 3.4.0 com Ktor 3
+compilou para Android, Desktop, metadata iOS, JS e WasmJS. No Web WasmJS, a
+validação visual confirmou capas remotas e a grade com duas ou quatro colunas
+conforme a largura disponível do conteúdo; a execução nativa iOS permanece
+pendente de macOS/Xcode. A UI usa o singleton padrão do Coil, cujas políticas
+de memória e disco permanecem habilitadas; não há configuração de tamanho,
+diretório, expiração, invalidação, offline ou `Cache-Control`. A Sprint 7
+consumirá o ID já transportado pela rota para carregar e apresentar detalhes.
 
 ---
 

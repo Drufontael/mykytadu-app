@@ -2,16 +2,18 @@ package br.com.mykytadu.features.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import br.com.mykytadu.domain.model.AniListAnimeId
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -50,9 +52,10 @@ import br.com.mykytadu.composeapp.generated.resources.search_retry
 import br.com.mykytadu.composeapp.generated.resources.search_title
 import br.com.mykytadu.composeapp.generated.resources.search_title_unavailable
 import br.com.mykytadu.core.theme.AppDimensions
+import br.com.mykytadu.core.layout.ResponsiveLayout
+import br.com.mykytadu.core.layout.responsiveLayoutFor
 import br.com.mykytadu.domain.model.AnimeSummary
 import br.com.mykytadu.domain.result.RepositoryFailure
-import br.com.mykytadu.presentation.components.AppCard
 import br.com.mykytadu.presentation.components.AppEmptyState
 import br.com.mykytadu.presentation.components.AppError
 import br.com.mykytadu.presentation.components.AppLoading
@@ -68,16 +71,16 @@ fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val listState = key(state.normalizedQuery) { rememberLazyListState() }
+    val gridState = key(state.normalizedQuery) { rememberLazyGridState() }
     var returnIndex by rememberSaveable(state.normalizedQuery) { mutableStateOf<Int?>(null) }
     var returnOffset by rememberSaveable(state.normalizedQuery) { mutableStateOf(0) }
-    DisposableEffect(isCurrentRoute, listState) {
+    DisposableEffect(isCurrentRoute, gridState) {
         onDispose {
             // Capture before the outgoing entry is measured without the main navigation.
             // Browser forward leaves this screen without invoking the card callback.
             if (isCurrentRoute) {
-                returnIndex = listState.firstVisibleItemIndex
-                returnOffset = listState.firstVisibleItemScrollOffset
+                returnIndex = gridState.firstVisibleItemIndex
+                returnOffset = gridState.firstVisibleItemScrollOffset
             }
         }
     }
@@ -87,7 +90,7 @@ fun SearchScreen(
         // Restore after the entry resumes, when its original viewport is available again.
         if (lifecycleState == Lifecycle.State.RESUMED) {
             returnIndex?.let { index ->
-                listState.scrollToItem(index, returnOffset)
+                gridState.scrollToItem(index, returnOffset)
                 returnIndex = null
             }
         }
@@ -124,7 +127,7 @@ fun SearchScreen(
             content = state.content,
             onRetry = viewModel::retry,
             onAnimeSelected = onAnimeSelected,
-            listState = listState,
+            gridState = gridState,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
@@ -137,7 +140,7 @@ private fun SearchFirstPageContent(
     content: SearchContent,
     onRetry: () -> Unit,
     onAnimeSelected: (AniListAnimeId) -> Unit,
-    listState: LazyListState,
+    gridState: LazyGridState,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -168,7 +171,7 @@ private fun SearchFirstPageContent(
             is SearchContent.Results -> SearchResults(
                 items = content.items,
                 onAnimeSelected = onAnimeSelected,
-                listState = listState,
+                gridState = gridState,
                 modifier = Modifier.fillMaxSize(),
             )
 
@@ -216,29 +219,32 @@ private fun RateLimitCooldown(
 private fun SearchResults(
     items: List<AnimeSummary>,
     onAnimeSelected: (AniListAnimeId) -> Unit,
-    listState: LazyListState,
+    gridState: LazyGridState,
     modifier: Modifier = Modifier,
 ) {
     val unavailableTitle = stringResource(Res.string.search_title_unavailable)
 
-    LazyColumn(
-        state = listState,
-        modifier = modifier,
-        contentPadding = PaddingValues(bottom = AppDimensions.padding.lg),
-        verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
-    ) {
-        items(
-            items = items,
-            key = { anime -> anime.id.value },
-        ) { anime ->
-            AppCard(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onAnimeSelected(anime.id) },
-            ) {
-                Text(
-                    text = anime.displayTitle(unavailableTitle),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+    BoxWithConstraints(modifier = modifier) {
+        val columns = when (responsiveLayoutFor(maxWidth)) {
+            ResponsiveLayout.COMPACT -> GridCells.Fixed(2)
+            ResponsiveLayout.EXPANDED -> GridCells.Fixed(4)
+        }
+
+        LazyVerticalGrid(
+            columns = columns,
+            state = gridState,
+            contentPadding = PaddingValues(bottom = AppDimensions.padding.lg),
+            horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
+            verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
+        ) {
+            items(
+                items = items,
+                key = { anime -> anime.id.value },
+            ) { anime ->
+                AnimeSearchResultCard(
+                    anime = anime,
+                    unavailableTitle = unavailableTitle,
+                    onClick = { onAnimeSelected(anime.id) },
                 )
             }
         }
