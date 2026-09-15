@@ -141,6 +141,14 @@ Quando a apresentação precisar escolher um título, a ordem é:
 Essa regra pertence à apresentação; os modelos preservam os títulos disponíveis
 sem selecionar um deles.
 
+A pesquisa apresenta resultados em uma grade responsiva e usa `PageInfo` para
+carregar páginas adicionais conforme a rolagem se aproxima do fim. O estado
+incremental mantém os itens exibidos durante carregamento ou falha e oferece
+retry explícito no rodapé da grade.
+O disparo e os estados incrementais da grade têm cobertura automatizada de UI
+no Desktop. A grade e o carregamento de capas foram validados visualmente no
+Web WasmJS.
+
 O contrato técnico da integração está em
 [`api-externa-anilist.md`](api-externa-anilist.md). O acesso direto no Web e suas
 condições estão no

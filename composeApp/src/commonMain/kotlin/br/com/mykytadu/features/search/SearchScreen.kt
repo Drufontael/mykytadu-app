@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -24,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -39,6 +41,7 @@ import br.com.mykytadu.composeapp.generated.resources.search_debouncing
 import br.com.mykytadu.composeapp.generated.resources.search_empty_message
 import br.com.mykytadu.composeapp.generated.resources.search_empty_title
 import br.com.mykytadu.composeapp.generated.resources.search_error_generic
+import br.com.mykytadu.composeapp.generated.resources.search_error_more_title
 import br.com.mykytadu.composeapp.generated.resources.search_error_rate_limited
 import br.com.mykytadu.composeapp.generated.resources.search_error_title
 import br.com.mykytadu.composeapp.generated.resources.search_error_timeout
@@ -47,6 +50,7 @@ import br.com.mykytadu.composeapp.generated.resources.search_field_placeholder
 import br.com.mykytadu.composeapp.generated.resources.search_initial_message
 import br.com.mykytadu.composeapp.generated.resources.search_initial_title
 import br.com.mykytadu.composeapp.generated.resources.search_loading
+import br.com.mykytadu.composeapp.generated.resources.search_loading_more
 import br.com.mykytadu.composeapp.generated.resources.search_rate_limit_cooldown
 import br.com.mykytadu.composeapp.generated.resources.search_retry
 import br.com.mykytadu.composeapp.generated.resources.search_title
@@ -126,6 +130,8 @@ fun SearchScreen(
         SearchFirstPageContent(
             content = state.content,
             onRetry = viewModel::retry,
+            onLoadNextPage = viewModel::loadNextPage,
+            onRetryNextPage = viewModel::retryNextPage,
             onAnimeSelected = onAnimeSelected,
             gridState = gridState,
             modifier = Modifier
@@ -139,6 +145,8 @@ fun SearchScreen(
 private fun SearchFirstPageContent(
     content: SearchContent,
     onRetry: () -> Unit,
+    onLoadNextPage: () -> Unit,
+    onRetryNextPage: () -> Unit,
     onAnimeSelected: (AniListAnimeId) -> Unit,
     gridState: LazyGridState,
     modifier: Modifier = Modifier,
@@ -170,6 +178,11 @@ private fun SearchFirstPageContent(
 
             is SearchContent.Results -> SearchResults(
                 items = content.items,
+                currentPage = content.pageInfo.currentPage,
+                hasNextPage = content.pageInfo.hasNextPage,
+                pagination = content.pagination,
+                onLoadNextPage = onLoadNextPage,
+                onRetryNextPage = onRetryNextPage,
                 onAnimeSelected = onAnimeSelected,
                 gridState = gridState,
                 modifier = Modifier.fillMaxSize(),
@@ -218,11 +231,34 @@ private fun RateLimitCooldown(
 @Composable
 private fun SearchResults(
     items: List<AnimeSummary>,
+    currentPage: Int,
+    hasNextPage: Boolean,
+    pagination: SearchPaginationState,
+    onLoadNextPage: () -> Unit,
+    onRetryNextPage: () -> Unit,
     onAnimeSelected: (AniListAnimeId) -> Unit,
     gridState: LazyGridState,
     modifier: Modifier = Modifier,
 ) {
     val unavailableTitle = stringResource(Res.string.search_title_unavailable)
+
+    LaunchedEffect(gridState, items.size, currentPage, hasNextPage, pagination) {
+        if (!hasNextPage) return@LaunchedEffect
+
+        snapshotFlow {
+            gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+        }.collect { lastVisibleIndex ->
+            val prefetchThreshold = (items.lastIndex - NEXT_PAGE_PREFETCH_DISTANCE)
+                .coerceAtLeast(0)
+            if (
+                pagination is SearchPaginationState.Idle &&
+                lastVisibleIndex != null &&
+                lastVisibleIndex >= prefetchThreshold
+            ) {
+                onLoadNextPage()
+            }
+        }
+    }
 
     BoxWithConstraints(modifier = modifier) {
         val columns = when (responsiveLayoutFor(maxWidth)) {
@@ -247,9 +283,41 @@ private fun SearchResults(
                     onClick = { onAnimeSelected(anime.id) },
                 )
             }
+
+            if (hasNextPage && pagination !is SearchPaginationState.Idle) {
+                item(
+                    key = PAGINATION_FOOTER_KEY,
+                    span = { GridItemSpan(maxLineSpan) },
+                ) {
+                    when (pagination) {
+                        SearchPaginationState.Idle -> Unit
+                        SearchPaginationState.Loading -> Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(AppDimensions.padding.md),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            AppLoading(
+                                contentDescription = stringResource(Res.string.search_loading_more),
+                            )
+                        }
+
+                        is SearchPaginationState.Failure -> AppError(
+                            title = stringResource(Res.string.search_error_more_title),
+                            message = failureMessage(pagination.reason),
+                            retryText = stringResource(Res.string.search_retry),
+                            onRetry = onRetryNextPage,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
+            }
         }
     }
 }
+
+private const val NEXT_PAGE_PREFETCH_DISTANCE = 4
+private const val PAGINATION_FOOTER_KEY = "search-pagination-footer"
 
 @Composable
 private fun failureMessage(reason: RepositoryFailure): String =

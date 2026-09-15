@@ -1,6 +1,7 @@
 package br.com.mykytadu.features.search
 
 import br.com.mykytadu.domain.model.AnimeSummary
+import br.com.mykytadu.domain.model.PageInfo
 import br.com.mykytadu.domain.result.RepositoryFailure
 
 data class SearchUiState(
@@ -24,6 +25,8 @@ sealed interface SearchContent {
 
     data class Results(
         val items: List<AnimeSummary>,
+        val pageInfo: PageInfo,
+        val pagination: SearchPaginationState = SearchPaginationState.Idle,
     ) : SearchContent
 
     data object Empty : SearchContent
@@ -31,4 +34,13 @@ sealed interface SearchContent {
     data class Failure(
         val reason: RepositoryFailure,
     ) : SearchContent
+}
+
+sealed interface SearchPaginationState {
+    data object Idle : SearchPaginationState
+    data object Loading : SearchPaginationState
+
+    data class Failure(
+        val reason: RepositoryFailure,
+    ) : SearchPaginationState
 }

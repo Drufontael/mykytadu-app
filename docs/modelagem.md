@@ -677,7 +677,7 @@ A UI não deverá acessar APIs diretamente.
 
 ## 8.1 Pesquisa de Anime
 
-> **Estado:** Primeira página e navegação de detalhes com ID implementadas. Imagens e paginação incremental permanecem planejadas.
+> **Estado:** Primeira página, paginação incremental deduplicada, recuperação de falha no estado, integração visual na grade, imagens e navegação de detalhes com ID implementadas.
 
 ```mermaid
 sequenceDiagram
@@ -814,8 +814,18 @@ atual e está indisponível no contrato tipado consumido pelo ViewModel. Isso n�
 comprova ausência do header na resposta AniList nem restrição CORS a ele.
 Respeitá-lo continua uma intenção no [contrato AniList](api-externa-anilist.md#13-limites-e-uso-responsável).
 
-Paginação por `PageInfo.hasNextPage`, deduplicação e preservação de resultados
-em loading/falha incremental permanecem planejadas. Coil 3.4.0 com Ktor 3
+Paginação por `PageInfo.hasNextPage`, mesclagem deduplicada por
+`AniListAnimeId` e preservação de resultados em loading/falha incremental estão
+implementadas. O estado de resultados
+transporta `PageInfo` e `SearchPaginationState` distingue ocioso, carregamento
+e falha incremental. `SearchViewModel.loadNextPage()` solicita `currentPage + 1`
+uma única vez por vez, quando `hasNextPage` está ativo, e invalida respostas de
+consultas anteriores. `retryNextPage()` repete a página pendente após falha sem
+descartar os itens já exibidos. A grade responsiva dispara a próxima página
+próximo ao fim da rolagem e exibe loading, falha e retry em um rodapé de
+largura completa. Esse fluxo possui cobertura automatizada de UI no Desktop e
+validação visual da grade e das capas no Web WasmJS.
+Coil 3.4.0 com Ktor 3
 compilou para Android, Desktop, metadata iOS, JS e WasmJS. No Web WasmJS, a
 validação visual confirmou capas remotas e a grade com duas ou quatro colunas
 conforme a largura disponível do conteúdo; a execução nativa iOS permanece

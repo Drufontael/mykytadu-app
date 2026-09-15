@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList e domínio do catálogo. A pesquisa funcional da S6.2, a navegação com ID AniList da S6.3 e a S6.4 — resultados responsivos e imagens — estão aceitas. A Sprint 6 segue em andamento; paginação incremental, autenticação e biblioteca permanecem planejadas.
+Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList e domínio do catálogo. A pesquisa funcional da S6.2, a navegação com ID AniList da S6.3 e a S6.4 — resultados responsivos e imagens — estão aceitas. A S6.5 foi concluída e aceita, incluindo estado incremental, paginação, deduplicação, recuperação de falha, integração visual e validação no Web WasmJS; autenticação e biblioteca permanecem planejadas.
 
 ## Plataformas
 
@@ -23,7 +23,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprint W1 — Fundação Web | Concluída |
-| Sprint 6 — Busca de Animes | Em andamento — S6.1 a S6.4 concluídas e aceitas |
+| Sprint 6 — Busca de Animes | Em andamento — S6.1 a S6.4 concluídas; S6.5.1 a S6.5.7 aceitas |
 | Sprints 7 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -202,7 +202,7 @@ W1. Fundação Web;
 
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
-A próxima etapa é a **S6.5 — Paginação e recuperação incremental**.
+A próxima etapa é a **S6.6 — Validação End-to-End**.
 
 ## Documentação
 

@@ -192,6 +192,96 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun `carregar proxima pagina usa pageInfo e acumula resultados`() = runTest {
+        val firstPage = anime(20, "Naruto")
+        val secondPage = anime(21, "Naruto Shippuden")
+        val repository = ControllableAnimeRepository { call ->
+            if (call.page == 1) {
+                successPage(1, true, firstPage)
+            } else {
+                successPage(2, false, firstPage, secondPage, secondPage)
+            }
+        }
+        val viewModel = SearchViewModel(repository, StandardTestDispatcher(testScheduler))
+
+        viewModel.onQueryChange("Naruto")
+        viewModel.submit()
+        runCurrent()
+        viewModel.loadNextPage()
+        runCurrent()
+
+        assertEquals(
+            listOf(SearchCall("Naruto", 1, SEARCH_PAGE_SIZE), SearchCall("Naruto", 2, SEARCH_PAGE_SIZE)),
+            repository.calls,
+        )
+        val results = assertIs<SearchContent.Results>(viewModel.uiState.value.content)
+        assertEquals(listOf(firstPage, secondPage), results.items)
+        assertEquals(2, results.pageInfo.currentPage)
+        assertEquals(false, results.pageInfo.hasNextPage)
+        assertEquals(SearchPaginationState.Idle, results.pagination)
+    }
+
+    @Test
+    fun `carregar proxima pagina respeita hasNextPage`() = runTest {
+        val repository = ControllableAnimeRepository { successResult(anime(20, "Naruto")) }
+        val viewModel = SearchViewModel(repository, StandardTestDispatcher(testScheduler))
+
+        viewModel.onQueryChange("Naruto")
+        viewModel.submit()
+        runCurrent()
+        viewModel.loadNextPage()
+        runCurrent()
+
+        assertEquals(1, repository.calls.size)
+        assertEquals(SearchPaginationState.Idle, assertIs<SearchContent.Results>(viewModel.uiState.value.content).pagination)
+    }
+
+    @Test
+    fun `falha incremental preserva resultados e retry repete a mesma pagina`() = runTest {
+        val firstPage = anime(20, "Naruto")
+        val secondPage = anime(21, "Naruto Shippuden")
+        var nextPageAttempts = 0
+        val repository = ControllableAnimeRepository { call ->
+            if (call.page == 1) {
+                successPage(1, true, firstPage)
+            } else if (nextPageAttempts++ == 0) {
+                RepositoryResult.Failure(RepositoryFailure.Timeout, TestException())
+            } else {
+                successPage(2, false, secondPage)
+            }
+        }
+        val viewModel = SearchViewModel(repository, StandardTestDispatcher(testScheduler))
+
+        viewModel.onQueryChange("Naruto")
+        viewModel.submit()
+        runCurrent()
+        viewModel.loadNextPage()
+        runCurrent()
+
+        val failedResults = assertIs<SearchContent.Results>(viewModel.uiState.value.content)
+        assertEquals(listOf(firstPage), failedResults.items)
+        assertEquals(
+            SearchPaginationState.Failure(RepositoryFailure.Timeout),
+            failedResults.pagination,
+        )
+
+        viewModel.retryNextPage()
+        runCurrent()
+
+        assertEquals(
+            listOf(
+                SearchCall("Naruto", 1, SEARCH_PAGE_SIZE),
+                SearchCall("Naruto", 2, SEARCH_PAGE_SIZE),
+                SearchCall("Naruto", 2, SEARCH_PAGE_SIZE),
+            ),
+            repository.calls,
+        )
+        val recoveredResults = assertIs<SearchContent.Results>(viewModel.uiState.value.content)
+        assertEquals(listOf(firstPage, secondPage), recoveredResults.items)
+        assertEquals(SearchPaginationState.Idle, recoveredResults.pagination)
+    }
+
+    @Test
     fun `falha esperada permite retry da consulta atual`() = runTest {
         var attempt = 0
         val repository = ControllableAnimeRepository {
@@ -361,14 +451,20 @@ private fun anime(id: Int, title: String): AnimeSummary =
 
 private fun successResult(
     vararg items: AnimeSummary,
+): RepositoryResult<PagedResult<AnimeSummary>> = successPage(1, false, *items)
+
+private fun successPage(
+    page: Int = 1,
+    hasNextPage: Boolean = false,
+    vararg items: AnimeSummary,
 ): RepositoryResult<PagedResult<AnimeSummary>> =
     RepositoryResult.Success(
         PagedResult(
             items = items.toList(),
             pageInfo = PageInfo(
-                currentPage = 1,
-                lastPage = 1,
-                hasNextPage = false,
+                currentPage = page,
+                lastPage = if (hasNextPage) page + 1 else page,
+                hasNextPage = hasNextPage,
                 perPage = SEARCH_PAGE_SIZE,
                 total = items.size,
             ),

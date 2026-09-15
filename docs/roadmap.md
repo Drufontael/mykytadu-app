@@ -118,11 +118,16 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 ### S6.5 — Paginação e recuperação incremental
 
-**Estado:** Planejada
+**Estado:** Concluída e aceita — S6.5.1 a S6.5.7
 
-- [ ] Paginar por `PageInfo.hasNextPage`
-- [ ] Bloquear concorrência, deduplicar por `AniListAnimeId` e repetir a página que falhou
-- [ ] Preservar resultados em loading e erro incrementais e rejeitar respostas de consultas anteriores
+- [x] Definir estado incremental e transportar `PageInfo` nos resultados
+- [x] Solicitar a próxima página por `PageInfo.hasNextPage`, com bloqueio e invalidação de respostas obsoletas
+- [x] Deduplicar páginas por `AniListAnimeId`, preservando a primeira ocorrência
+- [x] Repetir a página que falhou sem descartar resultados
+- [x] Preservar resultados em loading e erro incrementais e rejeitar respostas de consultas anteriores
+- [x] Integrar carregamento automático, estado de erro e retry à grade responsiva
+- [x] Cobrir o gatilho, loading incremental, erro e retry em teste automatizado de UI
+- [x] Validar visualmente a grade, capas e rolagem no Web WasmJS
 
 ### S6.6 — Validação End-to-End
 
@@ -144,9 +149,9 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 - [x] Lista de títulos da primeira página com capa opcional
 - [x] Carregamento de imagens remotas
 - [x] Cache padrão de imagens do Coil, sem política HTTP ou offline
-- [ ] Paginação baseada em `PageInfo.hasNextPage`
+- [x] Paginação baseada em `PageInfo.hasNextPage`
 - [x] Loading inicial
-- [ ] Loading incremental
+- [x] Loading incremental
 - [x] Estado vazio
 - [x] Erro com nova tentativa
 - [x] Navegação com o ID AniList real
@@ -155,8 +160,8 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 - [x] Consultas vazias não geram requisições.
 - [x] Uma nova consulta não mistura resultados da anterior.
-- [ ] A paginação não duplica itens.
-- [ ] Falha ao carregar nova página não elimina resultados já exibidos.
+- [x] A paginação não duplica itens.
+- [x] Falha ao carregar nova página não elimina resultados já exibidos.
 - [ ] Loading inicial e loading incremental são visualmente distintos.
 - [x] Estados de erro e vazio utilizam o Design System.
 - [x] O usuário consegue pesquisar e visualizar resultados.
@@ -168,7 +173,7 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 A Sprint 6 transportará e restaurará o ID AniList selecionado na navegação. A Sprint 7 consumirá o ID recebido para carregar e apresentar os detalhes completos do anime.
 
-Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura o ID AniList, inclusive no histórico Web, e preserva a pesquisa no retorno. A S6.4 consolidou Coil 3.4.0 com rede Ktor 3 após compilar Android, Desktop, metadata iOS, JS e WasmJS. A grade usa duas ou quatro colunas conforme a largura disponível do conteúdo, com breakpoint de 600dp. Mantêm-se somente as políticas padrão habilitadas de memória e disco do Coil, sem cache HTTP, expiração, invalidação ou offline. A S6.4.5 cobriu URL de capa, grade compacta, seleção e restauração de scroll, e a S6.4.6 validou visualmente imagens, responsividade e navegação no Web WasmJS. A validação completa da Sprint 6 permanece em S6.6. O próximo passo é S6.5.
+Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura o ID AniList, inclusive no histórico Web, e preserva a pesquisa no retorno. A S6.4 consolidou Coil 3.4.0 com rede Ktor 3 após compilar Android, Desktop, metadata iOS, JS e WasmJS. A grade usa duas ou quatro colunas conforme a largura disponível do conteúdo, com breakpoint de 600dp. Mantêm-se somente as políticas padrão habilitadas de memória e disco do Coil, sem cache HTTP, expiração, invalidação ou offline. A S6.4.5 cobriu URL de capa, grade compacta, seleção e restauração de scroll, e a S6.4.6 validou visualmente imagens, responsividade e navegação no Web WasmJS. A S6.5.1 definiu o estado incremental e passou a transportar `PageInfo` nos resultados. A S6.5.2 passou a solicitar `currentPage + 1` somente quando `hasNextPage` permite, bloqueando concorrência e rejeitando respostas obsoletas. A S6.5.3 passou a deduplicar resultados por `AniListAnimeId`, preservando a primeira ocorrência. A S6.5.4 passou a preservar resultados durante falhas incrementais e repetir a página pendente. A S6.5.5 integrou o carregamento automático e o rodapé de loading, erro e retry à grade responsiva. A S6.5.6 adicionou cobertura automatizada de UI para o gatilho, loading, erro e retry. A S6.5.7 validou visualmente a grade, as capas e a rolagem no Web WasmJS. A validação completa da Sprint 6 permanece em S6.6. O próximo passo é S6.6.
 
 ---
 

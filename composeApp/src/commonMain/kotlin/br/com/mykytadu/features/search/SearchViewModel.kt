@@ -103,6 +103,55 @@ class SearchViewModel internal constructor(
         onQueryChange("")
     }
 
+    fun loadNextPage() {
+        val state = _uiState.value
+        val results = state.content as? SearchContent.Results ?: return
+        val normalizedQuery = state.normalizedQuery ?: return
+
+        if (
+            !results.pageInfo.hasNextPage ||
+            results.pagination !is SearchPaginationState.Idle
+        ) {
+            return
+        }
+
+        requestNextPage(state, results, normalizedQuery)
+    }
+
+    fun retryNextPage() {
+        val state = _uiState.value
+        val results = state.content as? SearchContent.Results ?: return
+        val normalizedQuery = state.normalizedQuery ?: return
+
+        if (
+            !results.pageInfo.hasNextPage ||
+            results.pagination !is SearchPaginationState.Failure
+        ) {
+            return
+        }
+
+        requestNextPage(state, results, normalizedQuery)
+    }
+
+    private fun requestNextPage(
+        state: SearchUiState,
+        results: SearchContent.Results,
+        normalizedQuery: String,
+    ) {
+        val nextPage = results.pageInfo.currentPage + 1
+        val executionGeneration = generation
+        _uiState.value = state.copy(
+            content = results.copy(pagination = SearchPaginationState.Loading),
+        )
+        searchJob = viewModelScope.launch(dispatcher) {
+            executeNextPage(
+                normalizedQuery = normalizedQuery,
+                page = nextPage,
+                executionGeneration = executionGeneration,
+            )
+        }
+    }
+
     fun retry() {
         val state = _uiState.value
         val failedQuery = state.normalizedQuery ?: return
@@ -154,6 +203,50 @@ class SearchViewModel internal constructor(
         _uiState.update { state -> state.copy(content = result.toSearchContent()) }
     }
 
+    private suspend fun executeNextPage(
+        normalizedQuery: String,
+        page: Int,
+        executionGeneration: Long,
+    ) {
+        if (!isCurrent(normalizedQuery, executionGeneration)) return
+
+        val result = animeRepository.searchAnime(
+            query = normalizedQuery,
+            page = page,
+            perPage = SEARCH_PAGE_SIZE,
+        )
+
+        currentCoroutineContext().ensureActive()
+        if (!isCurrent(normalizedQuery, executionGeneration)) return
+
+        _uiState.update { state ->
+            val current = state.content as? SearchContent.Results
+                ?: return@update state
+            if (
+                current.pagination !is SearchPaginationState.Loading ||
+                current.pageInfo.currentPage + 1 != page
+            ) {
+                return@update state
+            }
+
+            when (result) {
+                is RepositoryResult.Success -> state.copy(
+                    content = current.copy(
+                        items = (current.items + result.value.items).distinctBy { anime -> anime.id },
+                        pageInfo = result.value.pageInfo,
+                        pagination = SearchPaginationState.Idle,
+                    ),
+                )
+
+                is RepositoryResult.Failure -> state.copy(
+                    content = current.copy(
+                        pagination = SearchPaginationState.Failure(result.reason),
+                    ),
+                )
+            }
+        }
+    }
+
     private suspend fun awaitRateLimitCooldown(executionGeneration: Long) {
         for (remainingSeconds in SEARCH_RATE_LIMIT_COOLDOWN_SECONDS downTo 1) {
             if (generation != executionGeneration) return
@@ -188,7 +281,14 @@ class SearchViewModel internal constructor(
     private fun RepositoryResult<PagedResult<AnimeSummary>>.toSearchContent(): SearchContent =
         when (this) {
             is RepositoryResult.Success -> {
-                if (value.items.isEmpty()) SearchContent.Empty else SearchContent.Results(value.items)
+                if (value.items.isEmpty()) {
+                    SearchContent.Empty
+                } else {
+                    SearchContent.Results(
+                        items = value.items,
+                        pageInfo = value.pageInfo,
+                    )
+                }
             }
 
             is RepositoryResult.Failure -> SearchContent.Failure(reason)

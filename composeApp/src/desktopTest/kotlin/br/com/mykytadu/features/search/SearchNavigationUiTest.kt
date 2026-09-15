@@ -13,6 +13,7 @@ import br.com.mykytadu.core.navigation.NavigationHistoryBridge
 import br.com.mykytadu.core.navigation.NavigationMutation
 import br.com.mykytadu.domain.model.*
 import br.com.mykytadu.domain.repository.AnimeRepository
+import br.com.mykytadu.domain.result.RepositoryFailure
 import br.com.mykytadu.domain.result.RepositoryResult
 import org.junit.Rule
 import org.junit.Test
@@ -20,6 +21,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import kotlinx.coroutines.CompletableDeferred
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
@@ -98,6 +100,71 @@ class SearchNavigationUiTest {
         }
     }
 
+    @Test
+    fun `grade carrega pagina seguinte e exibe erro e retry no rodape`() {
+        val repository = IncrementalFakeRepository()
+        val created = mutableListOf<SearchViewModel>()
+        startKoin {
+            modules(module {
+                viewModel {
+                    SearchViewModel(repository).also { created += it }
+                }
+            })
+        }
+        try {
+            compose.setContent { Box(Modifier.size(500.dp, 700.dp)) { App(TestHistoryBridge()) } }
+            compose.onNode(hasSetTextAction()).performTextInput("Example")
+            compose.onNode(hasSetTextAction()).performImeAction()
+
+            compose.waitUntil(5_000) {
+                created.singleOrNull()?.uiState?.value?.content is SearchContent.Results
+            }
+            compose.onNode(hasScrollToIndexAction()).performScrollToIndex(18)
+            compose.waitUntil(5_000) { repository.calls.count { it.page == 2 } == 1 }
+            compose.onNodeWithContentDescription("Carregando mais resultados").assertExists()
+
+            compose.runOnIdle {
+                repository.firstNextPage.complete(
+                    RepositoryResult.Failure(RepositoryFailure.Timeout),
+                )
+            }
+            compose.waitUntil(5_000) {
+                (created.single().uiState.value.content as? SearchContent.Results)?.pagination is
+                    SearchPaginationState.Failure
+            }
+            compose.waitForIdle()
+            compose.onNode(hasScrollToIndexAction()).performScrollToIndex(20)
+            compose.onNodeWithText("Não foi possível carregar mais resultados")
+                .assertExists()
+                .assertIsDisplayed()
+            compose.onNodeWithText("Tentar novamente")
+                .performClick()
+
+            compose.waitUntil(5_000) {
+                repository.calls.count { it.page == 2 } == 2 &&
+                    (created.single().uiState.value.content as? SearchContent.Results)?.pagination is
+                    SearchPaginationState.Loading
+            }
+            compose.waitForIdle()
+            compose.onNodeWithContentDescription("Carregando mais resultados").assertExists()
+
+            compose.runOnIdle {
+                repository.retryNextPage.complete(
+                    pagedSuccess(2, false, testAnime(21, "Example 21")),
+                )
+            }
+            compose.waitUntil(5_000) {
+                val results = created.single().uiState.value.content as? SearchContent.Results
+                results?.pageInfo?.currentPage == 2 && results.pagination is SearchPaginationState.Idle
+            }
+            compose.waitForIdle()
+            compose.onNode(hasScrollToIndexAction()).performScrollToIndex(20)
+            compose.onNodeWithText("Example 21").assertIsDisplayed()
+        } finally {
+            stopKoin()
+        }
+    }
+
     private class TestHistoryBridge : NavigationHistoryBridge {
         override val initialBackStack = listOf(AppRoute.Search)
         val pushed = mutableListOf<List<AppRoute>>()
@@ -125,4 +192,62 @@ class SearchNavigationUiTest {
         override suspend fun getAnimeDetails(id: AniListAnimeId): RepositoryResult<AnimeDetails> =
             error("The details placeholder must not fetch details.")
     }
+
+    private class IncrementalFakeRepository : AnimeRepository {
+        val calls = mutableListOf<SearchCall>()
+        val firstNextPage = CompletableDeferred<RepositoryResult<PagedResult<AnimeSummary>>>()
+        val retryNextPage = CompletableDeferred<RepositoryResult<PagedResult<AnimeSummary>>>()
+        private var nextPageAttempts = 0
+
+        override suspend fun searchAnime(
+            query: String,
+            page: Int,
+            perPage: Int,
+        ): RepositoryResult<PagedResult<AnimeSummary>> {
+            calls += SearchCall(query, page, perPage)
+            return when (page) {
+                1 -> pagedSuccess(
+                    1,
+                    true,
+                    *((1..20).map { testAnime(it, "Example $it") }).toTypedArray(),
+                )
+
+                2 -> if (nextPageAttempts++ == 0) firstNextPage.await() else retryNextPage.await()
+                else -> error("Página inesperada: $page")
+            }
+        }
+
+        override suspend fun getAnimeDetails(id: AniListAnimeId): RepositoryResult<AnimeDetails> =
+            error("Os detalhes não devem ser chamados neste teste.")
+    }
 }
+
+private data class SearchCall(
+    val query: String,
+    val page: Int,
+    val perPage: Int,
+)
+
+private fun testAnime(id: Int, title: String): AnimeSummary =
+    AnimeSummary(
+        id = AniListAnimeId(id),
+        titles = AnimeTitles(english = title),
+    )
+
+private fun pagedSuccess(
+    page: Int,
+    hasNextPage: Boolean,
+    vararg items: AnimeSummary,
+): RepositoryResult<PagedResult<AnimeSummary>> =
+    RepositoryResult.Success(
+        PagedResult(
+            items = items.toList(),
+            pageInfo = PageInfo(
+                currentPage = page,
+                lastPage = if (hasNextPage) page + 1 else page,
+                hasNextPage = hasNextPage,
+                perPage = 20,
+                total = items.size,
+            ),
+        ),
+    )
