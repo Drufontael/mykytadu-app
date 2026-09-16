@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList e domínio do catálogo. A pesquisa funcional da S6.2, a navegação com ID AniList da S6.3 e a S6.4 — resultados responsivos e imagens — estão aceitas. A S6.5 foi concluída e aceita, incluindo estado incremental, paginação, deduplicação, recuperação de falha, integração visual e validação no Web WasmJS; autenticação e biblioteca permanecem planejadas.
+Atualmente, as sprints até a S6 estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList, domínio do catálogo e busca end-to-end. A S6 foi validada com smoke tests manuais em Android, Desktop e Web, além das suítes automatizadas e builds aplicáveis. O build e a execução nativos iOS permanecem pendentes por dependerem de macOS e Xcode, sem bloquear a evolução dos demais targets.
 
 ## Plataformas
 
@@ -23,7 +23,7 @@ Atualmente, as cinco primeiras sprints estão concluídas: fundação multiplata
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprint W1 — Fundação Web | Concluída |
-| Sprint 6 — Busca de Animes | Em andamento — S6.1 a S6.4 concluídas; S6.5.1 a S6.5.7 aceitas |
+| Sprint 6 — Busca de Animes | Concluída — validação manual em Android, Desktop e Web; iOS nativo pendente de ambiente |
 | Sprints 7 a 16 | Planejadas |
 
 Já estão disponíveis:
@@ -102,7 +102,11 @@ Abra o projeto no Android Studio, selecione a configuração `composeApp` e exec
 
 ### iOS
 
-Os targets `iosArm64` e `iosSimulatorArm64` estão configurados. A compilação e a integração do framework iOS exigem macOS e Xcode.
+Os targets `iosArm64` e `iosSimulatorArm64` estão configurados. A compilação e a integração do framework iOS exigem macOS e Xcode, portanto a execução nativa permanece pendente no ambiente atual.
+
+O projeto está aberto a contribuições para configurar, executar e validar o
+aplicativo em iOS. O fluxo esperado inclui login, busca de animes, paginação,
+tela de detalhes e retorno para os resultados.
 
 ### Web
 
@@ -202,7 +206,9 @@ W1. Fundação Web;
 
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
-A próxima etapa é a **S6.6 — Validação End-to-End**.
+A próxima etapa é iniciar a **Sprint 7 — Detalhes do anime end-to-end**. A
+validação nativa iOS pode ser adicionada posteriormente quando houver macOS e
+Xcode disponíveis.
 
 ## Documentação
 

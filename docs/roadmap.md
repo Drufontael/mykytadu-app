@@ -32,7 +32,7 @@ inserida entre as Sprints 5 e 6 sem renumeração.
 | S4 | Camada de Comunicação | Concluída | [S4](sprints/S4.md) |
 | S5 | Domínio do Catálogo | Concluída | [S5](sprints/S5.md) |
 | W1 | Fundação Web | Concluída | [W1](sprints/W1.md) |
-| S6 | Busca de Animes End-to-End | Em andamento | [S6](sprints/S6.md) |
+| S6 | Busca de Animes End-to-End | Concluída | [S6](sprints/S6.md) |
 | S7 | Detalhes do Anime End-to-End | Planejada | a criar |
 | S8 | Persistência e Biblioteca Local | Planejada | a criar |
 | S9 | Biblioteca End-to-End | Planejada | a criar |
@@ -71,7 +71,7 @@ base da experiência.
 ---
 # Sprint 6 — Busca de Animes End-to-End
 
-**Status:** Em andamento — S6.1 a S6.4 concluídas e aceitas
+**Status:** Concluída — validação manual em Android, Desktop e Web; iOS nativo pendente de ambiente
 
 ## Objetivo
 
@@ -131,12 +131,19 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 ### S6.6 — Validação End-to-End
 
-**Estado:** Planejada
+**Estado:** Concluída — S6.6.1 a S6.6.8 concluídas e aceitas; iOS nativo pendente de ambiente
 
-- [ ] Consolidar testes e smoke tests reais nos targets aplicáveis
-- [ ] Validar pesquisa, imagens, paginação, responsividade, teclado e navegação
-- [ ] Verificar separadamente `SearchViewModel`, resultados e posição de scroll ao retornar dos detalhes
-- [ ] Encerrar documentalmente a Sprint 6 após aceite
+- [x] Confirmar a matriz de tasks e executar builds/testes locais dos targets aplicáveis
+- [x] Compilar Desktop, Android debug, metadata comum/iOS, JavaScript e WasmJS
+- [x] Executar testes de navegador JS e WasmJS
+- [x] Executar smoke test manual Web WasmJS
+- [x] Executar smoke tests manuais Android, Desktop e Web
+- [x] Validar pesquisa, imagens, paginação, responsividade, teclado e navegação em Android, Desktop e Web
+- [x] Verificar separadamente `SearchViewModel` e os modelos de domínio por regressão automatizada
+- [x] Verificar resultados e posição de scroll ao retornar dos detalhes
+- [x] Consolidar evidências, alcance e limitações por target
+- [x] Remodelar o registro da sprint no padrão documental aprovado
+- [x] Encerrar documentalmente a Sprint 6 após aceite
 
 ### Escopo
 
@@ -162,18 +169,18 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 - [x] Uma nova consulta não mistura resultados da anterior.
 - [x] A paginação não duplica itens.
 - [x] Falha ao carregar nova página não elimina resultados já exibidos.
-- [ ] Loading inicial e loading incremental são visualmente distintos.
+- [x] Loading inicial e loading incremental são visualmente distintos.
 - [x] Estados de erro e vazio utilizam o Design System.
 - [x] O usuário consegue pesquisar e visualizar resultados.
 - [x] O usuário consegue abrir a rota de detalhes com o ID correto.
 - [x] Nenhum DTO remoto chega à UI.
-- [ ] O comportamento é validado nos targets disponíveis.
+- [x] O comportamento é validado nos targets disponíveis no ambiente atual.
 
 ### Divisão com a Sprint 7
 
 A Sprint 6 transportará e restaurará o ID AniList selecionado na navegação. A Sprint 7 consumirá o ID recebido para carregar e apresentar os detalhes completos do anime.
 
-Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura o ID AniList, inclusive no histórico Web, e preserva a pesquisa no retorno. A S6.4 consolidou Coil 3.4.0 com rede Ktor 3 após compilar Android, Desktop, metadata iOS, JS e WasmJS. A grade usa duas ou quatro colunas conforme a largura disponível do conteúdo, com breakpoint de 600dp. Mantêm-se somente as políticas padrão habilitadas de memória e disco do Coil, sem cache HTTP, expiração, invalidação ou offline. A S6.4.5 cobriu URL de capa, grade compacta, seleção e restauração de scroll, e a S6.4.6 validou visualmente imagens, responsividade e navegação no Web WasmJS. A S6.5.1 definiu o estado incremental e passou a transportar `PageInfo` nos resultados. A S6.5.2 passou a solicitar `currentPage + 1` somente quando `hasNextPage` permite, bloqueando concorrência e rejeitando respostas obsoletas. A S6.5.3 passou a deduplicar resultados por `AniListAnimeId`, preservando a primeira ocorrência. A S6.5.4 passou a preservar resultados durante falhas incrementais e repetir a página pendente. A S6.5.5 integrou o carregamento automático e o rodapé de loading, erro e retry à grade responsiva. A S6.5.6 adicionou cobertura automatizada de UI para o gatilho, loading, erro e retry. A S6.5.7 validou visualmente a grade, as capas e a rolagem no Web WasmJS. A validação completa da Sprint 6 permanece em S6.6. O próximo passo é S6.6.
+Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura o ID AniList, inclusive no histórico Web, e preserva a pesquisa no retorno. A S6.4 consolidou Coil 3.4.0 com rede Ktor 3 após compilar Android, Desktop, metadata iOS, JS e WasmJS. A grade usa duas ou quatro colunas conforme a largura disponível do conteúdo, com breakpoint de 600dp. Mantêm-se somente as políticas padrão habilitadas de memória e disco do Coil, sem cache HTTP, expiração, invalidação ou offline. A S6.4.5 cobriu URL de capa, grade compacta, seleção e restauração de scroll, e a S6.4.6 validou visualmente imagens, responsividade e navegação no Web WasmJS. A S6.5.1 definiu o estado incremental e passou a transportar `PageInfo` nos resultados. A S6.5.2 passou a solicitar `currentPage + 1` somente quando `hasNextPage` permite, bloqueando concorrência e rejeitando respostas obsoletas. A S6.5.3 passou a deduplicar resultados por `AniListAnimeId`, preservando a primeira ocorrência. A S6.5.4 passou a preservar resultados durante falhas incrementais e repetir a página pendente. A S6.5.5 integrou o carregamento automático e o rodapé de loading, erro e retry à grade responsiva. A S6.5.6 adicionou cobertura automatizada de UI para o gatilho, loading, erro e retry. A S6.5.7 validou visualmente a grade, as capas e a rolagem no Web WasmJS. A S6.6 confirmou builds, testes automatizados e smoke tests manuais em Android, Desktop e Web. A validação nativa iOS permanece pendente de macOS/Xcode e aberta para contribuição. O próximo passo é a Sprint 7.
 
 ---
 

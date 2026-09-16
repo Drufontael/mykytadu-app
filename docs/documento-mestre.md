@@ -146,8 +146,9 @@ carregar páginas adicionais conforme a rolagem se aproxima do fim. O estado
 incremental mantém os itens exibidos durante carregamento ou falha e oferece
 retry explícito no rodapé da grade.
 O disparo e os estados incrementais da grade têm cobertura automatizada de UI
-no Desktop. A grade e o carregamento de capas foram validados visualmente no
-Web WasmJS.
+no Desktop. A pesquisa, a grade, o carregamento de capas, a paginação e a
+navegação foram validados visualmente em Android, Desktop e Web. O build e a
+execução nativos iOS permanecem dependentes de macOS/Xcode.
 
 O contrato técnico da integração está em
 [`api-externa-anilist.md`](api-externa-anilist.md). O acesso direto no Web e suas
@@ -249,6 +250,34 @@ Uma entrega requer evidência proporcional ao impacto:
 
 Metadata iOS não equivale ao build nativo. Bundle gerado não comprova que a
 aplicação renderizou. Avisos devem ser separados de falhas.
+
+A matriz local da S6.6.1 confirmou compilação e testes para Desktop, Android
+debug, metadata comum/iOS, JavaScript e WasmJS. Smoke tests manuais posteriores
+confirmaram o fluxo de busca nos targets Android, Desktop e Web disponíveis.
+Essa evidência não substitui a execução nativa iOS, que permanece pendente de
+macOS/Xcode.
+
+A regressão comportamental da S6.6.2 confirmou o `SearchViewModel` e os modelos
+de domínio em Desktop e Android debug, sem falhas nos testes direcionados.
+
+Os builds locais da S6.6.3 concluíram para Desktop, Android debug, metadata
+comum/iOS, JavaScript e WasmJS; metadata iOS continua sem substituir o build
+nativo em macOS/Xcode.
+
+Os testes de navegador JS e WasmJS da S6.6.4 concluíram sem falhas ou erros;
+avisos do empacotamento Web permanecem limitações técnicas registradas.
+
+Os smoke tests em Android, Desktop e Web confirmaram pesquisa, capas, grade,
+loading inicial e incremental, teclado, paginação, navegação para detalhes e
+retorno ao contexto da pesquisa.
+
+As evidências da Sprint 6 estão consolidadas por target e distinguem validações
+automatizadas, builds e smoke tests manuais. A única limitação de plataforma em
+aberto é a execução nativa iOS, dependente de macOS/Xcode.
+
+O registro da Sprint 6 foi remodelado para uma estrutura única de objetivo,
+escopo, critérios, riscos e evidências e encerrado após a validação nos targets
+disponíveis. A participação para concluir a etapa nativa iOS permanece aberta.
 
 Os resultados de busca cobrem automaticamente a seleção da URL da capa e a
 grade compacta, além de seleção, teclado e restauração de scroll em Desktop.
