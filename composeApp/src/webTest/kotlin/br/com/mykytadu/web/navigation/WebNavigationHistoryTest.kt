@@ -1,6 +1,6 @@
 package br.com.mykytadu.web.navigation
 
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.core.navigation.AppRoute
 import br.com.mykytadu.core.navigation.NavigationMutation
 import kotlin.test.Test
@@ -16,7 +16,7 @@ class WebNavigationHistoryTest {
         assertEquals("#/login", WebRouteCodec.encode(AppRoute.Login))
         assertEquals("#/home", WebRouteCodec.encode(AppRoute.Home))
         assertEquals("#/search", WebRouteCodec.encode(AppRoute.Search))
-        assertEquals("#/anime/20", WebRouteCodec.encode(AppRoute.AnimeDetails(AniListAnimeId(20))))
+        assertEquals("#/anime/20", WebRouteCodec.encode(AppRoute.AnimeDetails(CatalogAnimeId("20"))))
         assertEquals("#/library", WebRouteCodec.encode(AppRoute.Library))
         assertEquals("#/profile", WebRouteCodec.encode(AppRoute.Profile))
         assertEquals("#/settings", WebRouteCodec.encode(AppRoute.Settings))
@@ -28,7 +28,7 @@ class WebNavigationHistoryTest {
         assertEquals(listOf(AppRoute.Login), WebRouteCodec.decode("#/login").backStack)
         assertEquals(listOf(AppRoute.Home), WebRouteCodec.decode("#/home").backStack)
         assertEquals(listOf(AppRoute.Search), WebRouteCodec.decode("#/search").backStack)
-        assertEquals(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20))), WebRouteCodec.decode("#/anime/20").backStack)
+        assertEquals(listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId("20"))), WebRouteCodec.decode("#/anime/20").backStack)
         assertEquals(listOf(AppRoute.Library), WebRouteCodec.decode("#/library").backStack)
         assertEquals(listOf(AppRoute.Profile), WebRouteCodec.decode("#/profile").backStack)
         assertEquals(listOf(AppRoute.Profile, AppRoute.Settings), WebRouteCodec.decode("#/settings").backStack)
@@ -87,7 +87,7 @@ class WebNavigationHistoryTest {
         val dispose = controller.bind(restored::add)
 
         controller.onAppNavigation(listOf(AppRoute.Search), NavigationMutation.PUSH)
-        controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20))), NavigationMutation.PUSH)
+        controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId("20"))), NavigationMutation.PUSH)
         port.emit("#/search")
         port.emit("#/search")
 
@@ -105,13 +105,13 @@ class WebNavigationHistoryTest {
         controller.bind(restored::add)
 
         controller.onAppNavigation(listOf(AppRoute.Search), NavigationMutation.PUSH)
-        controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20))), NavigationMutation.PUSH)
+        controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId("20"))), NavigationMutation.PUSH)
         port.emit("#/search")
         port.emit("#/anime/20")
 
         val expected: List<List<AppRoute>> = listOf(
                 listOf(AppRoute.Search),
-                listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20))),
+                listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId("20"))),
             )
         assertEquals(expected, restored)
         assertEquals(2, port.pushed.size)
@@ -194,7 +194,7 @@ class WebNavigationHistoryTest {
     fun `details IDs canonicalize and invalid IDs keep general fallback`() {
         listOf("1" to 1, "00020" to 20, "2147483647" to Int.MAX_VALUE).forEach { (text, id) ->
             val result = WebRouteCodec.decode("#/anime/$text")
-            assertEquals(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(id))), result.backStack)
+            assertEquals(listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId(id.toString()))), result.backStack)
             assertEquals("#/anime/$id", result.canonicalFragment)
             assertEquals(text == id.toString(), result.isCanonical)
         }
@@ -221,8 +221,8 @@ class WebNavigationHistoryTest {
         val controller = WebNavigationHistoryController(port)
         val restored = mutableListOf<List<AppRoute>>()
         controller.bind(restored::add)
-        val first = listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(20)))
-        val second = listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(21)))
+        val first = listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId("20")))
+        val second = listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId("21")))
         controller.onAppNavigation(first, NavigationMutation.PUSH)
         controller.onAppNavigation(first, NavigationMutation.PUSH)
         port.emit("#/search")
@@ -244,11 +244,11 @@ class WebNavigationHistoryTest {
         val restored = mutableListOf<List<AppRoute>>()
         controller.bind(restored::add)
         listOf(20, 21).forEach {
-            controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(it))), NavigationMutation.PUSH)
+            controller.onAppNavigation(listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId(it.toString()))), NavigationMutation.PUSH)
         }
         port.emit("#/anime/20")
         port.emit("#/anime/21")
-        assertEquals(listOf(20, 21), restored.map { (it.last() as AppRoute.AnimeDetails).id.value })
+        assertEquals(listOf("20", "21"), restored.map { (it.last() as AppRoute.AnimeDetails).id.value })
         assertEquals(2, port.pushed.size)
     }
 

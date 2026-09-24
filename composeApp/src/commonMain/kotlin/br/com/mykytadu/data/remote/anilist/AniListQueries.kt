@@ -26,7 +26,6 @@ internal object AniListQueries {
                     sort: SEARCH_MATCH
                 ) {
                     id
-                    idMal
 
                     title {
                         romaji
@@ -57,7 +56,6 @@ internal object AniListQueries {
                 type: ANIME
             ) {
                 id
-                idMal
 
                 title {
                     romaji

@@ -32,7 +32,6 @@ class AnimeSearchMapperTest {
                 media = listOf(
                     AnimeSearchItemDto(
                         id = 5114,
-                        idMal = 5114,
                         title = AnimeTitleDto(
                             romaji = " Fullmetal Alchemist ",
                             english = " Fullmetal Alchemist Brotherhood ",
@@ -57,8 +56,7 @@ class AnimeSearchMapperTest {
         val result = dto.toPagedAnimeSummaries()
         val anime = result.items.single()
 
-        assertEquals(5114, anime.id.value)
-        assertEquals(5114, anime.idMal)
+        assertEquals("5114", anime.id.value)
         assertEquals("Fullmetal Alchemist", anime.titles.romaji)
         assertEquals("Fullmetal Alchemist Brotherhood", anime.titles.english)
         assertEquals("鋼の錬金術師", anime.titles.native)
@@ -92,7 +90,6 @@ class AnimeSearchMapperTest {
 
         val anime = dto.toPagedAnimeSummaries().items.single()
 
-        assertNull(anime.idMal)
         assertNull(anime.titles.romaji)
         assertNull(anime.titles.english)
         assertNull(anime.titles.native)

@@ -2,7 +2,7 @@ package br.com.mykytadu.domain.repository
 
 import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeSummary
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.domain.model.PagedResult
 import br.com.mykytadu.domain.result.RepositoryResult
 
@@ -15,6 +15,6 @@ interface AnimeRepository {
     ): RepositoryResult<PagedResult<AnimeSummary>>
 
     suspend fun getAnimeDetails(
-        id: AniListAnimeId,
+        id: CatalogAnimeId,
     ): RepositoryResult<AnimeDetails>
 }

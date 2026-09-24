@@ -14,6 +14,7 @@ import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 import io.ktor.http.HttpMethod
@@ -62,7 +63,6 @@ class AniListAnimeApiTest {
             val anime = page.media.single()
 
             assertEquals(20, anime.id)
-            assertEquals(20, anime.idMal)
             assertEquals("NARUTO", anime.title.romaji)
             assertEquals("Naruto", anime.title.english)
             assertEquals("TV", anime.format)
@@ -281,7 +281,6 @@ class AniListAnimeApiTest {
             val anime = page.media.single()
 
             assertEquals(999, anime.id)
-            assertEquals(null, anime.idMal)
             assertEquals(null, anime.title.english)
             assertEquals(null, anime.coverImage)
             assertEquals(null, anime.episodes)
@@ -333,6 +332,7 @@ class AniListAnimeApiTest {
             assertTrue(query.contains("query SearchAnime"))
             assertTrue(query.contains("type: ANIME"))
             assertTrue(query.contains("sort: SEARCH_MATCH"))
+            assertFalse(query.contains("idMal"))
 
             assertEquals(
                 "Naruto",
@@ -372,7 +372,6 @@ class AniListAnimeApiTest {
                     >(success.value)
 
             assertEquals(21579, anime.id)
-            assertEquals(32365, anime.idMal)
             assertEquals(
                 "Boruto: Naruto the Movie - The Day Naruto Became Hokage",
                 anime.title.english,
@@ -430,6 +429,7 @@ class AniListAnimeApiTest {
             assertTrue(query.contains("query GetAnimeDetails"))
             assertTrue(query.contains("description(asHtml: false)"))
             assertTrue(query.contains("studios(isMain: true)"))
+            assertFalse(query.contains("idMal"))
             assertEquals(
                 21579,
                 variables.getValue("id").jsonPrimitive.int,
@@ -600,7 +600,6 @@ class AniListAnimeApiTest {
                   "media": [
                     {
                       "id": 20,
-                      "idMal": 20,
                       "title": {
                         "romaji": "NARUTO",
                         "english": "Naruto",
@@ -665,7 +664,6 @@ class AniListAnimeApiTest {
               "media": [
                 {
                   "id": 999,
-                  "idMal": null,
                   "title": {
                     "romaji": "Future Anime",
                     "english": null,
@@ -690,7 +688,6 @@ class AniListAnimeApiTest {
           "data": {
             "Media": {
               "id": 21579,
-              "idMal": 32365,
               "title": {
                 "romaji": "BORUTO: NARUTO THE MOVIE - Naruto ga Hokage ni Natta Hi",
                 "english": "Boruto: Naruto the Movie - The Day Naruto Became Hokage",

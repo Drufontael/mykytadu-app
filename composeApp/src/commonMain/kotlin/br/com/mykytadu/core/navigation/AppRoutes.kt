@@ -1,6 +1,6 @@
 package br.com.mykytadu.core.navigation
 
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
@@ -21,8 +21,8 @@ sealed interface AppRoute : NavKey {
 
     @Serializable
     data class AnimeDetails(
-        @Serializable(with = AniListAnimeIdNavSerializer::class)
-        val id: AniListAnimeId,
+        @Serializable(with = CatalogAnimeIdNavSerializer::class)
+        val id: CatalogAnimeId,
     ) : AppRoute
 
     @Serializable

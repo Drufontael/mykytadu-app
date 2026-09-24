@@ -29,7 +29,6 @@ class AnimeDetailsMapperTest {
         val dto = AnimeDetailsDataDto(
             media = AnimeDetailsDto(
                 id = 5114,
-                idMal = 5114,
                 title = AnimeTitleDto(
                     romaji = " Fullmetal Alchemist ",
                     english = " Fullmetal Alchemist Brotherhood ",
@@ -102,8 +101,7 @@ class AnimeDetailsMapperTest {
 
         val result = dto.toAnimeDetails()
 
-        assertEquals(5114, result.id.value)
-        assertEquals(5114, result.idMal)
+        assertEquals("5114", result.id.value)
         assertEquals("Fullmetal Alchemist", result.titles.romaji)
         assertEquals("Fullmetal Alchemist Brotherhood", result.titles.english)
         assertEquals("鋼の錬金術師", result.titles.native)
@@ -142,7 +140,7 @@ class AnimeDetailsMapperTest {
         )
 
         val relation = result.relations.single()
-        assertEquals(121, relation.id.value)
+        assertEquals("121", relation.id.value)
         assertEquals(AnimeRelationType.ADAPTATION, relation.relationType)
         assertEquals(MediaType.MANGA, relation.mediaType)
         assertEquals(AnimeFormat.MANGA, relation.format)
@@ -160,8 +158,7 @@ class AnimeDetailsMapperTest {
             title = AnimeTitleDto(null, null, null),
         ).toAnimeDetails()
 
-        assertEquals(1, result.id.value)
-        assertNull(result.idMal)
+        assertEquals("1", result.id.value)
         assertNull(result.description)
         assertNull(result.format)
         assertNull(result.status)
@@ -254,7 +251,7 @@ class AnimeDetailsMapperTest {
         ).toAnimeDetails()
 
         assertEquals(listOf(7), result.studios.map { it.id })
-        assertEquals(listOf(8), result.relations.map { it.id.value })
+        assertEquals(listOf("8"), result.relations.map { it.id.value })
     }
 
     @Test

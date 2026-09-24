@@ -7,14 +7,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import br.com.mykytadu.presentation.components.AppLoading
 import br.com.mykytadu.presentation.NavigationPlaceholder
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.composeapp.generated.resources.Res
 import br.com.mykytadu.composeapp.generated.resources.anime_details_placeholder
 import br.com.mykytadu.composeapp.generated.resources.anime_details_back
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AnimeDetailsScreen(id: AniListAnimeId, onBack: () -> Unit) {
+fun AnimeDetailsScreen(id: CatalogAnimeId, onBack: () -> Unit) {
     val text = stringResource(Res.string.anime_details_placeholder, id.value)
     val backText = stringResource(Res.string.anime_details_back)
     // Web resources load asynchronously; do not create an action without its label.

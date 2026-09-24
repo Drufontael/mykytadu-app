@@ -3,7 +3,7 @@ package br.com.mykytadu.web.diagnostics
 import br.com.mykytadu.domain.model.AnimeImages
 import br.com.mykytadu.domain.model.AnimeSummary
 import br.com.mykytadu.domain.model.AnimeTitles
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.domain.model.PageInfo
 import br.com.mykytadu.domain.model.PagedResult
 import br.com.mykytadu.domain.repository.AnimeRepository
@@ -163,7 +163,7 @@ class WebNetworkDiagnosticRunnerTest {
 
         val success = assertIs<WebNetworkDiagnosticState.Success>(states.last())
         assertEquals(1, success.itemCount)
-        assertEquals(20, success.firstId)
+        assertEquals("20", success.firstId)
         assertEquals("Naruto", success.firstTitle)
         assertEquals("https://example.test/naruto.jpg", success.coverUrl)
     }
@@ -182,11 +182,11 @@ class WebNetworkDiagnosticRunnerTest {
 
         repository.complete(1)
         advanceUntilIdle()
-        assertEquals(21, assertIs<WebNetworkDiagnosticState.Success>(states.last()).firstId)
+        assertEquals("21", assertIs<WebNetworkDiagnosticState.Success>(states.last()).firstId)
 
         repository.complete(0)
         advanceUntilIdle()
-        assertEquals(21, assertIs<WebNetworkDiagnosticState.Success>(states.last()).firstId)
+        assertEquals("21", assertIs<WebNetworkDiagnosticState.Success>(states.last()).firstId)
     }
 
     private class ControllableRepository : AnimeRepository {
@@ -205,7 +205,7 @@ class WebNetworkDiagnosticRunnerTest {
             return result()
         }
 
-        override suspend fun getAnimeDetails(id: AniListAnimeId) =
+        override suspend fun getAnimeDetails(id: CatalogAnimeId) =
             error("Não usado pelo diagnóstico.")
 
         fun completeWithSuccess() {
@@ -217,7 +217,7 @@ class WebNetworkDiagnosticRunnerTest {
                 PagedResult(
                     items = listOf(
                         AnimeSummary(
-                            id = AniListAnimeId(20),
+                            id = CatalogAnimeId("20"),
                             titles = AnimeTitles(english = "Naruto"),
                             images = AnimeImages(coverLarge = "https://example.test/naruto.jpg"),
                         ),
@@ -251,7 +251,7 @@ class WebNetworkDiagnosticRunnerTest {
                     PagedResult(
                         items = listOf(
                             AnimeSummary(
-                                id = AniListAnimeId(20 + index),
+                                id = CatalogAnimeId((20 + index).toString()),
                                 titles = AnimeTitles(english = "Naruto $index"),
                             ),
                         ),
@@ -267,7 +267,7 @@ class WebNetworkDiagnosticRunnerTest {
             }
         }
 
-        override suspend fun getAnimeDetails(id: AniListAnimeId) =
+        override suspend fun getAnimeDetails(id: CatalogAnimeId) =
             error("Não usado pelo diagnóstico.")
 
         fun complete(index: Int) {

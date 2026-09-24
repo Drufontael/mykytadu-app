@@ -60,3 +60,5 @@ ADR.
 | [ADR-005](ADR-005-consumir-anilist-diretamente-no-web.md) | Aprovado | acesso direto à AniList enquanto CORS for viável |
 | [ADR-006](ADR-006-adotar-anilist-como-fonte-do-catalogo.md) | Aprovado | AniList como fonte externa inicial do catálogo |
 | [ADR-007](ADR-007-escopar-viewmodels-por-entrada-navigation3.md) | Aprovado | Lifecycle e Koin com ViewModelStore por entrada do Navigation 3 |
+| [ADR-008](ADR-008-desacoplar-identidade-do-catalogo-do-provedor.md) | Aprovado | desacoplar a identidade do catálogo do provedor externo |
+| [ADR-009](ADR-009-nao-solicitar-identificadores-externos-sem-consumidor.md) | Aprovado | não solicitar identificadores externos sem consumidor |

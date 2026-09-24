@@ -65,7 +65,7 @@ class SearchNavigationUiTest {
             val originalBounds = item.fetchSemanticsNode().boundsInRoot
             item.performClick()
             compose.onNodeWithText("Detalhes do anime — ID AniList: 1015").assertIsDisplayed()
-            assertEquals(AppRoute.AnimeDetails(AniListAnimeId(1015)), bridge.pushed.last().last())
+            assertEquals(AppRoute.AnimeDetails(CatalogAnimeId("1015")), bridge.pushed.last().last())
             compose.onNodeWithText("Voltar à pesquisa").performClick()
             item.assertIsDisplayed()
             assertEquals(originalBounds, item.fetchSemanticsNode().boundsInRoot)
@@ -76,7 +76,7 @@ class SearchNavigationUiTest {
             assertEquals(0, cleared)
 
             // Real NavDisplay + decorators, driven by the same restoration callback as Web.
-            compose.runOnIdle { bridge.restore(listOf(AppRoute.Search, AppRoute.AnimeDetails(AniListAnimeId(1016)))) }
+            compose.runOnIdle { bridge.restore(listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId("1016")))) }
             compose.onNodeWithText("Detalhes do anime — ID AniList: 1016").assertIsDisplayed()
             compose.runOnIdle { bridge.restore(listOf(AppRoute.Search)) }
             item.assertIsDisplayed()
@@ -185,11 +185,11 @@ class SearchNavigationUiTest {
         override suspend fun searchAnime(query: String, page: Int, perPage: Int): RepositoryResult<PagedResult<AnimeSummary>> {
             searches++
             return RepositoryResult.Success(PagedResult(
-                items = (0 until 20).map { AnimeSummary(id = AniListAnimeId(1000 + it), titles = AnimeTitles(english = "Example $it")) },
+                items = (0 until 20).map { AnimeSummary(id = CatalogAnimeId((1000 + it).toString()), titles = AnimeTitles(english = "Example $it")) },
                 pageInfo = PageInfo(currentPage = 1, lastPage = 1, hasNextPage = false, perPage = 20, total = 20),
             ))
         }
-        override suspend fun getAnimeDetails(id: AniListAnimeId): RepositoryResult<AnimeDetails> =
+        override suspend fun getAnimeDetails(id: CatalogAnimeId): RepositoryResult<AnimeDetails> =
             error("The details placeholder must not fetch details.")
     }
 
@@ -217,7 +217,7 @@ class SearchNavigationUiTest {
             }
         }
 
-        override suspend fun getAnimeDetails(id: AniListAnimeId): RepositoryResult<AnimeDetails> =
+        override suspend fun getAnimeDetails(id: CatalogAnimeId): RepositoryResult<AnimeDetails> =
             error("Os detalhes não devem ser chamados neste teste.")
     }
 }
@@ -230,7 +230,7 @@ private data class SearchCall(
 
 private fun testAnime(id: Int, title: String): AnimeSummary =
     AnimeSummary(
-        id = AniListAnimeId(id),
+        id = CatalogAnimeId(id.toString()),
         titles = AnimeTitles(english = title),
     )
 

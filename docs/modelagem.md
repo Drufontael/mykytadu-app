@@ -150,7 +150,7 @@ flowchart TD
     MainNavigation -.-> Library
     MainNavigation -.-> Profile
 
-    Search -->|AniListAnimeId| AnimeDetails
+    Search -->|CatalogAnimeId| AnimeDetails
 
     Profile --> Settings
 
@@ -214,10 +214,10 @@ Navegação raiz
 ## 4.5 Detalhes do Anime
 
 `Detalhes do Anime` é uma rota secundária da pesquisa e recebe um
-`AniListAnimeId` obrigatório:
+`CatalogAnimeId` obrigatório:
 
 ```text
-Pesquisa ── AniListAnimeId ──> Detalhes do Anime
+Pesquisa ── CatalogAnimeId ──> Detalhes do Anime
 ```
 
 No futuro, outras áreas, como a Home, também poderão abrir diretamente os detalhes de um anime.
@@ -320,7 +320,7 @@ As fronteiras vigentes são:
 
 ## 5.2 Contratos fundamentais
 
-`AniListAnimeId` é um identificador positivo e semanticamente específico. `RepositoryResult` e sete categorias de `RepositoryFailure` permanecem independentes da infraestrutura. `NetworkFailure` é convertido internamente na camada de dados, com preservação opcional da causa técnica.
+`CatalogAnimeId` é um identificador opaco baseado em `String` não vazia. A camada de dados traduz o ID numérico positivo da AniList para esse contrato e valida a conversão inversa antes de consultar detalhes. O tipo não representa IDs locais nem do backend. `RepositoryResult` e sete categorias de `RepositoryFailure` permanecem independentes da infraestrutura. `NetworkFailure` é convertido internamente na camada de dados, com preservação opcional da causa técnica.
 
 `PageInfo` valida página atual, tamanho da página, última página e total. `PagedResult<T>` aceita páginas vazias, preserva `hasNextPage` sem inferência pelo número de itens e mantém um snapshot da lista recebida. Esses tipos não são serializáveis e o domínio não depende de rede, GraphQL, Ktor ou DTOs.
 
@@ -328,14 +328,14 @@ As fronteiras vigentes são:
 
 ## 5.3 Modelos do catálogo
 
-`AnimeSummary` e `AnimeDetails` são independentes, sem herança nem composição entre eles. Ambos declaram seus próprios campos e reutilizam `AniListAnimeId`, `idMal: Int?`, `AnimeTitles` e `AnimeImages`.
+`AnimeSummary` e `AnimeDetails` são independentes, sem herança nem composição entre eles. Ambos declaram seus próprios campos e reutilizam `CatalogAnimeId`, `AnimeTitles` e `AnimeImages`. Identificadores externos auxiliares não são solicitados nem modelados sem consumidor concreto.
 
 - `AnimeTitles` preserva romaji, inglês, nativo e um snapshot dos sinônimos, sem selecionar o título exibido.
 - `AnimeImages` mantém capa large, extraLarge, banner e cor opcionais.
 - `PartialDate` aceita componentes independentes e valida apenas mês entre 1–12 e dia entre 1–31, sem conversão para data completa ou restrição de ano.
 - `AnimeDetails` acrescenta descrição original, duração, indicação de conteúdo adulto, datas, gêneros como `List<String>`, estúdios, trailer e relações. Gêneros, estúdios e relações mantêm snapshots das listas recebidas e aceitam vazio.
 - `Studio` contém ID, nome e indicação opcional de estúdio de animação. `Trailer` contém identificador, site e thumbnail opcional; a validação de strings pertence ao mapper.
-- `AnimeRelation` mantém ID AniList, tipo da relação, tipo da mídia, títulos, formato, status e capa medium. Não referencia objetos completos e pode representar obras de mangá, reutilizando o identificador existente.
+- `AnimeRelation` mantém `CatalogAnimeId`, tipo da relação, tipo da mídia, títulos, formato, status e capa medium. Não referencia objetos completos e pode representar obras de mangá, reutilizando a identidade de catálogo existente.
 - `AnimeFormat`, `AnimeReleaseStatus`, `AnimeSeason`, `MediaType` e `AnimeRelationType` possuem `UNKNOWN`. As propriedades de enum são anuláveis, distinguindo ausência de valor desconhecido.
 
 Os contratos não possuem serialização, dependências de infraestrutura ou regras de apresentação. A seleção de título na apresentação segue inglês, romaji, nativo, primeiro sinônimo e recurso localizado de título indisponível. Conversões remotas descartam trailers incompletos e relações sem nó ou ID válido individualmente.
@@ -352,14 +352,13 @@ Os diagramas representam os contratos implementados em `domain/model`. `?` indic
 classDiagram
     direction LR
 
-    class AniListAnimeId {
+    class CatalogAnimeId {
         <<value class>>
-        +Int value
+        +String value
     }
 
     class AnimeSummary {
-        +AniListAnimeId id
-        +Int? idMal
+        +CatalogAnimeId id
         +AnimeTitles titles
         +AnimeImages images
         +AnimeFormat? format
@@ -371,8 +370,7 @@ classDiagram
     }
 
     class AnimeDetails {
-        +AniListAnimeId id
-        +Int? idMal
+        +CatalogAnimeId id
         +AnimeTitles titles
         +AnimeImages images
         +String? description
@@ -425,7 +423,7 @@ classDiagram
     }
 
     class AnimeRelation {
-        +AniListAnimeId id
+        +CatalogAnimeId id
         +AnimeRelationType? relationType
         +MediaType? mediaType
         +AnimeTitles titles
@@ -434,10 +432,10 @@ classDiagram
         +String? coverMedium
     }
 
-    AnimeSummary --> "1" AniListAnimeId : id
+    AnimeSummary --> "1" CatalogAnimeId : id
     AnimeSummary --> "1" AnimeTitles : titles
     AnimeSummary --> "1" AnimeImages : images
-    AnimeDetails --> "1" AniListAnimeId : id
+    AnimeDetails --> "1" CatalogAnimeId : id
     AnimeDetails --> "1" AnimeTitles : titles
     AnimeDetails --> "1" AnimeImages : images
     AnimeDetails --> "0..1" PartialDate : startDate
@@ -445,7 +443,7 @@ classDiagram
     AnimeDetails --> "0..*" Studio : studios
     AnimeDetails --> "0..1" Trailer : trailer
     AnimeDetails --> "0..*" AnimeRelation : relations
-    AnimeRelation --> "1" AniListAnimeId : id
+    AnimeRelation --> "1" CatalogAnimeId : id
     AnimeRelation --> "1" AnimeTitles : titles
 ```
 
@@ -547,7 +545,7 @@ Os mapeadores preservam nulabilidade e coleções vazias, mantêm valores descon
 
 ## 5.6 AnimeRepository
 
-`AnimeRepository` pertence ao domínio e oferece pesquisa paginada e consulta de detalhes por `AniListAnimeId`. `AniListAnimeRepository` permanece na camada de dados, depende de `AnimeApi` e dos mapeadores e converte falhas remotas para `RepositoryFailure`.
+`AnimeRepository` pertence ao domínio e oferece pesquisa paginada e consulta de detalhes por `CatalogAnimeId`. `AniListAnimeRepository` permanece na camada de dados, converte a identidade opaca para o ID numérico positivo exigido pela AniList, depende de `AnimeApi` e dos mapeadores e converte falhas remotas para `RepositoryFailure`.
 
 A pesquisa normaliza a consulta com `trim` e rejeita consulta vazia, página ou tamanho inválidos. Falhas de mapeamento por `IllegalArgumentException` resultam em `InvalidData`; cancelamentos e exceções inesperadas não são interceptados. `RepositoryModule` registra uma instância singleton de `AnimeRepository` e reutiliza `AnimeApi` pelo Koin.
 
@@ -711,7 +709,7 @@ do conteúdo fica abaixo de 600dp e quatro a partir desse limite, com prioridade
 sinônimos e texto de indisponibilidade. `AnimeSearchResultCard` exibe a capa
 remota com prioridade para `coverExtraLarge` e fallback para `coverLarge`; URL
 a ausência, vazia ou falha de imagem mantém uma superfície neutra. Cada resultado
-selecionável encaminha seu `AniListAnimeId` à rota de detalhes. Não há
+selecionável encaminha seu `CatalogAnimeId` à rota de detalhes. Não há
 carregamento incremental.
 
 ### Lifecycle e escopo
@@ -815,7 +813,7 @@ comprova ausência do header na resposta AniList nem restrição CORS a ele.
 Respeitá-lo continua uma intenção no [contrato AniList](api-externa-anilist.md#13-limites-e-uso-responsável).
 
 Paginação por `PageInfo.hasNextPage`, mesclagem deduplicada por
-`AniListAnimeId` e preservação de resultados em loading/falha incremental estão
+`CatalogAnimeId` e preservação de resultados em loading/falha incremental estão
 implementadas. O estado de resultados
 transporta `PageInfo` e `SearchPaginationState` distingue ocioso, carregamento
 e falha incremental. `SearchViewModel.loadNextPage()` solicita `currentPage + 1`

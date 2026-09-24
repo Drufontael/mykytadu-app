@@ -5,7 +5,6 @@ import br.com.mykytadu.data.remote.anilist.dto.AnimeSearchItemDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeSearchPageDto
 import br.com.mykytadu.data.remote.anilist.dto.PageInfoDto
 import br.com.mykytadu.domain.model.AnimeSummary
-import br.com.mykytadu.domain.model.AniListAnimeId
 import br.com.mykytadu.domain.model.PageInfo
 import br.com.mykytadu.domain.model.PagedResult
 
@@ -24,8 +23,7 @@ internal fun AnimeSearchPageDto.toPagedAnimeSummaries(): PagedResult<AnimeSummar
 
 internal fun AnimeSearchItemDto.toAnimeSummary(): AnimeSummary =
     AnimeSummary(
-        id = AniListAnimeId(id),
-        idMal = idMal,
+        id = id.toCatalogAnimeId(),
         titles = title.toAnimeTitles(),
         images = coverImage.toAnimeImages(),
         format = format.toAnimeFormat(),

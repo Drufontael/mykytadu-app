@@ -3,10 +3,10 @@ package br.com.mykytadu.domain.model
 import kotlin.jvm.JvmInline
 
 @JvmInline
-value class AniListAnimeId(
-    val value: Int,
+value class CatalogAnimeId(
+    val value: String,
 ) {
     init {
-        require(value > 0) { "AniList anime id must be positive." }
+        require(value.isNotBlank()) { "Catalog anime id must not be blank." }
     }
 }

@@ -3,7 +3,7 @@ package br.com.mykytadu.features.search
 import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeSummary
 import br.com.mykytadu.domain.model.AnimeTitles
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.domain.model.PageInfo
 import br.com.mykytadu.domain.model.PagedResult
 import br.com.mykytadu.domain.repository.AnimeRepository
@@ -436,7 +436,7 @@ class SearchViewModelTest {
             }
         }
 
-        override suspend fun getAnimeDetails(id: AniListAnimeId): RepositoryResult<AnimeDetails> =
+        override suspend fun getAnimeDetails(id: CatalogAnimeId): RepositoryResult<AnimeDetails> =
             error("Não deve ser chamado neste teste.")
     }
 
@@ -445,7 +445,7 @@ class SearchViewModelTest {
 
 private fun anime(id: Int, title: String): AnimeSummary =
     AnimeSummary(
-        id = AniListAnimeId(id),
+        id = CatalogAnimeId(id.toString()),
         titles = AnimeTitles(english = title),
     )
 

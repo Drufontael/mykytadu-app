@@ -12,7 +12,6 @@ data class AnimeDetailsDataDto(
 @Serializable
 data class AnimeDetailsDto(
     val id: Int,
-    val idMal: Int? = null,
     val title: AnimeTitleDto,
     val synonyms: List<String> = emptyList(),
     val description: String? = null,

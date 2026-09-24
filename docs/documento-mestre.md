@@ -113,8 +113,12 @@ registradas em [`docs/adr/`](adr/README.md).
 
 O domínio representa conceitos do MykytaDu e não o formato de uma API externa.
 
-- IDs locais, AniList e backend possuem significados distintos;
-- `AniListAnimeId` identifica obras no catálogo AniList;
+- IDs de catálogo, IDs nativos de provedores, IDs locais e IDs do backend
+  possuem significados distintos;
+- `CatalogAnimeId` identifica uma entrada do catálogo sem expor o provedor ao
+  domínio;
+- a camada de dados traduz entre `CatalogAnimeId` e o identificador nativo da
+  AniList;
 - um futuro ID local identifica registros persistidos pelo aplicativo;
 - um futuro ID do backend identifica recursos controlados pelo MykytaDu API;
 - ausência legítima permanece nula, sem sentinelas como zero ou texto de
@@ -122,8 +126,10 @@ O domínio representa conceitos do MykytaDu e não o formato de uma API externa.
 - coleções vazias são válidas quando o domínio permitir;
 - valores externos desconhecidos devem ser tratados explicitamente.
 
-Os contratos do catálogo são independentes de GraphQL, Ktor e DTOs. A decisão
-está no [`ADR-002`](adr/ADR-002-isolar-dominio-dos-contratos-anilist.md).
+Os contratos do catálogo são independentes de GraphQL, Ktor, DTOs e nomes de
+provedores. As decisões estão no
+[`ADR-002`](adr/ADR-002-isolar-dominio-dos-contratos-anilist.md) e no
+[`ADR-008`](adr/ADR-008-desacoplar-identidade-do-catalogo-do-provedor.md).
 
 ## 7. Catálogo e apresentação
 
@@ -172,9 +178,10 @@ Fragment routing é a estratégia atual porque funciona em hospedagem estática 
 rewrite de paths. A decisão e seus critérios de revisão estão no
 [`ADR-004`](adr/ADR-004-integrar-navigation3-ao-historico-com-fragmentos.md).
 
-`AnimeDetails` recebe obrigatoriamente um `AniListAnimeId`. A rota compartilhada
-e o fragmento Web `#/anime/{id}` validam IDs positivos antes de criar o destino;
-endereços sem ID válido não fabricam identificadores. O retorno de detalhes
+`AnimeDetails` recebe obrigatoriamente um `CatalogAnimeId`. A rota compartilhada
+aceita uma identidade opaca não vazia; os deep links atuais e o fragmento Web
+`#/anime/{id}` preservam o contrato decimal positivo da AniList. Endereços sem
+ID válido não fabricam identificadores. O retorno de detalhes
 mantém o contexto da entrada de pesquisa enquanto ela permanecer no back stack.
 
 ## 9. Web

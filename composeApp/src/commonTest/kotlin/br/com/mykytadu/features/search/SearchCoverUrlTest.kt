@@ -2,7 +2,7 @@ package br.com.mykytadu.features.search
 
 import br.com.mykytadu.domain.model.AnimeImages
 import br.com.mykytadu.domain.model.AnimeSummary
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -40,7 +40,7 @@ class SearchCoverUrlTest {
         coverExtraLarge: String? = null,
         coverLarge: String? = null,
     ): AnimeSummary = AnimeSummary(
-        id = AniListAnimeId(1),
+        id = CatalogAnimeId("1"),
         images = AnimeImages(
             coverExtraLarge = coverExtraLarge,
             coverLarge = coverLarge,

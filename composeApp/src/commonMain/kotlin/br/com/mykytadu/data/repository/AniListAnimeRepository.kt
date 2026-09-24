@@ -2,10 +2,11 @@ package br.com.mykytadu.data.repository
 
 import br.com.mykytadu.core.network.NetworkResult
 import br.com.mykytadu.data.mapper.toAnimeDetails
+import br.com.mykytadu.data.mapper.toAniListAnimeIdOrNull
 import br.com.mykytadu.data.mapper.toPagedAnimeSummaries
 import br.com.mykytadu.data.mapper.toRepositoryFailure
 import br.com.mykytadu.data.remote.api.AnimeApi
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeSummary
 import br.com.mykytadu.domain.model.PagedResult
@@ -44,15 +45,19 @@ internal class AniListAnimeRepository(
     }
 
     override suspend fun getAnimeDetails(
-        id: AniListAnimeId,
-    ): RepositoryResult<AnimeDetails> =
-        when (val result = animeApi.getAnimeDetails(id.value)) {
+        id: CatalogAnimeId,
+    ): RepositoryResult<AnimeDetails> {
+        val aniListId = id.toAniListAnimeIdOrNull()
+            ?: return RepositoryResult.Failure(RepositoryFailure.InvalidInput)
+
+        return when (val result = animeApi.getAnimeDetails(aniListId)) {
             is NetworkResult.Success ->
                 mapDomainValue { result.value.toAnimeDetails() }
 
             is NetworkResult.Failure ->
                 result.error.toRepositoryFailure()
         }
+    }
 
     private inline fun <T> mapDomainValue(
         mapper: () -> T,

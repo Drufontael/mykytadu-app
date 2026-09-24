@@ -27,7 +27,6 @@ data class PageInfoDto(
 @Serializable
 data class AnimeSearchItemDto(
     val id: Int,
-    val idMal: Int? = null,
     val title: AnimeTitleDto,
     val coverImage: AnimeCoverImageDto? = null,
     val format: String? = null,

@@ -1,7 +1,7 @@
 package br.com.mykytadu.core.navigation
 
 import androidx.navigation3.runtime.NavKey
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -17,17 +17,27 @@ class AnimeDetailsRouteTest {
     private val stackSerializer = ListSerializer(PolymorphicSerializer(NavKey::class))
 
     @Test
-    fun `polymorphic back stack preserves distinct details and positive Int limits`() {
-        val stack = listOf<NavKey>(AppRoute.Search) + listOf(1, 20, Int.MAX_VALUE).map {
-            AppRoute.AnimeDetails(AniListAnimeId(it))
+    fun `polymorphic back stack preserves distinct opaque catalog IDs`() {
+        val stack = listOf<NavKey>(AppRoute.Search) + listOf("1", "20", "catalog-key").map {
+            AppRoute.AnimeDetails(CatalogAnimeId(it))
         }
         assertEquals(stack, json.decodeFromString(stackSerializer, json.encodeToString(stackSerializer, stack)))
         assertNotEquals(stack[1], stack[2])
     }
 
     @Test
-    fun `route deserialization refuses missing non positive and overflow IDs`() {
-        listOf("{}", "{\"id\":0}", "{\"id\":-1}", "{\"id\":2147483648}", "{\"id\":\"bad\"}").forEach {
+    fun `route serialization represents opaque catalog ID as text`() {
+        val route = AppRoute.AnimeDetails(CatalogAnimeId("catalog-key"))
+
+        val encoded = json.encodeToString(AppRoute.AnimeDetails.serializer(), route)
+
+        assertEquals("{\"id\":\"catalog-key\"}", encoded)
+        assertEquals(route, json.decodeFromString(AppRoute.AnimeDetails.serializer(), encoded))
+    }
+
+    @Test
+    fun `route deserialization refuses missing blank and non string IDs`() {
+        listOf("{}", "{\"id\":0}", "{\"id\":\"\"}", "{\"id\":\"   \"}").forEach {
             assertFailsWith<IllegalArgumentException> {
                 json.decodeFromString(AppRoute.AnimeDetails.serializer(), it)
             }
@@ -37,7 +47,7 @@ class AnimeDetailsRouteTest {
     @Test
     fun `shared deep link accepts decimal IDs and leading zeroes`() {
         listOf("1" to 1, "00020" to 20, "2147483647" to Int.MAX_VALUE).forEach { (text, value) ->
-            assertEquals(AppRoute.AnimeDetails(AniListAnimeId(value)), AppDeepLink.resolve("mykytadu://app/anime/$text"))
+            assertEquals(AppRoute.AnimeDetails(CatalogAnimeId(value.toString())), AppDeepLink.resolve("mykytadu://app/anime/$text"))
         }
     }
 
@@ -55,7 +65,7 @@ class AnimeDetailsRouteTest {
         assertEquals(RouteAccess.PUBLIC, AppRoute.Login.access)
         MainDestination.entries.forEach { assertEquals(RouteAccess.PROTECTED, it.route.access) }
         listOf(1, 20, Int.MAX_VALUE).forEach { id ->
-            val route = AppRoute.AnimeDetails(AniListAnimeId(id))
+            val route = AppRoute.AnimeDetails(CatalogAnimeId(id.toString()))
             assertEquals(RouteAccess.PROTECTED, route.access)
             assertEquals(false, MainDestination.entries.any { it.route == route })
         }
@@ -64,8 +74,8 @@ class AnimeDetailsRouteTest {
 
     @Test
     fun `restoration retains prefix and differentiates IDs instead of route types`() {
-        val first = AppRoute.AnimeDetails(AniListAnimeId(20))
-        val second = AppRoute.AnimeDetails(AniListAnimeId(21))
+        val first = AppRoute.AnimeDetails(CatalogAnimeId("20"))
+        val second = AppRoute.AnimeDetails(CatalogAnimeId("21"))
         val removed = mutableListOf<NavKey>()
         val backing = mutableListOf<NavKey>()
         val stack = object : MutableList<NavKey> by backing {

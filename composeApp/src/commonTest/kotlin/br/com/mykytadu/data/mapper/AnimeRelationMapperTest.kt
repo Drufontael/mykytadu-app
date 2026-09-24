@@ -30,7 +30,7 @@ class AnimeRelationMapperTest {
         val result = edge.toAnimeRelation()
 
         requireNotNull(result)
-        assertEquals(21, result.id.value)
+        assertEquals("21", result.id.value)
         assertEquals(AnimeRelationType.PREQUEL, result.relationType)
         assertEquals(MediaType.ANIME, result.mediaType)
         assertEquals("Related Romaji", result.titles.romaji)
@@ -112,7 +112,7 @@ class AnimeRelationMapperTest {
 
         val result = relations.toAnimeRelations()
 
-        assertEquals(listOf(10, 20), result.map { it.id.value })
+        assertEquals(listOf("10", "20"), result.map { it.id.value })
         assertEquals(
             listOf(AnimeRelationType.PREQUEL, AnimeRelationType.SEQUEL),
             result.map { it.relationType },

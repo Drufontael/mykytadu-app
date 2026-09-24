@@ -2,8 +2,7 @@ package br.com.mykytadu.domain.model
 
 /** Detalhes do catálogo. As coleções mantêm snapshots das listas recebidas. */
 class AnimeDetails(
-    val id: AniListAnimeId,
-    val idMal: Int? = null,
+    val id: CatalogAnimeId,
     val titles: AnimeTitles = AnimeTitles(),
     val images: AnimeImages = AnimeImages(),
     val description: String? = null,

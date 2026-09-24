@@ -12,12 +12,11 @@ class CatalogModelsTest {
     @Test
     fun `deve construir resumo completo sem contratos remotos`() {
         val summary = AnimeSummary(
-            id = AniListAnimeId(20), idMal = 30, titles = titles, images = images,
+            id = CatalogAnimeId("20"), titles = titles, images = images,
             format = AnimeFormat.TV, status = AnimeReleaseStatus.FINISHED, episodes = 12,
             season = AnimeSeason.SPRING, seasonYear = 2020, averageScore = 80,
         )
-        assertEquals(AniListAnimeId(20), summary.id)
-        assertEquals(30, summary.idMal)
+        assertEquals(CatalogAnimeId("20"), summary.id)
         assertEquals(titles, summary.titles)
         assertEquals(images, summary.images)
         assertEquals(AnimeFormat.TV, summary.format)
@@ -30,8 +29,7 @@ class CatalogModelsTest {
 
     @Test
     fun `deve aceitar resumo com opcionais ausentes`() {
-        val summary = AnimeSummary(AniListAnimeId(1))
-        assertNull(summary.idMal)
+        val summary = AnimeSummary(CatalogAnimeId("1"))
         assertNull(summary.titles.english)
         assertNull(summary.titles.romaji)
         assertNull(summary.titles.native)
@@ -49,13 +47,13 @@ class CatalogModelsTest {
     fun `deve construir detalhes completos independentes do resumo`() {
         val studios = listOf(Studio(1, "A", true), Studio(2, "B", false))
         val relations = listOf(
-            AnimeRelation(AniListAnimeId(2), AnimeRelationType.SEQUEL, MediaType.ANIME,
+            AnimeRelation(CatalogAnimeId("2"), AnimeRelationType.SEQUEL, MediaType.ANIME,
                 titles, AnimeFormat.MOVIE, AnimeReleaseStatus.FINISHED, "medium"),
-            AnimeRelation(AniListAnimeId(3), AnimeRelationType.ADAPTATION, MediaType.MANGA,
+            AnimeRelation(CatalogAnimeId("3"), AnimeRelationType.ADAPTATION, MediaType.MANGA,
                 format = AnimeFormat.ONE_SHOT),
         )
         val details = AnimeDetails(
-            id = AniListAnimeId(1), idMal = 10, titles = titles, images = images,
+            id = CatalogAnimeId("1"), titles = titles, images = images,
             description = "<br>Sinopse original", format = AnimeFormat.TV,
             status = AnimeReleaseStatus.FINISHED, episodes = 12, duration = 24,
             season = AnimeSeason.WINTER, seasonYear = 2020, isAdult = false,
@@ -63,8 +61,7 @@ class CatalogModelsTest {
             genres = listOf("Action", "Gênero aberto"), averageScore = 85,
             studios = studios, trailer = Trailer("abc", "dailymotion"), relations = relations,
         )
-        assertEquals(AniListAnimeId(1), details.id)
-        assertEquals(10, details.idMal)
+        assertEquals(CatalogAnimeId("1"), details.id)
         assertEquals(titles, details.titles)
         assertEquals(images, details.images)
         assertEquals("<br>Sinopse original", details.description)
@@ -90,13 +87,12 @@ class CatalogModelsTest {
 
     @Test
     fun `deve aceitar detalhes com colecoes vazias e opcionais ausentes`() {
-        val details = AnimeDetails(AniListAnimeId(1))
+        val details = AnimeDetails(CatalogAnimeId("1"))
         assertTrue(details.genres.isEmpty())
         assertTrue(details.studios.isEmpty())
         assertTrue(details.relations.isEmpty())
         assertTrue(details.titles.synonyms.isEmpty())
         assertEquals(AnimeImages(), details.images)
-        assertNull(details.idMal)
         assertNull(details.description)
         assertNull(details.format)
         assertNull(details.status)
@@ -127,14 +123,14 @@ class CatalogModelsTest {
     fun `deve manter snapshots das colecoes de detalhes`() {
         val genres = mutableListOf("Action", "Drama")
         val studios = mutableListOf(Studio(1, "A"), Studio(2, "B"))
-        val relations = mutableListOf(AnimeRelation(AniListAnimeId(2)), AnimeRelation(AniListAnimeId(3)))
-        val details = AnimeDetails(AniListAnimeId(1), genres = genres, studios = studios, relations = relations)
+        val relations = mutableListOf(AnimeRelation(CatalogAnimeId("2")), AnimeRelation(CatalogAnimeId("3")))
+        val details = AnimeDetails(CatalogAnimeId("1"), genres = genres, studios = studios, relations = relations)
         genres.clear()
         studios.clear()
         relations.clear()
         assertEquals(listOf("Action", "Drama"), details.genres)
         assertEquals(listOf(Studio(1, "A"), Studio(2, "B")), details.studios)
-        assertEquals(listOf(AniListAnimeId(2), AniListAnimeId(3)), details.relations.map { it.id })
+        assertEquals(listOf(CatalogAnimeId("2"), CatalogAnimeId("3")), details.relations.map { it.id })
     }
 
     @Test
@@ -153,7 +149,7 @@ class CatalogModelsTest {
 
     @Test
     fun `deve aceitar relacao somente com identificador`() {
-        val relation = AnimeRelation(AniListAnimeId(2))
+        val relation = AnimeRelation(CatalogAnimeId("2"))
         assertNull(relation.relationType)
         assertNull(relation.mediaType)
         assertNull(relation.format)

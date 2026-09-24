@@ -2,7 +2,7 @@ package br.com.mykytadu.features.search
 
 import br.com.mykytadu.domain.model.AnimeSummary
 import br.com.mykytadu.domain.model.AnimeTitles
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -52,7 +52,7 @@ class SearchTitleTest {
 
     private fun summary(titles: AnimeTitles): AnimeSummary =
         AnimeSummary(
-            id = AniListAnimeId(1),
+            id = CatalogAnimeId("1"),
             titles = titles,
         )
 }

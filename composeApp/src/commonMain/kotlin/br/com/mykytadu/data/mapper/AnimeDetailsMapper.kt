@@ -3,7 +3,6 @@ package br.com.mykytadu.data.mapper
 import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsDataDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsDto
 import br.com.mykytadu.domain.model.AnimeDetails
-import br.com.mykytadu.domain.model.AniListAnimeId
 
 internal fun AnimeDetailsDataDto.toAnimeDetails(): AnimeDetails =
     requireNotNull(media) {
@@ -12,8 +11,7 @@ internal fun AnimeDetailsDataDto.toAnimeDetails(): AnimeDetails =
 
 internal fun AnimeDetailsDto.toAnimeDetails(): AnimeDetails =
     AnimeDetails(
-        id = AniListAnimeId(id),
-        idMal = idMal,
+        id = id.toCatalogAnimeId(),
         titles = title.toAnimeTitles(synonyms),
         images = coverImage.toAnimeImages(bannerImage),
         description = description,

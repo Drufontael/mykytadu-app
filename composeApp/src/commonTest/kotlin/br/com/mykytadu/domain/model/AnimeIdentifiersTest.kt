@@ -8,31 +8,31 @@ import kotlin.test.assertNotEquals
 class AnimeIdentifiersTest {
 
     @Test
-    fun `deve aceitar identificador positivo`() {
-        assertEquals(1, AniListAnimeId(1).value)
+    fun `deve aceitar identificador nao vazio`() {
+        assertEquals("catalog-key", CatalogAnimeId("catalog-key").value)
     }
 
     @Test
-    fun `deve rejeitar identificador igual a zero`() {
+    fun `deve rejeitar identificador vazio`() {
         assertFailsWith<IllegalArgumentException> {
-            AniListAnimeId(0)
+            CatalogAnimeId("")
         }
     }
 
     @Test
-    fun `deve rejeitar identificador negativo`() {
+    fun `deve rejeitar identificador em branco`() {
         assertFailsWith<IllegalArgumentException> {
-            AniListAnimeId(-1)
+            CatalogAnimeId("   ")
         }
     }
 
     @Test
     fun `deve considerar identificadores com mesmo valor iguais`() {
-        assertEquals(AniListAnimeId(20), AniListAnimeId(20))
+        assertEquals(CatalogAnimeId("20"), CatalogAnimeId("20"))
     }
 
     @Test
     fun `deve diferenciar identificadores com valores diferentes`() {
-        assertNotEquals(AniListAnimeId(20), AniListAnimeId(21))
+        assertNotEquals(CatalogAnimeId("20"), CatalogAnimeId("21"))
     }
 }

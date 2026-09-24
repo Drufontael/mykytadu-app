@@ -44,7 +44,7 @@ implementação, validações aplicáveis, aceite humano e encerramento document
 
 ## Convenções
 
-- usar um arquivo por sprint: `S1.md`, `S6.md`, `W1.md`;
+- usar um arquivo por sprint ou manutenção: `S1.md`, `S6.md`, `W1.md`, `M1.md`;
 - manter subtasks dentro do registro da sprint;
 - usar links relativos para documentos e ADRs;
 - registrar datas somente quando comprovadas;
@@ -85,4 +85,5 @@ implementação, validações aplicáveis, aceite humano e encerramento document
 | S4 — Comunicação | Concluída | [S4.md](S4.md) |
 | S5 — Domínio do Catálogo | Concluída | [S5.md](S5.md) |
 | W1 — Fundação Web | Concluída | [W1.md](W1.md) |
-| S6 — Busca de Animes | Em andamento | [S6.md](S6.md) |
+| S6 — Busca de Animes | Concluída | [S6.md](S6.md) |
+| M1 — Identidade do catálogo | Concluída | [M1.md](M1.md) |

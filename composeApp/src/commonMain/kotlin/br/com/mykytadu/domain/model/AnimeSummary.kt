@@ -2,8 +2,7 @@ package br.com.mykytadu.domain.model
 
 /** Dados de pesquisa, independentes do contrato de detalhes. */
 data class AnimeSummary(
-    val id: AniListAnimeId,
-    val idMal: Int? = null,
+    val id: CatalogAnimeId,
     val titles: AnimeTitles = AnimeTitles(),
     val images: AnimeImages = AnimeImages(),
     val format: AnimeFormat? = null,

@@ -16,13 +16,14 @@ bloqueios e encerramentos ficam nos registros em
 - alterações de escopo são registradas no arquivo da sprint;
 - decisões arquiteturais relevantes apontam para ADRs;
 - biblioteca e persistência seguem direção local-first;
-- IDs locais, AniList e backend permanecem distintos;
+- IDs de catálogo, IDs nativos de provedores, IDs locais e IDs de backend permanecem distintos;
 - autenticação habilita sincronização, mas não condiciona o uso local.
 
 ## Estado consolidado
 
-O roadmap possui 16 sprints funcionais e uma sprint técnica adicional, W1,
-inserida entre as Sprints 5 e 6 sem renumeração.
+O roadmap possui 16 sprints funcionais, uma sprint técnica adicional, W1,
+inserida entre as Sprints 5 e 6 sem renumeração, e registros de manutenção
+arquitetural identificados por `M`.
 
 | Sprint | Objetivo | Estado | Registro |
 |---|---|---|---|
@@ -33,6 +34,7 @@ inserida entre as Sprints 5 e 6 sem renumeração.
 | S5 | Domínio do Catálogo | Concluída | [S5](sprints/S5.md) |
 | W1 | Fundação Web | Concluída | [W1](sprints/W1.md) |
 | S6 | Busca de Animes End-to-End | Concluída | [S6](sprints/S6.md) |
+| M1 | Desacoplamento da identidade do catálogo | Concluída | [M1](sprints/M1.md) |
 | S7 | Detalhes do Anime End-to-End | Planejada | a criar |
 | S8 | Persistência e Biblioteca Local | Planejada | a criar |
 | S9 | Biblioteca End-to-End | Planejada | a criar |
@@ -96,11 +98,11 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 - [x] Pesquisa automática a partir de três caracteres e submissão explícita de consultas curtas não vazias
 - [x] Cooldown local de 15 segundos com uma tentativa automática, validado por tempo virtual
 
-### S6.3 — Navegação de detalhes com ID AniList
+### S6.3 — Navegação de detalhes com identidade do catálogo
 
 **Estado:** Concluída e aceita
 
-- [x] Transportar e restaurar o `AniListAnimeId` na rota de detalhes
+- [x] Transportar e restaurar o `CatalogAnimeId` na rota de detalhes
 - [x] Atualizar serialização, callbacks, deep links e histórico Web
 - [x] Validar IDs ausentes, inválidos ou fora do intervalo sem criar IDs fictícios
 
@@ -122,7 +124,7 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 - [x] Definir estado incremental e transportar `PageInfo` nos resultados
 - [x] Solicitar a próxima página por `PageInfo.hasNextPage`, com bloqueio e invalidação de respostas obsoletas
-- [x] Deduplicar páginas por `AniListAnimeId`, preservando a primeira ocorrência
+- [x] Deduplicar páginas por `CatalogAnimeId`, preservando a primeira ocorrência
 - [x] Repetir a página que falhou sem descartar resultados
 - [x] Preservar resultados em loading e erro incrementais e rejeitar respostas de consultas anteriores
 - [x] Integrar carregamento automático, estado de erro e retry à grade responsiva
@@ -161,7 +163,7 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 - [x] Loading incremental
 - [x] Estado vazio
 - [x] Erro com nova tentativa
-- [x] Navegação com o ID AniList real
+- [x] Navegação com a identidade real do catálogo
 
 ### Critérios de aceite
 
@@ -178,9 +180,9 @@ Entregar a primeira funcionalidade completa do aplicativo: pesquisar animes na A
 
 ### Divisão com a Sprint 7
 
-A Sprint 6 transportará e restaurará o ID AniList selecionado na navegação. A Sprint 7 consumirá o ID recebido para carregar e apresentar os detalhes completos do anime.
+A Sprint 6 transporta e restaura a identidade de catálogo selecionada na navegação. A Sprint 7 consumirá essa identidade para carregar e apresentar os detalhes completos do anime. A tradução para o ID nativo da AniList pertence exclusivamente à camada de dados.
 
-Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura o ID AniList, inclusive no histórico Web, e preserva a pesquisa no retorno. A S6.4 consolidou Coil 3.4.0 com rede Ktor 3 após compilar Android, Desktop, metadata iOS, JS e WasmJS. A grade usa duas ou quatro colunas conforme a largura disponível do conteúdo, com breakpoint de 600dp. Mantêm-se somente as políticas padrão habilitadas de memória e disco do Coil, sem cache HTTP, expiração, invalidação ou offline. A S6.4.5 cobriu URL de capa, grade compacta, seleção e restauração de scroll, e a S6.4.6 validou visualmente imagens, responsividade e navegação no Web WasmJS. A S6.5.1 definiu o estado incremental e passou a transportar `PageInfo` nos resultados. A S6.5.2 passou a solicitar `currentPage + 1` somente quando `hasNextPage` permite, bloqueando concorrência e rejeitando respostas obsoletas. A S6.5.3 passou a deduplicar resultados por `AniListAnimeId`, preservando a primeira ocorrência. A S6.5.4 passou a preservar resultados durante falhas incrementais e repetir a página pendente. A S6.5.5 integrou o carregamento automático e o rodapé de loading, erro e retry à grade responsiva. A S6.5.6 adicionou cobertura automatizada de UI para o gatilho, loading, erro e retry. A S6.5.7 validou visualmente a grade, as capas e a rolagem no Web WasmJS. A S6.6 confirmou builds, testes automatizados e smoke tests manuais em Android, Desktop e Web. A validação nativa iOS permanece pendente de macOS/Xcode e aberta para contribuição. O próximo passo é a Sprint 7.
+Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmodels-por-entrada-navigation3.md), com evidências e limites no [registro S6](sprints/S6.md). A S6.3 transporta e restaura `CatalogAnimeId`, inclusive no histórico Web, e preserva a pesquisa no retorno. A S6.4 consolidou Coil 3.4.0 com rede Ktor 3 após compilar Android, Desktop, metadata iOS, JS e WasmJS. A grade usa duas ou quatro colunas conforme a largura disponível do conteúdo, com breakpoint de 600dp. Mantêm-se somente as políticas padrão habilitadas de memória e disco do Coil, sem cache HTTP, expiração, invalidação ou offline. A S6.4.5 cobriu URL de capa, grade compacta, seleção e restauração de scroll, e a S6.4.6 validou visualmente imagens, responsividade e navegação no Web WasmJS. A S6.5.1 definiu o estado incremental e passou a transportar `PageInfo` nos resultados. A S6.5.2 passou a solicitar `currentPage + 1` somente quando `hasNextPage` permite, bloqueando concorrência e rejeitando respostas obsoletas. A S6.5.3 passou a deduplicar resultados por `CatalogAnimeId`, preservando a primeira ocorrência. A S6.5.4 passou a preservar resultados durante falhas incrementais e repetir a página pendente. A S6.5.5 integrou o carregamento automático e o rodapé de loading, erro e retry à grade responsiva. A S6.5.6 adicionou cobertura automatizada de UI para o gatilho, loading, erro e retry. A S6.5.7 validou visualmente a grade, as capas e a rolagem no Web WasmJS. A S6.6 confirmou builds, testes automatizados e smoke tests manuais em Android, Desktop e Web. A manutenção [M1](sprints/M1.md) desacoplou essa identidade da AniList conforme [ADR-008](adr/ADR-008-desacoplar-identidade-do-catalogo-do-provedor.md) e removeu `idMal` sem consumidor conforme [ADR-009](adr/ADR-009-nao-solicitar-identificadores-externos-sem-consumidor.md). A validação nativa iOS permanece pendente de macOS/Xcode e aberta para contribuição. O próximo passo funcional é a Sprint 7.
 
 ---
 
@@ -266,7 +268,7 @@ Criar a base local-first da biblioteca pessoal sem depender de autenticação ou
 - [ ] Dados permanecem após reiniciar o aplicativo.
 - [ ] Progresso negativo não é aceito.
 - [ ] Progresso acima do total conhecido possui tratamento explícito.
-- [ ] IDs locais, AniList e futuros IDs de backend não são confundidos.
+- [ ] IDs de catálogo, IDs nativos da AniList, IDs locais e futuros IDs de backend não são confundidos.
 - [ ] O modelo persistido não é automaticamente tratado como modelo de domínio.
 - [ ] Migrações e operações principais possuem testes.
 - [ ] Nenhum contrato fictício de backend é introduzido.

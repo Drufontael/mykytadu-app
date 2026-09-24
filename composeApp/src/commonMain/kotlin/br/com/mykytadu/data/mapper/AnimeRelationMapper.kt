@@ -3,7 +3,6 @@ package br.com.mykytadu.data.mapper
 import br.com.mykytadu.data.remote.anilist.dto.AnimeRelationEdgeDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeRelationsDto
 import br.com.mykytadu.domain.model.AnimeRelation
-import br.com.mykytadu.domain.model.AniListAnimeId
 
 /**
  * Descarta somente relações estruturalmente inválidas,
@@ -21,7 +20,7 @@ internal fun AnimeRelationEdgeDto.toAnimeRelation(): AnimeRelation? {
     if (relatedAnime.id <= 0) return null
 
     return AnimeRelation(
-        id = AniListAnimeId(relatedAnime.id),
+        id = relatedAnime.id.toCatalogAnimeId(),
         relationType = relationType.toAnimeRelationType(),
         mediaType = relatedAnime.type.toMediaType(),
         titles = relatedAnime.title.toAnimeTitles(),

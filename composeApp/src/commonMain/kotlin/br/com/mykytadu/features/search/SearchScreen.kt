@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -70,7 +70,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SearchScreen(
-    onAnimeSelected: (AniListAnimeId) -> Unit,
+    onAnimeSelected: (CatalogAnimeId) -> Unit,
     isCurrentRoute: Boolean = true,
     viewModel: SearchViewModel = koinViewModel(),
 ) {
@@ -147,7 +147,7 @@ private fun SearchFirstPageContent(
     onRetry: () -> Unit,
     onLoadNextPage: () -> Unit,
     onRetryNextPage: () -> Unit,
-    onAnimeSelected: (AniListAnimeId) -> Unit,
+    onAnimeSelected: (CatalogAnimeId) -> Unit,
     gridState: LazyGridState,
     modifier: Modifier = Modifier,
 ) {
@@ -236,7 +236,7 @@ private fun SearchResults(
     pagination: SearchPaginationState,
     onLoadNextPage: () -> Unit,
     onRetryNextPage: () -> Unit,
-    onAnimeSelected: (AniListAnimeId) -> Unit,
+    onAnimeSelected: (CatalogAnimeId) -> Unit,
     gridState: LazyGridState,
     modifier: Modifier = Modifier,
 ) {

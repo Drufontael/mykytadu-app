@@ -18,7 +18,10 @@
 | Formato | JSON |
 | Autenticação para catálogo público | Não necessária |
 | Identificador externo principal | `Media.id` |
-| Identificador externo auxiliar | `Media.idMal` |
+| Identificadores externos auxiliares | Não solicitados sem consumidor concreto |
+
+A política para identificadores auxiliares está registrada no
+[`ADR-009`](adr/ADR-009-nao-solicitar-identificadores-externos-sem-consumidor.md).
 
 ## 2. Contexto
 
@@ -89,8 +92,6 @@ query SearchAnime(
             sort: SEARCH_MATCH
         ) {
             id
-            idMal
-
             title {
                 romaji
                 english
@@ -139,7 +140,6 @@ query SearchAnime(
       "media": [
         {
           "id": 20,
-          "idMal": 20,
           "title": {
             "romaji": "NARUTO",
             "english": "Naruto",
@@ -158,7 +158,6 @@ query SearchAnime(
         },
         {
           "id": 162561,
-          "idMal": 54688,
           "title": {
             "romaji": "NARUTO (2026)",
             "english": null,
@@ -186,7 +185,8 @@ O teste completo retornou dez resultados, incluindo séries, filmes, especiais e
 ### 5.5 Decisões da pesquisa
 
 - `Media.id` será usado para abrir a consulta de detalhes.
-- `idMal` será preservado como referência externa opcional.
+- identificadores externos auxiliares não serão solicitados sem consumidor
+  concreto;
 - os três formatos de título serão mantidos no DTO remoto;
 - `description` não será solicitada na pesquisa inicial;
 - `sort: SEARCH_MATCH` prioriza a relevância textual;
@@ -219,8 +219,6 @@ Obter pelo identificador AniList os dados necessários para a tela de detalhes p
 query GetAnimeDetails($id: Int!) {
     Media(id: $id, type: ANIME) {
         id
-        idMal
-
         title {
             romaji
             english
@@ -332,7 +330,7 @@ O teste retornou o especial `BORUTO: NARUTO THE MOVIE - Naruto ga Hokage ni Natt
 
 | Grupo | Resultado observado |
 |---|---|
-| Identificadores | `id: 21579`, `idMal: 32365` |
+| Identificador solicitado | `id: 21579` |
 | Títulos | romaji, inglês e nativo preenchidos |
 | Sinônimos | lista vazia |
 | Descrição | preenchida |

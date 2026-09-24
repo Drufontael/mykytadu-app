@@ -2,7 +2,7 @@ package br.com.mykytadu.di
 
 import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeSummary
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.domain.model.PagedResult
 import br.com.mykytadu.domain.repository.AnimeRepository
 import br.com.mykytadu.domain.result.RepositoryResult
@@ -52,7 +52,7 @@ class ViewModelModuleTest {
         ): RepositoryResult<PagedResult<AnimeSummary>> =
             error("Não deve ser chamado neste teste.")
 
-        override suspend fun getAnimeDetails(id: AniListAnimeId): RepositoryResult<AnimeDetails> =
+        override suspend fun getAnimeDetails(id: CatalogAnimeId): RepositoryResult<AnimeDetails> =
             error("Não deve ser chamado neste teste.")
     }
 }

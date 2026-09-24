@@ -15,7 +15,7 @@ import br.com.mykytadu.data.remote.anilist.dto.AnimeSearchItemDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeTitleDto
 import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeSummary
-import br.com.mykytadu.domain.model.AniListAnimeId
+import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.domain.model.PagedResult
 import br.com.mykytadu.core.network.NetworkFailure
 import kotlin.test.assertSame
@@ -105,7 +105,6 @@ class AniListAnimeRepositoryTest {
                     media = listOf(
                         AnimeSearchItemDto(
                             id = 5114,
-                            idMal = 5114,
                             title = AnimeTitleDto(
                                 romaji = "Fullmetal Alchemist",
                             ),
@@ -122,7 +121,7 @@ class AniListAnimeRepositoryTest {
         val page = assertIs<PagedResult<*>>(success.value)
         val anime = assertIs<AnimeSummary>(page.items.single())
 
-        assertEquals(5114, anime.id.value)
+        assertEquals("5114", anime.id.value)
         assertEquals("Fullmetal Alchemist", anime.titles.romaji)
         assertEquals(1, page.pageInfo.currentPage)
         assertEquals(1, page.pageInfo.total)
@@ -134,7 +133,6 @@ class AniListAnimeRepositoryTest {
             detailsResult = NetworkResult.Success(
                 AnimeDetailsDto(
                     id = 5114,
-                    idMal = 5114,
                     title = AnimeTitleDto(
                         romaji = "Fullmetal Alchemist",
                     ),
@@ -143,14 +141,70 @@ class AniListAnimeRepositoryTest {
         )
         val repository = AniListAnimeRepository(api)
 
-        val result = repository.getAnimeDetails(AniListAnimeId(5114))
+        val result = repository.getAnimeDetails(CatalogAnimeId("5114"))
 
         val success = assertIs<RepositoryResult.Success<*>>(result)
         val anime = assertIs<AnimeDetails>(success.value)
 
-        assertEquals(5114, anime.id.value)
+        assertEquals("5114", anime.id.value)
         assertEquals("Fullmetal Alchemist", anime.titles.romaji)
         assertEquals(5114, api.requestedDetailsId)
+    }
+
+    @Test
+    fun `deve reutilizar em detalhes a identidade retornada pela pesquisa`() = runTest {
+        val api = RecordingAnimeApi(
+            searchResult = NetworkResult.Success(
+                AnimeSearchPageDto(
+                    pageInfo = PageInfoDto(
+                        currentPage = 1,
+                        lastPage = 1,
+                        hasNextPage = false,
+                        perPage = 20,
+                        total = 1,
+                    ),
+                    media = listOf(
+                        AnimeSearchItemDto(
+                            id = 21579,
+                            title = AnimeTitleDto(romaji = "Anime pesquisado"),
+                        ),
+                    ),
+                ),
+            ),
+            detailsResult = NetworkResult.Success(
+                AnimeDetailsDto(
+                    id = 21579,
+                    title = AnimeTitleDto(romaji = "Anime detalhado"),
+                ),
+            ),
+        )
+        val repository = AniListAnimeRepository(api)
+
+        val search = assertIs<RepositoryResult.Success<PagedResult<AnimeSummary>>>(
+            repository.searchAnime("Anime", page = 1, perPage = 20),
+        )
+        val selectedId = search.value.items.single().id
+        val details = assertIs<RepositoryResult.Success<AnimeDetails>>(
+            repository.getAnimeDetails(selectedId),
+        )
+
+        assertEquals(CatalogAnimeId("21579"), selectedId)
+        assertEquals(selectedId, details.value.id)
+        assertEquals(21579, api.requestedDetailsId)
+    }
+
+    @Test
+    fun `nao deve chamar api quando identidade nao for compativel com AniList`() = runTest {
+        listOf("catalog-key", "0", "-1", "2147483648", "+1", " 20 ").forEach { value ->
+            val api = RecordingAnimeApi()
+            val repository = AniListAnimeRepository(api)
+
+            val result = repository.getAnimeDetails(CatalogAnimeId(value))
+
+            val failure = assertIs<RepositoryResult.Failure>(result)
+            assertEquals(RepositoryFailure.InvalidInput, failure.reason)
+            assertEquals(null, api.requestedDetailsId)
+        }
     }
 
     @Test
@@ -223,7 +277,7 @@ class AniListAnimeRepositoryTest {
         )
         val repository = AniListAnimeRepository(api)
 
-        val result = repository.getAnimeDetails(AniListAnimeId(5114))
+        val result = repository.getAnimeDetails(CatalogAnimeId("5114"))
 
         val failure = assertIs<RepositoryResult.Failure>(result)
         assertEquals(RepositoryFailure.InvalidData, failure.reason)
@@ -252,7 +306,7 @@ class AniListAnimeRepositoryTest {
         )
 
         val thrown = assertFailsWith<IllegalStateException> {
-            repository.getAnimeDetails(AniListAnimeId(5114))
+            repository.getAnimeDetails(CatalogAnimeId("5114"))
         }
 
         assertSame(defect, thrown)
@@ -268,7 +322,7 @@ class AniListAnimeRepositoryTest {
         )
         val repository = AniListAnimeRepository(api)
 
-        val result = repository.getAnimeDetails(AniListAnimeId(5114))
+        val result = repository.getAnimeDetails(CatalogAnimeId("5114"))
 
         val failure = assertIs<RepositoryResult.Failure>(result)
         assertEquals(RepositoryFailure.Timeout, failure.reason)

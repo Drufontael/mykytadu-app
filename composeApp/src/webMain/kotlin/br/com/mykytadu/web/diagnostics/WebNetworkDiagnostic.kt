@@ -41,7 +41,7 @@ internal sealed interface WebNetworkDiagnosticState {
     data object Loading : WebNetworkDiagnosticState
     data class Success(
         val itemCount: Int,
-        val firstId: Int?,
+        val firstId: String?,
         val firstTitle: String?,
         val coverUrl: String?,
     ) : WebNetworkDiagnosticState
