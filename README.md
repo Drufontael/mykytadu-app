@@ -45,13 +45,15 @@ Já estão disponíveis:
 - modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes.
 - shell Web com transporte Ktor baseado em Fetch e comunicação direta validada com a AniList.
 - navegação Web por fragmentos, integrada ao histórico do navegador em JS e WasmJS.
-- rota de detalhes tipada com `AniListAnimeId`, deep link compartilhado e URL Web `#/anime/{id}`.
+- rota de detalhes tipada com `CatalogAnimeId`, deep link compartilhado e URL Web `#/anime/{id}`.
 - shell Web responsivo e acessível no escopo validado, com distribuições de produção separadas para WasmJS e JavaScript.
 
 A busca já apresenta a primeira página de títulos com debounce, cancelamento,
 estados e retry, usando ViewModel por entrada do Navigation 3. O resultado
-selecionado abre o placeholder de detalhes com o ID AniList correto; retorno e
-histórico Web preservam o contexto da pesquisa enquanto a entrada existir.
+selecionado abre os detalhes com a identidade correta, inicia seu carregamento e
+trata loading, falha e retry; retorno e histórico Web preservam o contexto da
+pesquisa enquanto a entrada existir. A apresentação completa do conteúdo de
+detalhes permanece em evolução na Sprint 7.
 
 ## Stack
 
@@ -206,7 +208,8 @@ W1. Fundação Web;
 
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
-A próxima etapa é iniciar a **Sprint 7 — Detalhes do anime end-to-end**. A
+A **Sprint 7 — Detalhes do anime end-to-end** está em andamento; a próxima
+etapa é implementar a estrutura visual principal dos detalhes. A
 validação nativa iOS pode ser adicionada posteriormente quando houver macOS e
 Xcode disponíveis.
 

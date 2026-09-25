@@ -184,6 +184,12 @@ aceita uma identidade opaca não vazia; os deep links atuais e o fragmento Web
 ID válido não fabricam identificadores. O retorno de detalhes
 mantém o contexto da entrada de pesquisa enquanto ela permanecer no back stack.
 
+A entrada de detalhes cria um `AnimeDetailsViewModel` parametrizado pela
+identidade da rota. O carregamento começa automaticamente por meio de
+`AnimeRepository`, expõe estados de loading, conteúdo ou falha e permite retry
+somente após falha. A apresentação completa dos campos de `AnimeDetails`
+permanece escopo incremental da Sprint 7.
+
 ## 9. Web
 
 O Web reutiliza a aplicação compartilhada e isola APIs do navegador.

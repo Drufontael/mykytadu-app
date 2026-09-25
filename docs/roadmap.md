@@ -35,7 +35,7 @@ arquitetural identificados por `M`.
 | W1 | Fundação Web | Concluída | [W1](sprints/W1.md) |
 | S6 | Busca de Animes End-to-End | Concluída | [S6](sprints/S6.md) |
 | M1 | Desacoplamento da identidade do catálogo | Concluída | [M1](sprints/M1.md) |
-| S7 | Detalhes do Anime End-to-End | Planejada | a criar |
+| S7 | Detalhes do Anime End-to-End | Em andamento | [S7](sprints/S7.md) |
 | S8 | Persistência e Biblioteca Local | Planejada | a criar |
 | S9 | Biblioteca End-to-End | Planejada | a criar |
 | S10 | Home | Planejada | a criar |
@@ -188,7 +188,7 @@ Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmo
 
 # Sprint 7 — Detalhes do Anime End-to-End
 
-**Status:** Planejada
+**Status:** Em andamento — S7.1 concluída e aceita
 
 ## Objetivo
 
@@ -196,10 +196,10 @@ Transformar a rota de detalhes em uma funcionalidade completa baseada no anime s
 
 ### Escopo
 
-- [ ] Consumo do ID obrigatório transportado pela rota implementada na Sprint 6
+- [x] Consumo do ID obrigatório transportado pela rota implementada na Sprint 6
 - [ ] Deep Link de detalhes, caso seja tecnicamente apropriado
-- [ ] `AnimeDetailsViewModel`
-- [ ] Carregamento pelo `AnimeRepository`
+- [x] `AnimeDetailsViewModel`
+- [x] Carregamento pelo `AnimeRepository`
 - [ ] Capa
 - [ ] Banner
 - [ ] Títulos
@@ -211,8 +211,8 @@ Transformar a rota de detalhes em uma funcionalidade completa baseada no anime s
 - [ ] Temporada
 - [ ] Trailer quando disponível
 - [ ] Relações e links externos quando houver caso de uso
-- [ ] Loading
-- [ ] Erro e retry
+- [x] Loading
+- [x] Erro e retry
 - [ ] Adaptação visual para campos ausentes
 - [ ] Normalização segura da descrição
 

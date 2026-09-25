@@ -19,6 +19,13 @@
     <string name="search_error_rate_limited">Muitas pesquisas foram realizadas. Aguarde um pouco e tente novamente.</string>
     <string name="search_retry">Tentar novamente</string>
     <string name="search_title_unavailable">Título indisponível</string>
-    <string name="anime_details_placeholder">Detalhes do anime — ID AniList: %1$d</string>
+    <string name="anime_details_placeholder">Detalhes do anime — identidade do catálogo: %1$s</string>
     <string name="anime_details_back">Voltar à pesquisa</string>
+    <string name="anime_details_loading">Carregando detalhes do anime</string>
+    <string name="anime_details_error_title">Não foi possível carregar os detalhes</string>
+    <string name="anime_details_error_generic">Tente novamente em alguns instantes.</string>
+    <string name="anime_details_error_unavailable">Verifique sua conexão e tente novamente.</string>
+    <string name="anime_details_error_timeout">O carregamento demorou mais que o esperado. Tente novamente.</string>
+    <string name="anime_details_error_rate_limited">Muitas solicitações foram realizadas. Aguarde um pouco e tente novamente.</string>
+    <string name="anime_details_retry">Tentar novamente</string>
 </resources>

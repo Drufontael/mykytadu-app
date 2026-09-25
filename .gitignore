@@ -54,3 +54,6 @@ bin/
 /composeApp/src/desktopMain/kotlin/br/com/mykytadu/.keep
 /java_pid9200.hprof
 /gradle/gradle-daemon-jvm.properties
+
+### Artefatos locais de divulgação ###
+/instagram/

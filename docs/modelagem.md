@@ -551,7 +551,7 @@ A pesquisa normaliza a consulta com `trim` e rejeita consulta vazia, página ou 
 
 ## 5.7 Consumidores planejados
 
-Pesquisa e detalhes integrarão esses contratos por meio de estados, ViewModels e UI quando as respectivas funcionalidades forem implementadas.
+A pesquisa integra esses contratos por meio de estado, ViewModel e UI. Os detalhes possuem `AnimeDetailsViewModel` parametrizado por `CatalogAnimeId`, com carregamento automático, estados de loading, conteúdo e falha e retry após falha; a apresentação completa do conteúdo permanece em implementação.
 
 # 6. Plataforma Web
 
@@ -829,8 +829,9 @@ validação visual confirmou capas remotas e a grade com duas ou quatro colunas
 conforme a largura disponível do conteúdo; a execução nativa iOS permanece
 pendente de macOS/Xcode. A UI usa o singleton padrão do Coil, cujas políticas
 de memória e disco permanecem habilitadas; não há configuração de tamanho,
-diretório, expiração, invalidação, offline ou `Cache-Control`. A Sprint 7
-consumirá o ID já transportado pela rota para carregar e apresentar detalhes.
+diretório, expiração, invalidação, offline ou `Cache-Control`. A Sprint 7 já
+consome `CatalogAnimeId` transportado pela rota para carregar os detalhes; a
+estrutura visual completa permanece pendente.
 
 ---
 
