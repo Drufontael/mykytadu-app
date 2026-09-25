@@ -68,9 +68,9 @@ class SearchNavigationUiTest {
             item.assertIsDisplayed().assertHasClickAction()
             val originalBounds = item.fetchSemanticsNode().boundsInRoot
             item.performClick()
-            compose.onNodeWithText("Detalhes do anime — identidade do catálogo: 1015").assertIsDisplayed()
+            compose.onNodeWithText("Example 15").assertIsDisplayed()
             assertEquals(AppRoute.AnimeDetails(CatalogAnimeId("1015")), bridge.pushed.last().last())
-            compose.onNodeWithText("Voltar à pesquisa").performClick()
+            compose.onNodeWithContentDescription("Voltar à pesquisa").performClick()
             item.assertIsDisplayed()
             assertEquals(originalBounds, item.fetchSemanticsNode().boundsInRoot)
             assertSame(originalViewModel, created.single())
@@ -81,7 +81,7 @@ class SearchNavigationUiTest {
 
             // Real NavDisplay + decorators, driven by the same restoration callback as Web.
             compose.runOnIdle { bridge.restore(listOf(AppRoute.Search, AppRoute.AnimeDetails(CatalogAnimeId("1016")))) }
-            compose.onNodeWithText("Detalhes do anime — identidade do catálogo: 1016").assertIsDisplayed()
+            compose.onNodeWithText("Example 16").assertIsDisplayed()
             compose.runOnIdle { bridge.restore(listOf(AppRoute.Search)) }
             item.assertIsDisplayed()
             assertEquals(originalBounds, item.fetchSemanticsNode().boundsInRoot)
@@ -91,8 +91,8 @@ class SearchNavigationUiTest {
             // Keyboard activation exercises the actionable card, not a direct callback.
             item.performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.RequestFocus) { it() }
             item.performKeyInput { pressKey(Key.Enter) }
-            compose.onNodeWithText("Detalhes do anime — identidade do catálogo: 1015").assertIsDisplayed()
-            compose.onNodeWithText("Voltar à pesquisa").performClick()
+            compose.onNodeWithText("Example 15").assertIsDisplayed()
+            compose.onNodeWithContentDescription("Voltar à pesquisa").performClick()
             compose.onNodeWithText("Biblioteca").performClick()
             compose.waitUntil(5_000) { cleared == 1 }
             compose.onNodeWithText("Buscar").performClick()
@@ -194,7 +194,14 @@ class SearchNavigationUiTest {
             ))
         }
         override suspend fun getAnimeDetails(id: CatalogAnimeId): RepositoryResult<AnimeDetails> =
-            RepositoryResult.Success(AnimeDetails(id = id))
+            RepositoryResult.Success(
+                AnimeDetails(
+                    id = id,
+                    titles = AnimeTitles(
+                        english = "Example ${id.value.toInt() - 1000}",
+                    ),
+                ),
+            )
     }
 
     private class IncrementalFakeRepository : AnimeRepository {

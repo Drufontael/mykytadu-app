@@ -188,7 +188,7 @@ Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmo
 
 # Sprint 7 — Detalhes do Anime End-to-End
 
-**Status:** Em andamento — S7.1 concluída e aceita
+**Status:** Em andamento — S7.1, S7.2 e S7.3 concluídas e aceitas
 
 ## Objetivo
 
@@ -197,34 +197,34 @@ Transformar a rota de detalhes em uma funcionalidade completa baseada no anime s
 ### Escopo
 
 - [x] Consumo do ID obrigatório transportado pela rota implementada na Sprint 6
-- [ ] Deep Link de detalhes, caso seja tecnicamente apropriado
+- [x] Deep Link de detalhes por fragmento Web
 - [x] `AnimeDetailsViewModel`
 - [x] Carregamento pelo `AnimeRepository`
-- [ ] Capa
-- [ ] Banner
-- [ ] Títulos
-- [ ] Sinopse
-- [ ] Gêneros
-- [ ] Notas
-- [ ] Quantidade de episódios
-- [ ] Estúdios
-- [ ] Temporada
-- [ ] Trailer quando disponível
-- [ ] Relações e links externos quando houver caso de uso
+- [x] Capa
+- [x] Banner
+- [x] Título principal com fallback
+- [x] Sinopse
+- [x] Gêneros
+- [x] Nota principal
+- [x] Quantidade de episódios
+- [x] Estúdios
+- [x] Temporada e ano
+- [x] Trailer quando disponível e reconhecido
+- [x] Apresentação resumida de relações e link externo validado de trailer
 - [x] Loading
 - [x] Erro e retry
-- [ ] Adaptação visual para campos ausentes
-- [ ] Normalização segura da descrição
+- [x] Adaptação visual dos campos principais ausentes
+- [x] Normalização segura da descrição para texto
 
 ### Critérios de aceite
 
-- [ ] A tela carrega o anime pelo ID recebido.
-- [ ] Nenhum DTO remoto é exposto à UI.
-- [ ] Campos nulos ou coleções vazias não quebram o layout.
-- [ ] Seções sem conteúdo são omitidas ou adaptadas.
+- [x] A tela carrega o anime pelo ID recebido.
+- [x] Nenhum DTO remoto é exposto à UI.
+- [x] Campos nulos ou coleções vazias não quebram o layout principal.
+- [x] Seções sem conteúdo são omitidas ou adaptadas.
 - [ ] O retorno preserva adequadamente o contexto da pesquisa.
-- [ ] Links externos somente são apresentados quando válidos.
-- [ ] Loading, erro e retry estão implementados.
+- [x] Links externos somente são apresentados quando válidos.
+- [x] Loading, erro e retry estão implementados.
 - [ ] O layout é validado nos temas claro e escuro.
 - [ ] O comportamento é validado nos targets disponíveis.
 

@@ -24,7 +24,8 @@ Atualmente, as sprints até a S6 estão concluídas: fundação multiplataforma,
 | Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprint W1 — Fundação Web | Concluída |
 | Sprint 6 — Busca de Animes | Concluída — validação manual em Android, Desktop e Web; iOS nativo pendente de ambiente |
-| Sprints 7 a 16 | Planejadas |
+| Sprint 7 — Detalhes do Anime | Em andamento — S7.1, S7.2 e S7.3 concluídas e aceitas |
+| Sprints 8 a 16 | Planejadas |
 
 Já estão disponíveis:
 
@@ -52,8 +53,10 @@ A busca já apresenta a primeira página de títulos com debounce, cancelamento,
 estados e retry, usando ViewModel por entrada do Navigation 3. O resultado
 selecionado abre os detalhes com a identidade correta, inicia seu carregamento e
 trata loading, falha e retry; retorno e histórico Web preservam o contexto da
-pesquisa enquanto a entrada existir. A apresentação completa do conteúdo de
-detalhes permanece em evolução na Sprint 7.
+pesquisa enquanto a entrada existir. A tela apresenta banner, capa, título,
+metadados essenciais, sinopse, gêneros, datas, estúdios, trailer reconhecido e
+relações resumidas em layout responsivo. A navegação por relações permanece em
+evolução na Sprint 7.
 
 ## Stack
 
@@ -209,7 +212,7 @@ W1. Fundação Web;
 Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
 
 A **Sprint 7 — Detalhes do anime end-to-end** está em andamento; a próxima
-etapa é implementar a estrutura visual principal dos detalhes. A
+etapa é integrar a navegação das relações e consolidar o fluxo. A
 validação nativa iOS pode ser adicionada posteriormente quando houver macOS e
 Xcode disponíveis.
 

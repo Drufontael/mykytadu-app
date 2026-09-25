@@ -187,8 +187,12 @@ mantém o contexto da entrada de pesquisa enquanto ela permanecer no back stack.
 A entrada de detalhes cria um `AnimeDetailsViewModel` parametrizado pela
 identidade da rota. O carregamento começa automaticamente por meio de
 `AnimeRepository`, expõe estados de loading, conteúdo ou falha e permite retry
-somente após falha. A apresentação completa dos campos de `AnimeDetails`
-permanece escopo incremental da Sprint 7.
+somente após falha. A apresentação compartilhada exibe banner, capa, título,
+metadados essenciais e sinopse, adapta a composição à largura disponível, omite
+campos opcionais ausentes e normaliza descrições HTML para texto. Gêneros, datas
+parciais, estúdios, trailer de provedor reconhecido e relações resumidas são
+exibidos quando disponíveis. Relações ainda não iniciam navegação; essa
+integração permanece escopo incremental da Sprint 7.
 
 ## 9. Web
 

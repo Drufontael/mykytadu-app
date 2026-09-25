@@ -551,7 +551,7 @@ A pesquisa normaliza a consulta com `trim` e rejeita consulta vazia, página ou 
 
 ## 5.7 Consumidores planejados
 
-A pesquisa integra esses contratos por meio de estado, ViewModel e UI. Os detalhes possuem `AnimeDetailsViewModel` parametrizado por `CatalogAnimeId`, com carregamento automático, estados de loading, conteúdo e falha e retry após falha; a apresentação completa do conteúdo permanece em implementação.
+A pesquisa integra esses contratos por meio de estado, ViewModel e UI. Os detalhes possuem `AnimeDetailsViewModel` parametrizado por `CatalogAnimeId`, com carregamento automático, estados de loading, conteúdo e falha e retry após falha. A apresentação compartilhada deriva título, imagens, sinopse normalizada, metadados, gêneros, datas parciais, estúdios, trailer e relações resumidas do domínio, omite campos opcionais ausentes e alterna entre composições compacta e expandida. Gêneros e estúdios são limpos e deduplicados na apresentação; datas não fabricam componentes ausentes. URLs externas são construídas somente para IDs válidos de YouTube e Dailymotion. As relações ainda não iniciam navegação.
 
 # 6. Plataforma Web
 
@@ -830,8 +830,10 @@ conforme a largura disponível do conteúdo; a execução nativa iOS permanece
 pendente de macOS/Xcode. A UI usa o singleton padrão do Coil, cujas políticas
 de memória e disco permanecem habilitadas; não há configuração de tamanho,
 diretório, expiração, invalidação, offline ou `Cache-Control`. A Sprint 7 já
-consome `CatalogAnimeId` transportado pela rota para carregar os detalhes; a
-estrutura visual completa permanece pendente.
+consome `CatalogAnimeId` transportado pela rota para carregar os detalhes e
+apresenta sua estrutura visual principal de forma responsiva, incluindo gêneros,
+datas parciais, estúdios, trailer reconhecido e relações resumidas. A navegação
+por relações permanece incremental.
 
 ---
 
