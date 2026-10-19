@@ -5,12 +5,15 @@ import br.com.mykytadu.domain.model.AnimeImages
 import br.com.mykytadu.domain.model.AnimeRelation
 import br.com.mykytadu.domain.model.AnimeTitles
 import br.com.mykytadu.domain.model.CatalogAnimeId
+import br.com.mykytadu.domain.model.MediaType
 import br.com.mykytadu.domain.model.PartialDate
 import br.com.mykytadu.domain.model.Studio
 import br.com.mykytadu.domain.model.Trailer
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class AnimeDetailsPresentationTest {
 
@@ -92,5 +95,13 @@ class AnimeDetailsPresentationTest {
         assertEquals("Bebop Movie", relation.displayTitle("Indisponível"))
         assertEquals("https://img/medium.jpg", relation.coverUrl())
         assertEquals("Indisponível", AnimeRelation(CatalogAnimeId("22")).displayTitle("Indisponível"))
+    }
+
+    @Test
+    fun `relacao somente e navegavel quando representa anime`() {
+        assertTrue(AnimeRelation(id = CatalogAnimeId("1"), mediaType = MediaType.ANIME).isNavigable())
+        assertFalse(AnimeRelation(id = CatalogAnimeId("2"), mediaType = MediaType.MANGA).isNavigable())
+        assertFalse(AnimeRelation(id = CatalogAnimeId("3"), mediaType = MediaType.UNKNOWN).isNavigable())
+        assertFalse(AnimeRelation(id = CatalogAnimeId("4"), mediaType = null).isNavigable())
     }
 }

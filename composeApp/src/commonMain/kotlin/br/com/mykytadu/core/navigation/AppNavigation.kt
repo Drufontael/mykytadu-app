@@ -171,7 +171,17 @@ fun AppNavigation(
                     }
 
                     entry<AppRoute.AnimeDetails> { route ->
-                        AnimeDetailsScreen(id = route.id, onBack = ::navigateBack)
+                        AnimeDetailsScreen(
+                            id = route.id,
+                            onBack = ::navigateBack,
+                            onNavigateToAnime = { relatedId ->
+                                if (backStack.lastOrNull() == route && relatedId != route.id) {
+                                    updateBackStack(NavigationMutation.PUSH) {
+                                        backStack.add(AppRoute.AnimeDetails(relatedId))
+                                    }
+                                }
+                            },
+                        )
                     }
 
                     entry<AppRoute.Library> {

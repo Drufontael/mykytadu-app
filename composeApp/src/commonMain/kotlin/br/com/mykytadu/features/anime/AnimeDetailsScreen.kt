@@ -32,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -63,6 +65,7 @@ import org.koin.core.parameter.parametersOf
 fun AnimeDetailsScreen(
     id: CatalogAnimeId,
     onBack: () -> Unit,
+    onNavigateToAnime: (CatalogAnimeId) -> Unit = {},
     viewModel: AnimeDetailsViewModel = koinViewModel(parameters = { parametersOf(id) }),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -98,6 +101,7 @@ fun AnimeDetailsScreen(
                 is AnimeDetailsUiState.Content -> AnimeDetailsContent(
                     details = current.details,
                     onOpenExternal = uriHandler::openUri,
+                    onNavigateToAnime = onNavigateToAnime,
                     modifier = Modifier.fillMaxSize(),
                 )
                 is AnimeDetailsUiState.Failure -> AppError(
@@ -116,6 +120,7 @@ internal fun AnimeDetailsContent(
     details: AnimeDetails,
     modifier: Modifier = Modifier,
     onOpenExternal: (String) -> Unit = {},
+    onNavigateToAnime: (CatalogAnimeId) -> Unit = {},
 ) {
     val unavailableTitle = stringResource(Res.string.anime_details_title_unavailable)
     val title = details.displayTitle(unavailableTitle)
@@ -138,7 +143,13 @@ internal fun AnimeDetailsContent(
                                 .widthIn(max = 220.dp)
                                 .align(Alignment.CenterHorizontally),
                         )
-                        DetailsText(details, title, description, onOpenExternal = onOpenExternal)
+                        DetailsText(
+                            details = details,
+                            title = title,
+                            description = description,
+                            onOpenExternal = onOpenExternal,
+                            onNavigateToAnime = onNavigateToAnime,
+                        )
                     }
                     ResponsiveLayout.EXPANDED -> Row(
                         horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.xxl),
@@ -154,6 +165,7 @@ internal fun AnimeDetailsContent(
                             title = title,
                             description = description,
                             onOpenExternal = onOpenExternal,
+                            onNavigateToAnime = onNavigateToAnime,
                             modifier = Modifier.weight(1f),
                         )
                     }
@@ -213,6 +225,7 @@ private fun DetailsText(
     description: String?,
     modifier: Modifier = Modifier,
     onOpenExternal: (String) -> Unit,
+    onNavigateToAnime: (CatalogAnimeId) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -239,7 +252,11 @@ private fun DetailsText(
                 )
             }
         }
-        DetailsComplementaryContent(details, onOpenExternal)
+        DetailsComplementaryContent(
+            details = details,
+            onOpenExternal = onOpenExternal,
+            onNavigateToAnime = onNavigateToAnime,
+        )
         Spacer(Modifier.height(AppDimensions.spacing.xxl))
     }
 }
@@ -249,6 +266,7 @@ private fun DetailsText(
 private fun DetailsComplementaryContent(
     details: AnimeDetails,
     onOpenExternal: (String) -> Unit,
+    onNavigateToAnime: (CatalogAnimeId) -> Unit,
 ) {
     val genres = details.displayGenres()
     if (genres.isNotEmpty()) {
@@ -292,7 +310,10 @@ private fun DetailsComplementaryContent(
     }
 
     if (details.relations.isNotEmpty()) {
-        DetailsRelations(details.relations)
+        DetailsRelations(
+            relations = details.relations,
+            onNavigateToAnime = onNavigateToAnime,
+        )
     }
 }
 
@@ -312,13 +333,26 @@ private fun DetailsSection(
 }
 
 @Composable
-private fun DetailsRelations(relations: List<AnimeRelation>) {
+private fun DetailsRelations(
+    relations: List<AnimeRelation>,
+    onNavigateToAnime: (CatalogAnimeId) -> Unit,
+) {
     val unavailableTitle = stringResource(Res.string.anime_details_title_unavailable)
-    DetailsSection(stringResource(Res.string.anime_details_relations_title)) {
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.md)) {
+    val relationsTitle = stringResource(Res.string.anime_details_relations_title)
+    DetailsSection(relationsTitle) {
+        LazyRow(
+            modifier = Modifier.semantics { contentDescription = relationsTitle },
+            horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.md),
+        ) {
             items(relations, key = { it.id.value }) { relation ->
                 val title = relation.displayTitle(unavailableTitle)
-                AppCard(modifier = Modifier.width(180.dp)) {
+                val onClick = if (relation.isNavigable()) {
+                    { onNavigateToAnime(relation.id) }
+                } else null
+                AppCard(
+                    modifier = Modifier.width(180.dp),
+                    onClick = onClick,
+                ) {
                     relation.coverUrl()?.let { url ->
                         AsyncImage(
                             model = url,

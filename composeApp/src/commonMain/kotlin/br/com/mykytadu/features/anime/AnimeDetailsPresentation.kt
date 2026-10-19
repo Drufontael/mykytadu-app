@@ -2,6 +2,7 @@ package br.com.mykytadu.features.anime
 
 import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeRelation
+import br.com.mykytadu.domain.model.MediaType
 import br.com.mykytadu.domain.model.PartialDate
 import br.com.mykytadu.domain.model.Trailer
 
@@ -69,6 +70,8 @@ internal fun AnimeRelation.displayTitle(unavailableTitle: String): String =
         ?: unavailableTitle
 
 internal fun AnimeRelation.coverUrl(): String? = coverMedium?.trim()?.takeIf(String::isNotEmpty)
+
+internal fun AnimeRelation.isNavigable(): Boolean = mediaType == MediaType.ANIME
 
 private val BREAK_TAG = Regex("<br\\s*/?>", RegexOption.IGNORE_CASE)
 private val PARAGRAPH_END_TAG = Regex("</p\\s*>", RegexOption.IGNORE_CASE)

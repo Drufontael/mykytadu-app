@@ -151,6 +151,7 @@ flowchart TD
     MainNavigation -.-> Profile
 
     Search -->|CatalogAnimeId| AnimeDetails
+    AnimeDetails -->|relação anime| AnimeDetails
 
     Profile --> Settings
 
@@ -219,6 +220,17 @@ Navegação raiz
 ```text
 Pesquisa ── CatalogAnimeId ──> Detalhes do Anime
 ```
+
+A rota também suporta navegação direta para obras relacionadas quando a relação
+representa anime (`MediaType.ANIME`):
+
+```text
+Detalhes do Anime ── CatalogAnimeId (relação) ──> Detalhes do Anime
+```
+
+Relações de outras mídias (como mangá) permanecem apenas informativas e não
+clicáveis. Ao retornar, o back stack é desempilhado em ordem preservando as
+instâncias visitadas e o contexto original da pesquisa.
 
 No futuro, outras áreas, como a Home, também poderão abrir diretamente os detalhes de um anime.
 

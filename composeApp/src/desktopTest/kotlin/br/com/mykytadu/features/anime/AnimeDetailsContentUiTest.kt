@@ -11,6 +11,11 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasScrollAction
 import br.com.mykytadu.core.theme.AppTheme
 import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeFormat
@@ -20,6 +25,7 @@ import br.com.mykytadu.domain.model.AnimeRelationType
 import br.com.mykytadu.domain.model.AnimeSeason
 import br.com.mykytadu.domain.model.AnimeTitles
 import br.com.mykytadu.domain.model.CatalogAnimeId
+import br.com.mykytadu.domain.model.MediaType
 import br.com.mykytadu.domain.model.PartialDate
 import br.com.mykytadu.domain.model.Studio
 import br.com.mykytadu.domain.model.Trailer
@@ -98,7 +104,56 @@ class AnimeDetailsContentUiTest {
         compose.onNodeWithText("Sequência").fetchSemanticsNode()
     }
 
-    private fun completeDetails() = AnimeDetails(
+    @Test
+    fun `relacao de anime e clicavel e relacao de manga nao possui acao de clique`() {
+        var clickedId: CatalogAnimeId? = null
+        val animeRelation = AnimeRelation(
+            id = CatalogAnimeId("101"),
+            relationType = AnimeRelationType.SEQUEL,
+            mediaType = MediaType.ANIME,
+            titles = AnimeTitles(english = "Anime Sequel"),
+        )
+        val mangaRelation = AnimeRelation(
+            id = CatalogAnimeId("102"),
+            relationType = AnimeRelationType.ADAPTATION,
+            mediaType = MediaType.MANGA,
+            titles = AnimeTitles(english = "Manga Adaptation"),
+        )
+        val details = completeDetails(
+            relations = listOf(animeRelation, mangaRelation),
+        )
+
+        compose.setContent {
+            AppTheme {
+                Box(Modifier.size(900.dp, 700.dp)) {
+                    AnimeDetailsContent(
+                        details = details,
+                        onNavigateToAnime = { clickedId = it },
+                    )
+                }
+            }
+        }
+
+        compose.onNode(hasScrollAction() and hasContentDescription("Obras relacionadas")).performScrollTo()
+        val animeCard = compose.onNodeWithText("Anime Sequel")
+        animeCard.assertIsDisplayed().assertHasClickAction()
+        animeCard.performClick()
+        assertEquals(CatalogAnimeId("101"), clickedId)
+
+        val mangaCard = compose.onNodeWithText("Manga Adaptation")
+        mangaCard.assertIsDisplayed()
+        mangaCard.assert(!hasClickAction())
+    }
+
+    private fun completeDetails(
+        relations: List<AnimeRelation> = listOf(
+            AnimeRelation(
+                id = CatalogAnimeId("5"),
+                relationType = AnimeRelationType.SEQUEL,
+                titles = AnimeTitles(english = "Cowboy Bebop: O Filme"),
+            ),
+        ),
+    ) = AnimeDetails(
         id = CatalogAnimeId("1"),
         titles = AnimeTitles(english = "Cowboy Bebop"),
         description = "<p>Caçadores de recompensa.<br>No espaço.</p>",
@@ -114,12 +169,6 @@ class AnimeDetailsContentUiTest {
         genres = listOf("Ação", "Ficção científica"),
         studios = listOf(Studio(1, "Sunrise", true)),
         trailer = Trailer("abc", "youtube"),
-        relations = listOf(
-            AnimeRelation(
-                id = CatalogAnimeId("5"),
-                relationType = AnimeRelationType.SEQUEL,
-                titles = AnimeTitles(english = "Cowboy Bebop: O Filme"),
-            ),
-        ),
+        relations = relations,
     )
 }

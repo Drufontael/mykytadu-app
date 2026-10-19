@@ -169,6 +169,58 @@ class SearchNavigationUiTest {
         }
     }
 
+    @Test
+    fun `navegacao por relacoes empilha rota restaura contexto e retorna a pesquisa`() {
+        val repository = RelationsFakeRepository()
+        val bridge = TestHistoryBridge()
+        startKoin {
+            modules(module {
+                viewModel { SearchViewModel(repository) }
+                viewModel { parameters ->
+                    AnimeDetailsViewModel(parameters.get(), repository)
+                }
+            })
+        }
+        try {
+            compose.setContent { Box(Modifier.size(500.dp, 700.dp)) { App(bridge) } }
+            compose.onNode(hasSetTextAction()).performTextInput("Example")
+            compose.onNode(hasSetTextAction()).performImeAction()
+            compose.waitUntil(5_000) { compose.onAllNodesWithText("Example 0").fetchSemanticsNodes().isNotEmpty() }
+            compose.waitForIdle()
+
+            compose.onNode(hasScrollToIndexAction()).performScrollToIndex(15)
+            val item = compose.onNodeWithText("Example 15")
+            val originalBounds = item.fetchSemanticsNode().boundsInRoot
+            item.performClick()
+
+            compose.onNodeWithText("Example 15").assertIsDisplayed()
+            assertEquals(AppRoute.AnimeDetails(CatalogAnimeId("1015")), bridge.pushed.last().last())
+
+            compose.onNode(hasScrollAction() and hasContentDescription("Obras relacionadas")).performScrollTo()
+
+            val mangaCard = compose.onNodeWithText("Related Manga 2001")
+            mangaCard.assertIsDisplayed()
+            mangaCard.assert(!hasClickAction())
+
+            val animeCard = compose.onNodeWithText("Related Sequel 2000")
+            animeCard.assertIsDisplayed().assertHasClickAction()
+            animeCard.performClick()
+
+            compose.onNodeWithText("Related Sequel 2000").assertIsDisplayed()
+            assertEquals(AppRoute.AnimeDetails(CatalogAnimeId("2000")), bridge.pushed.last().last())
+
+            compose.onNodeWithContentDescription("Voltar à pesquisa").performClick()
+            compose.onNodeWithText("Example 15").assertIsDisplayed()
+
+            compose.onNodeWithContentDescription("Voltar à pesquisa").performClick()
+            item.assertIsDisplayed()
+            assertEquals(originalBounds, item.fetchSemanticsNode().boundsInRoot)
+            assertEquals("Example", compose.onNode(hasSetTextAction()).fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.EditableText].text)
+        } finally {
+            stopKoin()
+        }
+    }
+
     private class TestHistoryBridge : NavigationHistoryBridge {
         override val initialBackStack = listOf(AppRoute.Search)
         val pushed = mutableListOf<List<AppRoute>>()
@@ -230,6 +282,57 @@ class SearchNavigationUiTest {
 
         override suspend fun getAnimeDetails(id: CatalogAnimeId): RepositoryResult<AnimeDetails> =
             RepositoryResult.Success(AnimeDetails(id = id))
+    }
+
+    private class RelationsFakeRepository : AnimeRepository {
+        override suspend fun searchAnime(
+            query: String,
+            page: Int,
+            perPage: Int,
+        ): RepositoryResult<PagedResult<AnimeSummary>> =
+            RepositoryResult.Success(
+                PagedResult(
+                    items = (0 until 20).map {
+                        AnimeSummary(
+                            id = CatalogAnimeId((1000 + it).toString()),
+                            titles = AnimeTitles(english = "Example $it"),
+                        )
+                    },
+                    pageInfo = PageInfo(currentPage = 1, lastPage = 1, hasNextPage = false, perPage = 20, total = 20),
+                ),
+            )
+
+        override suspend fun getAnimeDetails(id: CatalogAnimeId): RepositoryResult<AnimeDetails> =
+            RepositoryResult.Success(
+                when (id.value) {
+                    "1015" -> AnimeDetails(
+                        id = id,
+                        titles = AnimeTitles(english = "Example 15"),
+                        relations = listOf(
+                            AnimeRelation(
+                                id = CatalogAnimeId("2000"),
+                                relationType = AnimeRelationType.SEQUEL,
+                                mediaType = MediaType.ANIME,
+                                titles = AnimeTitles(english = "Related Sequel 2000"),
+                            ),
+                            AnimeRelation(
+                                id = CatalogAnimeId("2001"),
+                                relationType = AnimeRelationType.ADAPTATION,
+                                mediaType = MediaType.MANGA,
+                                titles = AnimeTitles(english = "Related Manga 2001"),
+                            ),
+                        ),
+                    )
+                    "2000" -> AnimeDetails(
+                        id = id,
+                        titles = AnimeTitles(english = "Related Sequel 2000"),
+                    )
+                    else -> AnimeDetails(
+                        id = id,
+                        titles = AnimeTitles(english = "Example ${id.value}"),
+                    )
+                },
+            )
     }
 }
 

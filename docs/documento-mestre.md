@@ -189,10 +189,11 @@ identidade da rota. O carregamento começa automaticamente por meio de
 `AnimeRepository`, expõe estados de loading, conteúdo ou falha e permite retry
 somente após falha. A apresentação compartilhada exibe banner, capa, título,
 metadados essenciais e sinopse, adapta a composição à largura disponível, omite
-campos opcionais ausentes e normaliza descrições HTML para texto. Gêneros, datas
-parciais, estúdios, trailer de provedor reconhecido e relações resumidas são
-exibidos quando disponíveis. Relações ainda não iniciam navegação; essa
-integração permanece escopo incremental da Sprint 7.
+campos opcionais ausentes e normaliza descrições HTML para texto. Gêneros, datas parciais, estúdios, trailer de provedor reconhecido e relações
+resumidas são exibidos quando disponíveis. Relações do tipo anime são navegáveis
+e empilham uma nova rota de detalhes com proteção contra loops cíclicos, enquanto
+relações de outras mídias (como mangá) permanecem não interativas. O retorno
+desempilha ordenadamente as rotas preservando a pesquisa e suas posições anteriores.
 
 ## 9. Web
 
