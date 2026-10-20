@@ -188,7 +188,7 @@ Lifecycle e Koin estão integrados conforme [ADR-007](adr/ADR-007-escopar-viewmo
 
 # Sprint 7 — Detalhes do Anime End-to-End
 
-**Status:** Em andamento — S7.1, S7.2, S7.3 e S7.4 concluídas e aceitas
+**Status:** Concluída
 
 ## Objetivo
 
@@ -226,8 +226,8 @@ Transformar a rota de detalhes em uma funcionalidade completa baseada no anime s
 - [x] O retorno preserva adequadamente o contexto da pesquisa.
 - [x] Links externos somente são apresentados quando válidos.
 - [x] Loading, erro e retry estão implementados.
-- [ ] O layout é validado nos temas claro e escuro.
-- [ ] O comportamento é validado nos targets disponíveis.
+- [x] O layout é validado nos temas claro e escuro.
+- [x] O comportamento é validado nos targets disponíveis.
 
 ---
 

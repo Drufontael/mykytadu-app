@@ -145,6 +145,33 @@ class AnimeDetailsContentUiTest {
         mangaCard.assert(!hasClickAction())
     }
 
+    @Test
+    fun `conteudo renderiza com sucesso em tema claro e escuro em larguras compacta e expandida`() {
+        // Tema claro em largura compacta (360.dp)
+        compose.setContent {
+            AppTheme(darkTheme = false) {
+                Box(Modifier.size(360.dp, 750.dp)) {
+                    AnimeDetailsContent(details = completeDetails())
+                }
+            }
+        }
+        compose.onNodeWithText("Cowboy Bebop").assertIsDisplayed()
+        compose.onNodeWithText("Série de TV").fetchSemanticsNode()
+        compose.onNodeWithText("Sinopse").fetchSemanticsNode()
+
+        // Tema escuro em largura expandida (1024.dp)
+        compose.setContent {
+            AppTheme(darkTheme = true) {
+                Box(Modifier.size(1024.dp, 750.dp)) {
+                    AnimeDetailsContent(details = completeDetails())
+                }
+            }
+        }
+        compose.onNodeWithText("Cowboy Bebop").assertIsDisplayed()
+        compose.onNodeWithText("Série de TV").fetchSemanticsNode()
+        compose.onNodeWithText("Sinopse").fetchSemanticsNode()
+    }
+
     private fun completeDetails(
         relations: List<AnimeRelation> = listOf(
             AnimeRelation(
