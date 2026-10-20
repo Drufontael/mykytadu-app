@@ -617,49 +617,109 @@ offline, deploy e hospedagem definitiva permanecem fora da arquitetura atual.
 
 # 7. Biblioteca local
 
-> **Estado:** Proposto.
+> **Estado:** Modelos de domínio implementados (S8.1); persistência local e repositório em andamento (S8.2+).
 
-`LibraryEntry` será modelado quando a persistência local for implementada. Ele representa conceitualmente a relação local com um anime dentro da biblioteca pessoal e não depende da existência de usuário autenticado ou backend.
-
-A biblioteca seguirá a estratégia local-first:
+A biblioteca segue a estratégia local-first:
 
 - funciona sem autenticação;
 - persiste alterações localmente;
 - continua disponível sem conexão ou backend;
 - habilita sincronização somente após autenticação futura;
-- mantém IDs locais, IDs AniList e futuros IDs de backend separados.
+- mantém IDs locais (`LibraryEntryId`), IDs do catálogo (`CatalogAnimeId`), IDs AniList e futuros IDs de backend semanticamente distintos.
 
-Estados previstos:
+## 7.1 Modelos de Domínio da Biblioteca
 
-- Planejando;
-- Assistindo;
-- Pausado;
-- Concluído;
-- Abandonado.
+Os contratos residem em `br.com.mykytadu.domain.model` em `commonMain` e são completamente puros, sem anotações de banco de dados, serialização ou dependência de infraestrutura.
+
+- **`LibraryEntryId`**: Value class tipada que representa o identificador local da entrada na biblioteca. Rejeita valores vazios ou compostos exclusivamente por espaços em branco.
+- **`LibraryStatus`**: Enum representando os estados de acompanhamento da obra: `PLANNING`, `WATCHING`, `PAUSED`, `COMPLETED` e `DROPPED`.
+- **`LibraryProgress`**: Representa o progresso de consumo em episódios. Valida que `current >= 0` e `total >= 0` (quando informado). Trata episódios excedentes (`isOverTotal`), fornece `clampedCurrent`, `completionRatio` e métodos de progressão imutáveis (`increment`, `decrement` com piso zero).
+- **`LibraryRating`**: Value class representando a nota pessoal do usuário no intervalo fechado de 0 a 100.
+- **`LibraryEntry`**: Entidade de domínio imutável contendo a associação com o anime (`CatalogAnimeId`), status, progresso, nota opcional, notas em texto (`notes` com limite de 5000 caracteres) e marcas temporais de criação e atualização (`updatedAt >= createdAt`). Métodos `withProgress`, `withStatus`, `withRating` e `withNotes` garantem evolução consistente do estado.
+
+## 7.2 Diagrama de Classes da Biblioteca
+
+```mermaid
+classDiagram
+    direction LR
+
+    class LibraryEntryId {
+        <<value class>>
+        +String value
+    }
+
+    class CatalogAnimeId {
+        <<value class>>
+        +String value
+    }
+
+    class LibraryStatus {
+        <<enumeration>>
+        PLANNING
+        WATCHING
+        PAUSED
+        COMPLETED
+        DROPPED
+    }
+
+    class LibraryProgress {
+        +Int current
+        +Int? total
+        +Boolean isOverTotal
+        +Int clampedCurrent
+        +Float? completionRatio
+        +increment(step: Int) LibraryProgress
+        +decrement(step: Int) LibraryProgress
+    }
+
+    class LibraryRating {
+        <<value class>>
+        +Int value
+    }
+
+    class LibraryEntry {
+        +LibraryEntryId id
+        +CatalogAnimeId animeId
+        +LibraryStatus status
+        +LibraryProgress progress
+        +LibraryRating? rating
+        +String? notes
+        +Instant createdAt
+        +Instant updatedAt
+        +withProgress(progress: LibraryProgress, updatedAt: Instant) LibraryEntry
+        +withStatus(status: LibraryStatus, updatedAt: Instant) LibraryEntry
+        +withRating(rating: LibraryRating?, updatedAt: Instant) LibraryEntry
+        +withNotes(notes: String?, updatedAt: Instant) LibraryEntry
+    }
+
+    LibraryEntry --> "1" LibraryEntryId : id
+    LibraryEntry --> "1" CatalogAnimeId : animeId
+    LibraryEntry --> "1" LibraryStatus : status
+    LibraryEntry --> "1" LibraryProgress : progress
+    LibraryEntry --> "0..1" LibraryRating : rating
+```
 
 ---
 
-## 7.1 Diagrama de Estados de LibraryEntry
+## 7.3 Diagrama de Estados de LibraryEntry
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Planejando
+    [*] --> PLANNING
 
-    Planejando --> Assistindo : iniciar
+    PLANNING --> WATCHING : iniciar
+    WATCHING --> PAUSED : pausar
+    PAUSED --> WATCHING : retomar
 
-    Assistindo --> Pausado : pausar
-    Pausado --> Assistindo : retomar
+    WATCHING --> COMPLETED : concluir
+    WATCHING --> DROPPED : abandonar
+    PAUSED --> DROPPED : abandonar
 
-    Assistindo --> Concluido : concluir
-
-    Assistindo --> Abandonado : abandonar
-    Pausado --> Abandonado : abandonar
-
-    Concluido --> [*]
-    Abandonado --> [*]
+    COMPLETED --> [*]
+    DROPPED --> [*]
 ```
 
-> As transições acima representam uma proposta inicial. Regras como reabrir um anime concluído, retomar um abandonado ou concluir automaticamente pelo número de episódios deverão ser decididas durante a Sprint 8 e validadas no fluxo da Sprint 9.
+> As regras de transição de status no nível de caso de uso e repositório serão integradas e validadas nas subtasks subsequentes da Sprint 8.
 
 ---
 
