@@ -131,6 +131,11 @@ Descubra as tasks reais disponíveis no Gradle; não invente comandos. Valide
 primeiro a área afetada e execute testes dos targets aplicáveis antes de
 concluir o ciclo da task.
 
+Para máxima agilidade e redução de processos repetitivos, **agrupe as validações dos
+múltiplos targets em uma única invocação composta do Gradle** (por exemplo:
+`.\gradlew.bat :composeApp:desktopTest :composeApp:testDebugUnitTest :composeApp:assembleDebug :composeApp:jsBrowserTest :composeApp:wasmJsBrowserTest :composeApp:compileIosMainKotlinMetadata`),
+evitando invocações fragmentadas sucessivas.
+
 Registre comandos e resultados no relatório. Diferencie build, teste automatizado,
 smoke test e validação manual. Registre limitações do ambiente e não mascare testes
 ausentes como sucesso. Separe avisos LF/CRLF de erros reais.
@@ -153,7 +158,8 @@ revalide, atualize a documentação e gere um novo commit local.
 
 - **Commits locais:** pré-autorizados na branch de trabalho para tarefas que
   tenham passado nas validações pertinentes. Os commits devem ser atômicos,
-  pequenos, coerentes e com mensagens claras.
+  pequenos, coerentes e com mensagens claras. Execute as operações de stage e
+  commit de forma integrada dentro do ciclo da task.
 - **Push para upstream (Trava no Push):** executar `git push`, abrir pull request,
   fazer deploy ou publicação em serviços externos exige comando ou autorização
   explícita do usuário (ex.: `$mykytadu-git-publish`, "faça push", "publique").
@@ -172,6 +178,9 @@ armazenamento seguro por plataforma. Não introduza credenciais fictícias para
 fazer testes passarem.
 
 ## Relatório final
+
+Evite mensagens intermediárias redundantes no chat durante execuções assíncronas;
+conduza o fluxo e apresente diretamente o relatório consolidado ao final do ciclo.
 
 Ao concluir o ciclo autônomo da task, apresente um relatório direto e objetivo
 contendo:
