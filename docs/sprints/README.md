@@ -87,4 +87,5 @@ implementação, validações aplicáveis, aceite humano e encerramento document
 | W1 — Fundação Web | Concluída | [W1.md](W1.md) |
 | S6 — Busca de Animes | Concluída | [S6.md](S6.md) |
 | M1 — Identidade do catálogo | Concluída | [M1.md](M1.md) |
-| S7 — Detalhes do Anime | Em andamento | [S7.md](S7.md) |
+| S7 — Detalhes do Anime | Concluída | [S7.md](S7.md) |
+| S8 — Persistência e Biblioteca Local | Planejada | [S8.md](S8.md) |
