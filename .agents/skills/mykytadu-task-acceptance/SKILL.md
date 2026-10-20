@@ -1,61 +1,43 @@
 ---
 name: mykytadu-task-acceptance
-description: Gerencia o aceite de tasks implementadas no repositório MykytaDu e documenta seu encerramento somente após aprovação inequívoca do usuário. Use após implementar e validar uma task do MykytaDu ou ao processar a resposta à pergunta de aceite.
+description: Orienta o encerramento documental e validação de tasks no MykytaDu de forma integrada e contemporânea à implementação, gerando commit local e preservando a trava no push.
 ---
 
 # MykytaDu Task Acceptance
 
-Use este fluxo somente no repositório MykytaDu. Ele separa a entrega técnica do aceite e da documentação de encerramento.
+Este fluxo padroniza o encerramento técnico e documental das tarefas no repositório MykytaDu, alinhado ao modelo de **Autonomia com trava no push**.
 
-## Solicitar aceite
+## Encerramento integrado da task
 
-Depois de implementar uma task, executar as validações pertinentes e apresentar o relatório final, pergunte exatamente:
+Ao concluir a implementação técnica e passar nas validações do Gradle, o agente deve, no mesmo turno de trabalho:
 
-> A task está aceita?
+1. **Atualizar a documentação da sprint (`docs/sprints/`):**
+   - Marcar a subtask como concluída (`[x]`).
+   - Registrar as evidências reais dos testes executados (ex.: classes de teste, suites validadas).
+   - Atualizar a tabela de subtasks com o estado e evidência.
+2. **Atualizar documentos de arquitetura e modelo (quando afetados):**
+   - Atualizar `docs/modelagem.md` se contratos, entidades ou fluxos sofreram mudanças.
+   - Atualizar o Documento Mestre somente diante de decisões ou especificações duráveis.
+   - Atualizar `docs/roadmap.md` se um marco ou sprint foi finalizado.
+3. **Criar commit local atômico:**
+   - Adicionar ao stage os arquivos de código, testes e documentação pertencentes ao escopo da task.
+   - Criar um commit local claro e conciso na branch de trabalho.
+4. **Apresentar relatório final consolidado:**
+   - Informar o que foi implementado, os testes validados, a documentação atualizada e o hash do commit local.
+   - Informar que as alterações estão commitadas localmente e aguardar comando para `git push` ou início da próxima task.
 
-Nesse momento:
+## Processar correções ou ajustes posteriores
 
-- não atualize a documentação de encerramento;
-- não considere nem marque a task como concluída;
-- não realize commit, push ou pull request por causa desta skill;
-- aguarde uma resposta explícita do usuário.
+Se o usuário revisar o trabalho e solicitar correções, melhorias ou apontar divergências:
 
-Silêncio, ausência de objeção ou mudança de assunto não constituem aceite.
-
-## Processar resposta afirmativa
-
-Considere inequívocas respostas como `sim`, `ok`, `aceito`, `aprovado`, `pode concluir` e equivalentes claros no contexto.
-
-Após o aceite:
-
-1. Inspecione as alterações implementadas e o estado atual da documentação.
-2. Atualize o Documento Mestre com um resumo sucinto da task aceita.
-3. Atualize roadmap, modelagem, documentação de APIs, rede, persistência, identidade visual ou outros documentos técnicos somente quando forem realmente afetados.
-4. Preserve o formato, a estrutura e a linguagem existentes.
-5. Registre apenas resultados comprovados pela implementação e pelas validações; não replique todo o relatório no Documento Mestre nem o transforme em changelog.
-6. Revise o diff documental e confirme que contém somente alterações relacionadas à task aceita.
-7. Informe quais documentos foram atualizados e por quê.
-
-O aceite autoriza somente a documentação pertinente ao encerramento. Não altere código depois dele sem nova solicitação explícita e não faça commit, push ou pull request por causa desta skill.
-
-## Processar correções ou ausência de aceite
-
-Se a resposta trouxer observações, divergências ou instruções de correção:
-
-1. Não atualize a documentação de encerramento nem marque a task como concluída.
-2. Aplique somente as correções solicitadas, sem ampliar o escopo.
-3. Reexecute as validações afetadas.
-4. Apresente um novo relatório destacando as mudanças.
-5. Pergunte novamente:
-
-> A task está aceita?
-
-Se a resposta for ambígua e não contiver instruções executáveis, peça confirmação objetiva antes de agir.
+1. Aplique os ajustes solicitados no código ou documentação, respeitando o escopo.
+2. Reexecute as validações necessárias no Gradle.
+3. Atualize a documentação afetada com as novas evidências.
+4. Crie um novo commit local (ou amend se explicitamente solicitado).
+5. Apresente um resumo objetivo dos ajustes realizados e o novo commit gerado.
 
 ## Restrições
 
-- Não documente funcionalidades não implementadas.
-- Não altere documentos sem relação direta com a task aceita.
-- Não interprete aprovação parcial como aceite integral quando houver ressalvas pendentes.
-- Não use esta skill como autorização para commit, push, pull request ou ampliação de escopo.
-- Preserve alterações preexistentes e não relacionadas no working tree.
+- **Trava no push:** Não execute `git push`, não abra pull request e não faça deploy sem autorização explícita do usuário.
+- Não documente itens que não foram efetivamente implementados e validados.
+- Preserve arquivos preexistentes e alterações não relacionadas no working tree.

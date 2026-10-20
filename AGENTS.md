@@ -104,55 +104,62 @@ Prefira documentação oficial ao avaliar compatibilidade. Não remova dependên
 ou configurações apenas porque parecem não utilizadas sem comprovar todos os
 targets. Trate mudanças globais de Gradle como decisões arquiteturais.
 
-## Fluxo de implementação
+## Fluxo de implementação (Autonomia com trava no push)
 
-Siga esta sequência:
+A solicitação do usuário confere ao agente autorização para executar o ciclo
+completo de desenvolvimento de ponta a ponta na branch de trabalho local.
 
-1. Inspecionar.
-2. Delimitar o escopo autorizado.
-3. Implementar incrementalmente.
-4. Compilar e testar frequentemente.
-5. Executar regressão proporcional.
-6. Apresentar relatório.
-7. Solicitar aceite.
-8. Aguardar aceite inequívoco.
-9. Atualizar documentação somente depois do aceite.
+Siga esta sequência de forma contínua:
 
-Uma task não está concluída apenas porque compilou. Faça validação visual quando
-houver impacto de interface. Não inicie automaticamente a próxima task.
+1. Inspecionar o repositório, branch e alterações preexistentes.
+2. Delimitar o escopo autorizado (suporta metas compostas ou múltiplas subtasks quando solicitado).
+3. Implementar o código e testes necessários.
+4. Compilar e executar testes automatizados pertinentes no Gradle.
+5. Atualizar a documentação contemporaneamente (`docs/sprints/`, `docs/modelagem.md`, etc.), registrando o estado real e evidências.
+6. Criar commit local atômico contendo apenas as alterações pertinentes do escopo.
+7. Apresentar relatório final consolidado com resumo, validações e hash do commit local.
+8. Aguardar comando para `git push` ou instruções para a próxima task.
+
+O agente tem autonomia para encadear tarefas solicitadas em lote sem paradas
+artificiais intermediárias, gerando commits atômicos por marco lógico. Interrompa
+a execução autônoma apenas se houver falha de build/teste irresolúvel,
+ambiguidade material de produto ou risco a alterações preexistentes.
 
 ## Testes e validações
 
 Descubra as tasks reais disponíveis no Gradle; não invente comandos. Valide
-primeiro a área afetada e execute regressão dos targets aplicáveis antes do
-aceite.
+primeiro a área afetada e execute testes dos targets aplicáveis antes de
+concluir o ciclo da task.
 
-Registre comandos e resultados. Diferencie build, teste automatizado, smoke test
-e validação manual. Registre limitações do ambiente e não mascare testes ausentes
-como sucesso. Separe avisos LF/CRLF de erros reais.
+Registre comandos e resultados no relatório. Diferencie build, teste automatizado,
+smoke test e validação manual. Registre limitações do ambiente e não mascare testes
+ausentes como sucesso. Separe avisos LF/CRLF de erros reais.
 
-## Aceite e documentação
+## Documentação e encerramento
 
-Implementação, aceite humano e encerramento documental são etapas distintas.
-Antes do aceite, não marque uma task como concluída na documentação.
+A documentação técnica e de sprints deve ser atualizada de forma contemporânea
+à implementação, dentro do mesmo ciclo de trabalho, antes da criação do commit local.
 
-Respostas afirmativas inequívocas constituem aceite. Observações com defeitos ou
-pedidos de correção não constituem aceite. Após o aceite, atualize somente os
-documentos realmente afetados.
+- Atualize `docs/sprints/` marcando subtasks concluídas com suas evidências reais.
+- O Documento Mestre muda somente diante de especificação ou direcionamento durável.
+- O roadmap recebe alterações de estado ou critérios quando a sprint for concluída.
+- A modelagem (`docs/modelagem.md`) recebe alterações estruturais realizadas.
+- Não documente funcionalidades ainda não implementadas ou não testadas.
 
-Após o aceite, registre execução, evidências e encerramento em `docs/sprints/`. O Documento Mestre muda somente diante de especificação ou direcionamento durável,
-sem receber diário de sprints. O roadmap recebe estado, escopo ou critérios; a
-modelagem, alterações estruturais; e `docs/adr/`, decisões arquiteturais
-relevantes. Documentação técnica acompanha contratos reais sem copiar relatórios, e intenções futuras permanecem marcadas como planejadas.
+Caso o usuário solicite correções ou revisões após a entrega, aplique os ajustes,
+revalide, atualize a documentação e gere um novo commit local.
 
 ## Git e ações externas
 
-Stage, commit, push, pull request, publicação e deploy exigem autorização
-explícita. Quando autorizados, commits devem ser pequenos, coerentes e não
-misturar mudanças não relacionadas.
-
-Não reescreva histórico, não use comandos Git destrutivos e não envie mensagens
-ou realize ações em serviços externos sem autorização.
+- **Commits locais:** pré-autorizados na branch de trabalho para tarefas que
+  tenham passado nas validações pertinentes. Os commits devem ser atômicos,
+  pequenos, coerentes e com mensagens claras.
+- **Push para upstream (Trava no Push):** executar `git push`, abrir pull request,
+  fazer deploy ou publicação em serviços externos exige comando ou autorização
+  explícita do usuário (ex.: `$mykytadu-git-publish`, "faça push", "publique").
+- **Proteção e segurança:** não faça push com `--force` ou `--force-with-lease`.
+  Não use comandos destrutivos (`git reset --hard`, `git clean -f`, `git checkout --`).
+  Não adicione ao stage arquivos não relacionados, temporários ou com dados sensíveis.
 
 ## Segurança
 
@@ -166,15 +173,13 @@ fazer testes passarem.
 
 ## Relatório final
 
-Todo relatório de implementação ou correção apresentado antes do aceite deve informar:
+Ao concluir o ciclo autônomo da task, apresente um relatório direto e objetivo
+contendo:
 
-- alterações realizadas;
-- arquivos relevantes;
-- validações e resultados;
-- limitações e pendências conhecidas;
-- alterações preexistentes preservadas;
-- estado de stage, commit e push;
-- próximo passo recomendado;
-- pergunta final: **A task está aceita?**
-
-Após o aceite inequívoco e a atualização documental, apresente um relatório de encerramento sem solicitar novo aceite para a mesma task.
+- **Alterações realizadas:** resumo do código implementado ou corrigido;
+- **Validações e resultados:** comandos Gradle executados e status dos testes;
+- **Documentação atualizada:** arquivos em `docs/` modificados;
+- **Commit local:** hash e mensagem do commit criado;
+- **Estado do Git:** branch atual, commits locais pendentes de push;
+- **Próximo passo:** informe que as alterações estão commitadas localmente e
+  pergunte se o usuário deseja realizar o `git push` ou prosseguir para a próxima task.
