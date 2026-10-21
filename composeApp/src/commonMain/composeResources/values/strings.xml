@@ -113,4 +113,17 @@
     <string name="anime_details_in_library">Na biblioteca</string>
     <string name="anime_details_edit_library">Editar</string>
     <string name="anime_details_library_progress">Episódio %1$d / %2$s</string>
+    <string name="home_title">Início</string>
+    <string name="home_section_continue_watching">Continuar assistindo</string>
+    <string name="home_section_continue_watching_empty">Nenhum anime em andamento no momento.</string>
+    <string name="home_section_recent">Atualizados recentemente</string>
+    <string name="home_section_recent_empty">Nenhuma atividade recente na sua biblioteca.</string>
+    <string name="home_section_trending">Em alta na AniList</string>
+    <string name="home_section_trending_empty">Nenhum anime em alta encontrado.</string>
+    <string name="home_section_trending_error">Não foi possível carregar os animes em alta.</string>
+    <string name="home_empty_library_title">Sua biblioteca está vazia</string>
+    <string name="home_empty_library_message">Pesquise seus animes favoritos e adicione-os à sua biblioteca para acompanhar seu progresso diário.</string>
+    <string name="home_empty_library_action">Pesquisar catálogo</string>
+    <string name="home_retry_section">Tentar novamente</string>
+    <string name="home_increment_progress">+1 Ep</string>
 </resources>
