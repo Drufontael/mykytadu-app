@@ -723,6 +723,73 @@ stateDiagram-v2
 
 ---
 
+## 7.4 Camada de Dados da Biblioteca (Persistência Local e Mapeamento)
+
+> **Estado:** Implementado (S8.2).
+
+Para garantir estrita separação entre modelos de domínio e infraestrutura de armazenamento, os contratos de persistência residem em `data.local` e `data.mapper`:
+
+- **`LibraryEntryEntity`**: DTO serializável contendo apenas primitivos (`id`, `animeId`, `status`, `progressCurrent`, `progressTotal`, `isFavorite`, `rating`, `notes`, `createdAtEpochMillis`, `updatedAtEpochMillis`, `schemaVersion`). Permite serialização limpa e evolução de esquema sem alterar o domínio.
+- **`LibrarySchemaMigration`**: Valida a integridade dos dados e migra versões legadas de esquema para `CURRENT_SCHEMA_VERSION = 1`.
+- **`LibraryEntryMapper`**: Mapeador bidirecional robusto e defensivo:
+  - `toEntity()`: Converte `LibraryEntry` em `LibraryEntryEntity`.
+  - `toDomain()`: Converte `LibraryEntryEntity` em `LibraryEntry`, fornecendo fallback para status desconhecido (para `PLANNING`), saneamento de progresso negativo (com piso zero), higienização de notas (limite de 5000 caracteres) e garantia de que `updatedAt >= createdAt`.
+- **`LibraryLocalDataSource`**: Interface com operações CRUD reativas (`observeAllEntries`, `observeEntryByAnimeId`, `observeEntriesByStatus`, `upsertEntry`, `deleteEntry`, etc.).
+- **`InMemoryLibraryLocalDataSource`**: Implementação concorrente segura via `Mutex` e `MutableStateFlow`, assegurando unicidade de no máximo 1 entrada por `animeId`.
+
+```mermaid
+classDiagram
+    direction LR
+
+    class LibraryLocalDataSource {
+        <<interface>>
+        +getEntryById(id: String) LibraryEntryEntity?
+        +getEntryByAnimeId(animeId: String) LibraryEntryEntity?
+        +getAllEntries() List~LibraryEntryEntity~
+        +getEntriesByStatus(status: String) List~LibraryEntryEntity~
+        +upsertEntry(entry: LibraryEntryEntity)
+        +deleteEntry(id: String) Boolean
+        +deleteEntryByAnimeId(animeId: String) Boolean
+        +clearAll()
+        +observeAllEntries() Flow~List~LibraryEntryEntity~~
+        +observeEntryByAnimeId(animeId: String) Flow~LibraryEntryEntity?~
+        +observeEntriesByStatus(status: String) Flow~List~LibraryEntryEntity~~
+    }
+
+    class InMemoryLibraryLocalDataSource {
+        -Mutex mutex
+        -MutableStateFlow entriesFlow
+    }
+
+    class LibraryEntryEntity {
+        <<serializable>>
+        +String id
+        +String animeId
+        +String status
+        +Int progressCurrent
+        +Int? progressTotal
+        +Boolean isFavorite
+        +Int? rating
+        +String? notes
+        +Long createdAtEpochMillis
+        +Long updatedAtEpochMillis
+        +Int schemaVersion
+    }
+
+    class LibraryEntryMapper {
+        <<mapper>>
+        +toEntity(domain: LibraryEntry) LibraryEntryEntity
+        +toDomain(entity: LibraryEntryEntity) LibraryEntry
+    }
+
+    LibraryLocalDataSource <|.. InMemoryLibraryLocalDataSource : implements
+    LibraryLocalDataSource --> "0..*" LibraryEntryEntity : manipula
+    LibraryEntryMapper ..> LibraryEntryEntity : converte
+    LibraryEntryMapper ..> LibraryEntry : converte
+```
+
+---
+
 # 8. Fatias Verticais e Fluxos entre Camadas
 
 > **Estado:** Parcialmente implementado na busca; demais fluxos propostos.
