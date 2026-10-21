@@ -37,7 +37,7 @@ arquitetural identificados por `M`.
 | M1 | Desacoplamento da identidade do catálogo | Concluída | [M1](sprints/M1.md) |
 | S7 | Detalhes do Anime End-to-End | Concluída | [S7](sprints/S7.md) |
 | S8 | Persistência e Biblioteca Local | Concluída | [S8](sprints/S8.md) |
-| S9 | Biblioteca End-to-End | Em andamento | [S9](sprints/S9.md) |
+| S9 | Biblioteca End-to-End | Concluída | [S9](sprints/S9.md) |
 | S10 | Home | Planejada | a criar |
 | S11 | Configurações e Preferências | Planejada | a criar |
 | S12 | Backend e Autenticação | Planejada | a criar |
@@ -278,7 +278,7 @@ Criar a base local-first da biblioteca pessoal sem depender de autenticação ou
 
 # Sprint 9 — Biblioteca End-to-End
 
-**Status:** Em andamento
+**Status:** Concluída
 
 ## Objetivo
 
@@ -286,29 +286,29 @@ Entregar ao usuário o gerenciamento completo da biblioteca local.
 
 ### Escopo
 
-- [ ] Adicionar anime
-- [ ] Remover anime
-- [ ] Alterar status
-- [ ] Favoritar
-- [ ] Atualizar progresso
-- [ ] Registrar notas pessoais
-- [ ] Avaliação, se consolidada na Sprint 8
-- [ ] Filtros por status
-- [ ] Ordenação quando necessária
-- [ ] Estados vazio e erro
-- [ ] Confirmação de ações destrutivas
-- [ ] Navegação para detalhes
+- [x] Adicionar anime
+- [x] Remover anime
+- [x] Alterar status
+- [x] Favoritar
+- [x] Atualizar progresso
+- [x] Registrar notas pessoais
+- [x] Avaliação, se consolidada na Sprint 8
+- [x] Filtros por status
+- [x] Ordenação quando necessária
+- [x] Estados vazio e erro
+- [x] Confirmação de ações destrutivas
+- [x] Navegação para detalhes
 
 ### Critérios de aceite
 
-- [ ] O fluxo completo funciona offline.
-- [ ] Alterações aparecem imediatamente na interface.
-- [ ] Dados sobrevivem à reinicialização.
-- [ ] Filtros preservam estado adequadamente.
-- [ ] Remoção exige confirmação.
-- [ ] A biblioteca permite abrir os detalhes do anime.
-- [ ] As regras de progresso possuem testes.
-- [ ] Nenhuma operação depende do backend.
+- [x] O fluxo completo funciona offline.
+- [x] Alterações aparecem imediatamente na interface.
+- [x] Dados sobrevivem à reinicialização.
+- [x] Filtros preservam estado adequadamente.
+- [x] Remoção exige confirmação.
+- [x] A biblioteca permite abrir os detalhes do anime.
+- [x] As regras de progresso possuem testes.
+- [x] Nenhuma operação depende do backend.
 
 ---
 
