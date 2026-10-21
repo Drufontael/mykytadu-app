@@ -153,7 +153,19 @@ fun AppNavigation(
                     }
 
                     entry<AppRoute.Home> {
-                        HomeScreen()
+                        HomeScreen(
+                            onAnimeSelected = { id ->
+                                val route = AppRoute.AnimeDetails(id)
+                                if (backStack.lastOrNull() == AppRoute.Home) {
+                                    updateBackStack(NavigationMutation.PUSH) {
+                                        backStack.add(route)
+                                    }
+                                }
+                            },
+                            onNavigateToSearch = {
+                                onMainDestination(AppRoute.Search)
+                            },
+                        )
                     }
 
                     entry<AppRoute.Search> {
