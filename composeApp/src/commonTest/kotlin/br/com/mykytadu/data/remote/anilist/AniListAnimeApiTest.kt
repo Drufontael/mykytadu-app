@@ -18,6 +18,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 import io.ktor.http.HttpMethod
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import br.com.mykytadu.core.network.NetworkFailure
 import io.ktor.http.content.TextContent
@@ -592,8 +593,10 @@ class AniListAnimeApiTest {
 
             assertEquals(1, page.pageInfo?.currentPage)
             assertEquals(10, page.pageInfo?.perPage)
-            assertEquals(1, page.media?.size)
-            assertEquals(20, page.media?.first()?.id)
+            val media = page.media
+            assertNotNull(media)
+            assertEquals(1, media.size)
+            assertEquals(20, media.first().id)
         } finally {
             client.close()
         }
