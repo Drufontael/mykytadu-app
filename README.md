@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, as sprints até a S6 estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList, domínio do catálogo e busca end-to-end. A S6 foi validada com smoke tests manuais em Android, Desktop e Web, além das suítes automatizadas e builds aplicáveis. O build e a execução nativos iOS permanecem pendentes por dependerem de macOS e Xcode, sem bloquear a evolução dos demais targets.
+Atualmente, as sprints até a S7 estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList, domínio do catálogo, busca end-to-end e detalhes completos do anime com navegação por relações. A Sprint 8 (Persistência e Biblioteca Local) está em andamento, estruturando a base local-first da biblioteca pessoal nos 5 targets ativos. O build e a execução nativos iOS permanecem pendentes por dependerem de macOS e Xcode, sem bloquear a evolução dos demais targets.
 
 ## Plataformas
 
@@ -24,8 +24,9 @@ Atualmente, as sprints até a S6 estão concluídas: fundação multiplataforma,
 | Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprint W1 — Fundação Web | Concluída |
 | Sprint 6 — Busca de Animes | Concluída — validação manual em Android, Desktop e Web; iOS nativo pendente de ambiente |
-| Sprint 7 — Detalhes do Anime | Em andamento — S7.1, S7.2 e S7.3 concluídas e aceitas |
-| Sprints 8 a 16 | Planejadas |
+| Sprint 7 — Detalhes do Anime | Concluída — detalhes completos, trailer, relações navegáveis e layout responsivo nos temas claro/escuro |
+| Sprint 8 — Persistência e Biblioteca Local | Em andamento — modelos de domínio, persistência local, repositório e injeção Koin validados nos 5 targets |
+| Sprints 9 a 16 | Planejadas |
 
 Já estão disponíveis:
 
@@ -43,20 +44,19 @@ Já estão disponíveis:
 - estrutura compartilhada para resolução de Deep Links;
 - comunicação HTTP robusta e padronizada;
 - pesquisa paginada e consulta de detalhes por meio do `AnimeApi` da AniList;
-- modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes.
-- shell Web com transporte Ktor baseado em Fetch e comunicação direta validada com a AniList.
-- navegação Web por fragmentos, integrada ao histórico do navegador em JS e WasmJS.
-- rota de detalhes tipada com `CatalogAnimeId`, deep link compartilhado e URL Web `#/anime/{id}`.
+- modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes;
+- modelos de domínio e persistência local da biblioteca (`LibraryEntry`, `LibraryRepository`, `LibraryLocalDataSource`, drivers multiplataforma e `StorageModule`);
+- shell Web com transporte Ktor baseado em Fetch e comunicação direta validada com a AniList;
+- navegação Web por fragmentos, integrada ao histórico do navegador em JS e WasmJS;
+- rota de detalhes tipada com `CatalogAnimeId`, deep link compartilhado e URL Web `#/anime/{id}`;
 - shell Web responsivo e acessível no escopo validado, com distribuições de produção separadas para WasmJS e JavaScript.
 
-A busca já apresenta a primeira página de títulos com debounce, cancelamento,
-estados e retry, usando ViewModel por entrada do Navigation 3. O resultado
-selecionado abre os detalhes com a identidade correta, inicia seu carregamento e
-trata loading, falha e retry; retorno e histórico Web preservam o contexto da
-pesquisa enquanto a entrada existir. A tela apresenta banner, capa, título,
-metadados essenciais, sinopse, gêneros, datas, estúdios, trailer reconhecido e
-relações resumidas em layout responsivo. A navegação por relações permanece em
-evolução na Sprint 7.
+A busca já apresenta a grade de títulos com debounce, cancelamento, paginação
+incremental, estados e retry, usando ViewModel por entrada do Navigation 3. O
+resultado selecionado abre os detalhes com a identidade correta, exibindo banner,
+capa, título, metadados essenciais, sinopse, gêneros, datas, estúdios, trailer
+reconhecido e relações resumidas em layout responsivo com suporte a navegação por
+relações de anime.
 
 ## Stack
 

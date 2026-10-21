@@ -35,8 +35,8 @@ arquitetural identificados por `M`.
 | W1 | Fundação Web | Concluída | [W1](sprints/W1.md) |
 | S6 | Busca de Animes End-to-End | Concluída | [S6](sprints/S6.md) |
 | M1 | Desacoplamento da identidade do catálogo | Concluída | [M1](sprints/M1.md) |
-| S7 | Detalhes do Anime End-to-End | Em andamento | [S7](sprints/S7.md) |
-| S8 | Persistência e Biblioteca Local | Planejada | a criar |
+| S7 | Detalhes do Anime End-to-End | Concluída | [S7](sprints/S7.md) |
+| S8 | Persistência e Biblioteca Local | Em andamento | [S8](sprints/S8.md) |
 | S9 | Biblioteca End-to-End | Planejada | a criar |
 | S10 | Home | Planejada | a criar |
 | S11 | Configurações e Preferências | Planejada | a criar |
@@ -233,7 +233,7 @@ Transformar a rota de detalhes em uma funcionalidade completa baseada no anime s
 
 # Sprint 8 — Persistência e Biblioteca Local
 
-**Status:** Planejada
+**Status:** Em andamento — S8.1 a S8.4 concluídas; S8.5 em andamento
 
 ## Objetivo
 
@@ -241,19 +241,19 @@ Criar a base local-first da biblioteca pessoal sem depender de autenticação ou
 
 ### Escopo
 
-- [ ] Seleção fundamentada da solução de persistência multiplataforma
-- [ ] Esquema local
-- [ ] Migração inicial
-- [ ] Modelo `LibraryEntry`
-- [ ] Enum de status
-- [ ] Progresso
-- [ ] Favorito
-- [ ] Nota pessoal
-- [ ] Avaliação, somente se houver regra consolidada
-- [ ] `LibraryRepository`
-- [ ] Fonte de dados local
-- [ ] Testes de persistência e migração
-- [ ] Separação entre modelo persistido e modelo de domínio
+- [x] Seleção fundamentada da solução de persistência multiplataforma
+- [x] Esquema local
+- [x] Migração inicial
+- [x] Modelo `LibraryEntry`
+- [x] Enum de status
+- [x] Progresso
+- [x] Favorito
+- [x] Nota pessoal
+- [x] Avaliação, somente se houver regra consolidada
+- [x] `LibraryRepository`
+- [x] Fonte de dados local
+- [x] Testes de persistência e migração
+- [x] Separação entre modelo persistido e modelo de domínio
 
 ### Status previstos
 
@@ -265,14 +265,14 @@ Criar a base local-first da biblioteca pessoal sem depender de autenticação ou
 
 ### Critérios de aceite
 
-- [ ] A biblioteca funciona sem conexão e sem autenticação.
+- [x] A biblioteca funciona sem conexão e sem autenticação.
 - [ ] Dados permanecem após reiniciar o aplicativo.
-- [ ] Progresso negativo não é aceito.
-- [ ] Progresso acima do total conhecido possui tratamento explícito.
-- [ ] IDs de catálogo, IDs nativos da AniList, IDs locais e futuros IDs de backend não são confundidos.
-- [ ] O modelo persistido não é automaticamente tratado como modelo de domínio.
-- [ ] Migrações e operações principais possuem testes.
-- [ ] Nenhum contrato fictício de backend é introduzido.
+- [x] Progresso negativo não é aceito.
+- [x] Progresso acima do total conhecido possui tratamento explícito.
+- [x] IDs de catálogo, IDs nativos da AniList, IDs locais e futuros IDs de backend não são confundidos.
+- [x] O modelo persistido não é automaticamente tratado como modelo de domínio.
+- [x] Migrações e operações principais possuem testes.
+- [x] Nenhum contrato fictício de backend é introduzido.
 
 ---
 
