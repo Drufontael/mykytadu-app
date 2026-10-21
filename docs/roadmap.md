@@ -38,7 +38,7 @@ arquitetural identificados por `M`.
 | S7 | Detalhes do Anime End-to-End | Concluída | [S7](sprints/S7.md) |
 | S8 | Persistência e Biblioteca Local | Concluída | [S8](sprints/S8.md) |
 | S9 | Biblioteca End-to-End | Concluída | [S9](sprints/S9.md) |
-| S10 | Home | Planejada | a criar |
+| S10 | Home | Em andamento | [S10](sprints/S10.md) |
 | S11 | Configurações e Preferências | Planejada | a criar |
 | S12 | Backend e Autenticação | Planejada | a criar |
 | S13 | Sincronização e Perfil | Planejada | a criar |
@@ -314,7 +314,7 @@ Entregar ao usuário o gerenciamento completo da biblioteca local.
 
 # Sprint 10 — Home
 
-**Status:** Planejada
+**Status:** Em andamento
 
 ## Objetivo
 
