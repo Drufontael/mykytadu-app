@@ -15,6 +15,7 @@ val ViewModelModule = module {
         AnimeDetailsViewModel(
             id = parameters.get<CatalogAnimeId>(),
             animeRepository = get(),
+            libraryRepository = getOrNull(),
         )
     }
     viewModel {

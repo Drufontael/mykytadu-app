@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,11 +23,17 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +48,7 @@ import br.com.mykytadu.composeapp.generated.resources.*
 import br.com.mykytadu.core.layout.ResponsiveLayout
 import br.com.mykytadu.core.layout.responsiveLayoutFor
 import br.com.mykytadu.core.theme.AppDimensions
+import br.com.mykytadu.core.theme.AppShapes
 import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeFormat
 import br.com.mykytadu.domain.model.AnimeRelation
@@ -48,13 +56,20 @@ import br.com.mykytadu.domain.model.AnimeRelationType
 import br.com.mykytadu.domain.model.AnimeReleaseStatus
 import br.com.mykytadu.domain.model.AnimeSeason
 import br.com.mykytadu.domain.model.CatalogAnimeId
+import br.com.mykytadu.domain.model.LibraryEntry
 import br.com.mykytadu.domain.result.RepositoryFailure
-import br.com.mykytadu.presentation.components.AppChip
+import br.com.mykytadu.features.library.LibraryItemUiState
+import br.com.mykytadu.features.library.components.LibraryDeleteConfirmationDialog
+import br.com.mykytadu.features.library.components.LibraryEditDialog
+import br.com.mykytadu.features.library.components.label
+import br.com.mykytadu.features.library.components.semanticColor
 import br.com.mykytadu.presentation.components.AppButton
 import br.com.mykytadu.presentation.components.AppCard
+import br.com.mykytadu.presentation.components.AppChip
 import br.com.mykytadu.presentation.components.AppError
 import br.com.mykytadu.presentation.components.AppLoading
 import br.com.mykytadu.presentation.components.AppTopBar
+import br.com.mykytadu.presentation.components.appInteractivePointer
 import br.com.mykytadu.presentation.components.icons.AppIcons
 import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.stringResource
@@ -69,9 +84,13 @@ fun AnimeDetailsScreen(
     viewModel: AnimeDetailsViewModel = koinViewModel(parameters = { parametersOf(id) }),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val libraryEntry by viewModel.libraryEntry.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
     val screenTitle = stringResource(Res.string.anime_details_title)
     val backDescription = stringResource(Res.string.anime_details_back)
+
+    var showEditDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     if (screenTitle.isBlank() || backDescription.isBlank()) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -100,6 +119,10 @@ fun AnimeDetailsScreen(
                 )
                 is AnimeDetailsUiState.Content -> AnimeDetailsContent(
                     details = current.details,
+                    libraryEntry = libraryEntry,
+                    onAddToLibrary = { viewModel.addToLibrary(totalEpisodes = current.details.episodes) },
+                    onEditLibrary = { showEditDialog = true },
+                    onIncrementProgress = viewModel::incrementProgress,
                     onOpenExternal = uriHandler::openUri,
                     onNavigateToAnime = onNavigateToAnime,
                     modifier = Modifier.fillMaxSize(),
@@ -113,12 +136,61 @@ fun AnimeDetailsScreen(
             }
         }
     }
+
+    val currentDetails = (state as? AnimeDetailsUiState.Content)?.details
+    if (showEditDialog && libraryEntry != null && currentDetails != null) {
+        val entry = libraryEntry!!
+        val unavailableTitle = stringResource(Res.string.anime_details_title_unavailable)
+        val editItem = LibraryItemUiState(
+            id = entry.id,
+            animeId = id,
+            title = currentDetails.displayTitle(unavailableTitle),
+            coverUrl = currentDetails.coverUrl(),
+            status = entry.status,
+            progressCurrent = entry.progress.current,
+            progressTotal = entry.progress.total,
+            progressRatio = entry.progress.completionRatio,
+            isFavorite = entry.isFavorite,
+            rating = entry.rating?.value,
+            notes = entry.notes,
+            updatedAtEpochMillis = entry.updatedAtEpochMillis,
+        )
+
+        LibraryEditDialog(
+            item = editItem,
+            onSave = { status, progress, rating, notes, isFavorite ->
+                viewModel.updateLibraryEntry(status, progress, rating, notes, isFavorite)
+                showEditDialog = false
+            },
+            onDeleteRequest = {
+                showEditDialog = false
+                showDeleteConfirmation = true
+            },
+            onDismissRequest = { showEditDialog = false },
+        )
+    }
+
+    if (showDeleteConfirmation && currentDetails != null) {
+        val unavailableTitle = stringResource(Res.string.anime_details_title_unavailable)
+        LibraryDeleteConfirmationDialog(
+            animeTitle = currentDetails.displayTitle(unavailableTitle),
+            onConfirm = {
+                viewModel.removeFromLibrary()
+                showDeleteConfirmation = false
+            },
+            onDismissRequest = { showDeleteConfirmation = false },
+        )
+    }
 }
 
 @Composable
 internal fun AnimeDetailsContent(
     details: AnimeDetails,
     modifier: Modifier = Modifier,
+    libraryEntry: LibraryEntry? = null,
+    onAddToLibrary: () -> Unit = {},
+    onEditLibrary: () -> Unit = {},
+    onIncrementProgress: () -> Unit = {},
     onOpenExternal: (String) -> Unit = {},
     onNavigateToAnime: (CatalogAnimeId) -> Unit = {},
 ) {
@@ -147,6 +219,10 @@ internal fun AnimeDetailsContent(
                             details = details,
                             title = title,
                             description = description,
+                            libraryEntry = libraryEntry,
+                            onAddToLibrary = onAddToLibrary,
+                            onEditLibrary = onEditLibrary,
+                            onIncrementProgress = onIncrementProgress,
                             onOpenExternal = onOpenExternal,
                             onNavigateToAnime = onNavigateToAnime,
                         )
@@ -164,6 +240,10 @@ internal fun AnimeDetailsContent(
                             details = details,
                             title = title,
                             description = description,
+                            libraryEntry = libraryEntry,
+                            onAddToLibrary = onAddToLibrary,
+                            onEditLibrary = onEditLibrary,
+                            onIncrementProgress = onIncrementProgress,
                             onOpenExternal = onOpenExternal,
                             onNavigateToAnime = onNavigateToAnime,
                             modifier = Modifier.weight(1f),
@@ -223,6 +303,10 @@ private fun DetailsText(
     details: AnimeDetails,
     title: String,
     description: String?,
+    libraryEntry: LibraryEntry?,
+    onAddToLibrary: () -> Unit,
+    onEditLibrary: () -> Unit,
+    onIncrementProgress: () -> Unit,
     modifier: Modifier = Modifier,
     onOpenExternal: (String) -> Unit,
     onNavigateToAnime: (CatalogAnimeId) -> Unit,
@@ -238,6 +322,14 @@ private fun DetailsText(
             fontWeight = FontWeight.Bold,
         )
         DetailsMetadata(details)
+
+        DetailsLibrarySection(
+            libraryEntry = libraryEntry,
+            onAddToLibrary = onAddToLibrary,
+            onEditLibrary = onEditLibrary,
+            onIncrementProgress = onIncrementProgress,
+        )
+
         description?.let {
             Column(verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm)) {
                 Text(
@@ -261,7 +353,98 @@ private fun DetailsText(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun DetailsLibrarySection(
+    libraryEntry: LibraryEntry?,
+    onAddToLibrary: () -> Unit,
+    onEditLibrary: () -> Unit,
+    onIncrementProgress: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (libraryEntry == null) {
+        AppButton(
+            text = stringResource(Res.string.anime_details_add_to_library),
+            onClick = onAddToLibrary,
+            modifier = modifier.fillMaxWidth(),
+        )
+    } else {
+        AppCard(modifier = modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.xs),
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.xs),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(AppShapes.radius.chip),
+                            color = libraryEntry.status.semanticColor(),
+                        ) {
+                            Text(
+                                text = libraryEntry.status.label(),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                            )
+                        }
+                        if (libraryEntry.isFavorite) {
+                            Icon(
+                                imageVector = AppIcons.Anime.Favorite,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(AppDimensions.icon.sm),
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = stringResource(
+                            Res.string.anime_details_library_progress,
+                            libraryEntry.progress.current,
+                            libraryEntry.progress.total?.toString() ?: "?",
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+
+                    libraryEntry.rating?.let {
+                        Text(
+                            text = "★ ${it.value}/100",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.xs),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TextButton(
+                        onClick = onEditLibrary,
+                        modifier = Modifier.appInteractivePointer(enabled = true),
+                    ) {
+                        Text(stringResource(Res.string.anime_details_edit_library))
+                    }
+                    val canIncrement = libraryEntry.progress.total == null ||
+                        libraryEntry.progress.current < libraryEntry.progress.total
+                    AppButton(
+                        text = "+1",
+                        onClick = onIncrementProgress,
+                        enabled = canIncrement,
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun DetailsComplementaryContent(
     details: AnimeDetails,

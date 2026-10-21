@@ -109,4 +109,8 @@
     <string name="library_delete_dialog_message">Tem certeza de que deseja remover \"%1$s\" da sua biblioteca? Esta ação não pode ser desfeita.</string>
     <string name="library_delete_dialog_confirm">Remover</string>
     <string name="library_delete_dialog_cancel">Cancelar</string>
+    <string name="anime_details_add_to_library">+ Adicionar à biblioteca</string>
+    <string name="anime_details_in_library">Na biblioteca</string>
+    <string name="anime_details_edit_library">Editar</string>
+    <string name="anime_details_library_progress">Episódio %1$d / %2$s</string>
 </resources>
