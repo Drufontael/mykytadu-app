@@ -26,7 +26,8 @@ Atualmente, as sprints até a S8 estão concluídas: fundação multiplataforma,
 | Sprint 6 — Busca de Animes | Concluída — validação manual em Android, Desktop e Web; iOS nativo pendente de ambiente |
 | Sprint 7 — Detalhes do Anime | Concluída — detalhes completos, trailer, relações navegáveis e layout responsivo nos temas claro/escuro |
 | Sprint 8 — Persistência e Biblioteca Local | Concluída — base local-first, modelos de domínio, persistência local, repositório reativo e DI validados nos 5 targets |
-| Sprints 9 a 16 | Planejadas |
+| Sprint 9 — Biblioteca End-to-End | Em andamento |
+| Sprints 10 a 16 | Planejadas |
 
 Já estão disponíveis:
 
