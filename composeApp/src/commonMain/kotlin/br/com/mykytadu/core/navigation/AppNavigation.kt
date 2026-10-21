@@ -185,7 +185,19 @@ fun AppNavigation(
                     }
 
                     entry<AppRoute.Library> {
-                        LibraryScreen()
+                        LibraryScreen(
+                            onAnimeSelected = { id ->
+                                val route = AppRoute.AnimeDetails(id)
+                                if (backStack.lastOrNull() == AppRoute.Library) {
+                                    updateBackStack(NavigationMutation.PUSH) {
+                                        backStack.add(route)
+                                    }
+                                }
+                            },
+                            onNavigateToSearch = {
+                                onMainDestination(AppRoute.Search)
+                            },
+                        )
                     }
 
                     entry<AppRoute.Profile> {

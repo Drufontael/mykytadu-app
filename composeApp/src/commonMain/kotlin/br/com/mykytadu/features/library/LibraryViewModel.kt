@@ -144,13 +144,21 @@ class LibraryViewModel(
         }
     }
 
+    fun retry() {
+        observeLibraryFlow()
+    }
+
     fun setFilter(filter: LibraryFilter) {
         selectedFilter.value = filter
     }
 
+    fun onFilterSelected(filter: LibraryFilter) = setFilter(filter)
+
     fun setSort(sort: LibrarySort) {
         selectedSort.value = sort
     }
+
+    fun onSortSelected(sort: LibrarySort) = setSort(sort)
 
     fun incrementProgress(entryId: LibraryEntryId) {
         val entry = findEntry(entryId) ?: return
@@ -158,6 +166,11 @@ class LibraryViewModel(
         val now = timeProvider()
         val updated = entry.withProgress(newProgress, now)
         saveEntry(updated)
+    }
+
+    fun incrementProgress(animeId: CatalogAnimeId) {
+        val entry = currentEntries.value.firstOrNull { it.animeId == animeId } ?: return
+        incrementProgress(entry.id)
     }
 
     fun decrementProgress(entryId: LibraryEntryId) {

@@ -49,6 +49,13 @@ class SearchNavigationUiTest {
                 viewModel { parameters ->
                     AnimeDetailsViewModel(parameters.get(), repository)
                 }
+                viewModel {
+                    br.com.mykytadu.features.library.LibraryViewModel(
+                        libraryRepository = br.com.mykytadu.data.repository.DefaultLibraryRepository(
+                            localDataSource = br.com.mykytadu.data.local.datasource.InMemoryLibraryLocalDataSource(),
+                        ),
+                    )
+                }
             })
         }
         try {
@@ -178,6 +185,13 @@ class SearchNavigationUiTest {
                 viewModel { SearchViewModel(repository) }
                 viewModel { parameters ->
                     AnimeDetailsViewModel(parameters.get(), repository)
+                }
+                viewModel {
+                    br.com.mykytadu.features.library.LibraryViewModel(
+                        libraryRepository = br.com.mykytadu.data.repository.DefaultLibraryRepository(
+                            localDataSource = br.com.mykytadu.data.local.datasource.InMemoryLibraryLocalDataSource(),
+                        ),
+                    )
                 }
             })
         }
