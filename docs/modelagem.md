@@ -790,6 +790,60 @@ classDiagram
 
 ---
 
+## 7.5 LibraryRepository e Fluxo Reativo
+
+> **Estado:** Implementado (S8.3).
+
+O contrato `LibraryRepository` reside no domínio (`domain/repository`), provendo acesso às entradas da biblioteca através de consultas pontuais protegidas por `RepositoryResult` e fluxos contínuos de emissão através de Kotlin Coroutines `Flow`:
+
+- **Consultas e mutações pontuais:**
+  - `saveEntry(entry: LibraryEntry): RepositoryResult<Unit>`
+  - `getEntryById(id: LibraryEntryId): RepositoryResult<LibraryEntry?>`
+  - `getEntryByAnimeId(animeId: CatalogAnimeId): RepositoryResult<LibraryEntry?>`
+  - `getAllEntries(): RepositoryResult<List<LibraryEntry>>`
+  - `getEntriesByStatus(status: LibraryStatus): RepositoryResult<List<LibraryEntry>>`
+  - `deleteEntry(id: LibraryEntryId): RepositoryResult<Boolean>`
+  - `deleteEntryByAnimeId(animeId: CatalogAnimeId): RepositoryResult<Boolean>`
+- **Fluxos contínuos (`Flow`):**
+  - `observeAllEntries(): Flow<List<LibraryEntry>>`
+  - `observeEntryByAnimeId(animeId: CatalogAnimeId): Flow<LibraryEntry?>`
+  - `observeEntriesByStatus(status: LibraryStatus): Flow<List<LibraryEntry>>`
+
+A implementação `DefaultLibraryRepository` na camada de dados (`data/repository`) orquestra as conversões bidirecionais via `LibraryEntryMapper` e delega as operações físicas para `LibraryLocalDataSource`, capturando e mapeando exceções defensivamente para `RepositoryResult.Failure`.
+
+```mermaid
+classDiagram
+    direction LR
+
+    class LibraryRepository {
+        <<interface>>
+        +saveEntry(entry: LibraryEntry) RepositoryResult~Unit~
+        +getEntryById(id: LibraryEntryId) RepositoryResult~LibraryEntry?~
+        +getEntryByAnimeId(animeId: CatalogAnimeId) RepositoryResult~LibraryEntry?~
+        +getAllEntries() RepositoryResult~List~LibraryEntry~~
+        +getEntriesByStatus(status: LibraryStatus) RepositoryResult~List~LibraryEntry~~
+        +deleteEntry(id: LibraryEntryId) RepositoryResult~Boolean~
+        +deleteEntryByAnimeId(animeId: CatalogAnimeId) RepositoryResult~Boolean~
+        +observeAllEntries() Flow~List~LibraryEntry~~
+        +observeEntryByAnimeId(animeId: CatalogAnimeId) Flow~LibraryEntry?~
+        +observeEntriesByStatus(status: LibraryStatus) Flow~List~LibraryEntry~~
+    }
+
+    class DefaultLibraryRepository {
+        -LibraryLocalDataSource localDataSource
+    }
+
+    class LibraryLocalDataSource {
+        <<interface>>
+    }
+
+    LibraryRepository <|.. DefaultLibraryRepository : implements
+    DefaultLibraryRepository --> "1" LibraryLocalDataSource : localDataSource
+    LibraryRepository ..> LibraryEntry : expõe
+```
+
+---
+
 # 8. Fatias Verticais e Fluxos entre Camadas
 
 > **Estado:** Parcialmente implementado na busca; demais fluxos propostos.
