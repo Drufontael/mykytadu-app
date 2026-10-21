@@ -314,7 +314,7 @@ Entregar ao usuário o gerenciamento completo da biblioteca local.
 
 # Sprint 10 — Home
 
-**Status:** Em andamento
+**Status:** Concluída
 
 ## Objetivo
 
@@ -330,22 +330,22 @@ A Home deve priorizar:
 
 ### Escopo
 
-- [ ] Definição dos requisitos da Home
-- [ ] Seções pessoais baseadas na biblioteca local
-- [ ] Consultas AniList adicionais estritamente necessárias
-- [ ] Estados independentes por seção
-- [ ] Navegação para detalhes
-- [ ] Comportamento quando a biblioteca estiver vazia
-- [ ] Tratamento de indisponibilidade parcial
+- [x] Definição dos requisitos da Home
+- [x] Seções pessoais baseadas na biblioteca local
+- [x] Consultas AniList adicionais estritamente necessárias
+- [x] Estados independentes por seção
+- [x] Navegação para detalhes
+- [x] Comportamento quando a biblioteca estiver vazia
+- [x] Tratamento de indisponibilidade parcial
 
 ### Critérios de aceite
 
-- [ ] Conteúdo pessoal tem prioridade visual.
-- [ ] A Home continua útil quando a biblioteca está vazia.
-- [ ] Falha em uma seção não derruba toda a tela.
-- [ ] Novas operações AniList são isoladas na camada de dados.
-- [ ] A Home permite abrir detalhes.
-- [ ] Estados vazio, loading e erro são tratados por seção.
+- [x] Conteúdo pessoal tem prioridade visual.
+- [x] A Home continua útil quando a biblioteca está vazia.
+- [x] Falha em uma seção não derruba toda a tela.
+- [x] Novas operações AniList são isoladas na camada de dados.
+- [x] A Home permite abrir detalhes.
+- [x] Estados vazio, loading e erro são tratados por seção.
 
 ---
 

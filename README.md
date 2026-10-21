@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, as sprints até a S9 estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList, domínio do catálogo, busca end-to-end, detalhes completos do anime com navegação por relações, persistência local-first e gerenciamento completo da biblioteca pessoal end-to-end nos 5 targets ativos. O build e a execução nativos iOS permanecem pendentes por dependerem de macOS e Xcode, sem bloquear a evolução dos demais targets.
+Atualmente, as sprints até a S10 estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList, domínio do catálogo, busca end-to-end, detalhes completos do anime com navegação por relações, persistência local-first, gerenciamento completo da biblioteca pessoal e tela Home híbrida com continuidade e tendências nos 5 targets ativos. O build e a execução nativos iOS permanecem pendentes por dependerem de macOS e Xcode, sem bloquear a evolução dos demais targets.
 
 ## Plataformas
 
@@ -27,7 +27,8 @@ Atualmente, as sprints até a S9 estão concluídas: fundação multiplataforma,
 | Sprint 7 — Detalhes do Anime | Concluída — detalhes completos, trailer, relações navegáveis e layout responsivo nos temas claro/escuro |
 | Sprint 8 — Persistência e Biblioteca Local | Concluída — base local-first, modelos de domínio, persistência local, repositório reativo e DI validados nos 5 targets |
 | Sprint 9 — Biblioteca End-to-End | Concluída — experiência visual completa da biblioteca pessoal, filtros, ordenação, progresso (+1), modal de edição/exclusão e integração nos detalhes |
-| Sprints 10 a 16 | Planejadas |
+| Sprint 10 — Home | Concluída — tela Home híbrida com prioridade visual de continuar assistindo (+1), atualizados recentemente, tendências AniList e isolamento defensivo |
+| Sprints 11 a 16 | Planejadas |
 
 Já estão disponíveis:
 
