@@ -15,4 +15,15 @@ interface AnimeApi {
     suspend fun getAnimeDetails(
         id: Int,
     ): NetworkResult<AnimeDetailsDto>
+
+    suspend fun getTrendingAnime(
+        page: Int,
+        perPage: Int,
+    ): NetworkResult<AnimeSearchPageDto> =
+        NetworkResult.Success(
+            AnimeSearchPageDto(
+                pageInfo = null,
+                media = emptyList(),
+            )
+        )
 }

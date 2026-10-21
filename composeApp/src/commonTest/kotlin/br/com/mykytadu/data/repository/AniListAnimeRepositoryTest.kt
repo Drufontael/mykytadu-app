@@ -330,6 +330,34 @@ class AniListAnimeRepositoryTest {
         assertEquals(5114, api.requestedDetailsId)
     }
 
+    @Test
+    fun `deve delegar getTrendingAnime para api com sucesso`() = runTest {
+        val api = RecordingAnimeApi()
+        val repository = AniListAnimeRepository(api)
+
+        val result = repository.getTrendingAnime(page = 1, perPage = 10)
+
+        assertIs<RepositoryResult.Success<*>>(result)
+        assertEquals(1, api.trendingCallCount)
+        assertEquals(1, api.lastPage)
+        assertEquals(10, api.lastPerPage)
+    }
+
+    @Test
+    fun `deve validar argumentos invalidos em getTrendingAnime`() = runTest {
+        val api = RecordingAnimeApi()
+        val repository = AniListAnimeRepository(api)
+
+        val resultPage = repository.getTrendingAnime(page = 0, perPage = 10)
+        val failurePage = assertIs<RepositoryResult.Failure>(resultPage)
+        assertEquals(RepositoryFailure.InvalidInput, failurePage.reason)
+
+        val resultPerPage = repository.getTrendingAnime(page = 1, perPage = 0)
+        val failurePerPage = assertIs<RepositoryResult.Failure>(resultPerPage)
+        assertEquals(RepositoryFailure.InvalidInput, failurePerPage.reason)
+        assertEquals(0, api.trendingCallCount)
+    }
+
     private class ThrowingAnimeApi(
         private val cause: Throwable,
     ) : AnimeApi {
@@ -344,6 +372,12 @@ class AniListAnimeRepositoryTest {
         override suspend fun getAnimeDetails(
             id: Int,
         ): NetworkResult<AnimeDetailsDto> =
+            throw cause
+
+        override suspend fun getTrendingAnime(
+            page: Int,
+            perPage: Int,
+        ): NetworkResult<AnimeSearchPageDto> =
             throw cause
     }
 
@@ -370,6 +404,9 @@ class AniListAnimeRepositoryTest {
         var searchCallCount = 0
             private set
 
+        var trendingCallCount = 0
+            private set
+
         var lastSearch: String? = null
             private set
 
@@ -389,6 +426,16 @@ class AniListAnimeRepositoryTest {
             lastPage = page
             lastPerPage = perPage
 
+            return searchResult
+        }
+
+        override suspend fun getTrendingAnime(
+            page: Int,
+            perPage: Int,
+        ): NetworkResult<AnimeSearchPageDto> {
+            trendingCallCount++
+            lastPage = page
+            lastPerPage = perPage
             return searchResult
         }
 

@@ -6,9 +6,13 @@ import br.com.mykytadu.core.network.InvalidResponseException
 import br.com.mykytadu.core.network.NetworkFailure
 import br.com.mykytadu.core.network.NetworkResult
 import br.com.mykytadu.core.network.safeNetworkCall
+import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsDataDto
+import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsDto
+import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsVariablesDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeSearchDataDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeSearchPageDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeSearchVariablesDto
+import br.com.mykytadu.data.remote.anilist.dto.AnimeTrendingVariablesDto
 import br.com.mykytadu.data.remote.api.AnimeApi
 import br.com.mykytadu.data.remote.graphql.GraphQlRequest
 import br.com.mykytadu.data.remote.graphql.GraphQlResponse
@@ -16,9 +20,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsDataDto
-import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsDto
-import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsVariablesDto
 
 class AniListAnimeApi(
     private val httpClient: HttpClient,
@@ -88,6 +89,38 @@ class AniListAnimeApi(
         return when (result) {
             is NetworkResult.Failure -> result
             is NetworkResult.Success -> result.value.toDetailsResult()
+        }
+    }
+
+    override suspend fun getTrendingAnime(
+        page: Int,
+        perPage: Int,
+    ): NetworkResult<AnimeSearchPageDto> {
+        if (page < 1) {
+            return invalidRequest("Page must be greater than or equal to 1.")
+        }
+
+        if (perPage < 1) {
+            return invalidRequest("Per page must be greater than or equal to 1.")
+        }
+
+        val result = safeNetworkCall {
+            httpClient.post(ANILIST_ENDPOINT) {
+                setBody(
+                    GraphQlRequest(
+                        query = AniListQueries.trendingAnime,
+                        variables = AnimeTrendingVariablesDto(
+                            page = page,
+                            perPage = perPage,
+                        ),
+                    )
+                )
+            }.body<GraphQlResponse<AnimeSearchDataDto>>()
+        }
+
+        return when (result) {
+            is NetworkResult.Failure -> result
+            is NetworkResult.Success -> result.value.toSearchResult()
         }
     }
 

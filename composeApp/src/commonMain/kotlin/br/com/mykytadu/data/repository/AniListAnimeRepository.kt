@@ -59,6 +59,28 @@ internal class AniListAnimeRepository(
         }
     }
 
+    override suspend fun getTrendingAnime(
+        page: Int,
+        perPage: Int,
+    ): RepositoryResult<PagedResult<AnimeSummary>> {
+        if (page <= 0 || perPage <= 0) {
+            return RepositoryResult.Failure(RepositoryFailure.InvalidInput)
+        }
+
+        return when (
+            val result = animeApi.getTrendingAnime(
+                page = page,
+                perPage = perPage,
+            )
+        ) {
+            is NetworkResult.Success ->
+                mapDomainValue { result.value.toPagedAnimeSummaries() }
+
+            is NetworkResult.Failure ->
+                result.error.toRepositoryFailure()
+        }
+    }
+
     private inline fun <T> mapDomainValue(
         mapper: () -> T,
     ): RepositoryResult<T> =

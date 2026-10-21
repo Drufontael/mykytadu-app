@@ -153,4 +153,49 @@ internal object AniListQueries {
             }
         }
     """.trimIndent()
+
+    val trendingAnime = """
+        query TrendingAnime(
+            ${'$'}page: Int!
+            ${'$'}perPage: Int!
+        ) {
+            Page(
+                page: ${'$'}page
+                perPage: ${'$'}perPage
+            ) {
+                pageInfo {
+                    currentPage
+                    lastPage
+                    hasNextPage
+                    perPage
+                    total
+                }
+
+                media(
+                    type: ANIME
+                    sort: TRENDING_DESC
+                ) {
+                    id
+
+                    title {
+                        romaji
+                        english
+                        native
+                    }
+
+                    coverImage {
+                        large
+                        color
+                    }
+
+                    format
+                    status
+                    episodes
+                    season
+                    seasonYear
+                    averageScore
+                }
+            }
+        }
+    """.trimIndent()
 }

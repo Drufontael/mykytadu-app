@@ -570,6 +570,51 @@ class AniListAnimeApiTest {
             }
         }
 
+    @Test
+    fun `deve buscar animes em alta e retornar pagina desserializada`() = runTest {
+        val engine = MockEngine {
+            respond(
+                content = SEARCH_RESPONSE,
+                status = HttpStatusCode.OK,
+                headers = JSON_HEADERS,
+            )
+        }
+        val client = createTestClient(engine)
+        val api = AniListAnimeApi(client)
+
+        try {
+            val result = api.getTrendingAnime(page = 1, perPage = 10)
+
+            val success = assertIs<NetworkResult.Success<*>>(result)
+            val page = assertIs<
+                    br.com.mykytadu.data.remote.anilist.dto.AnimeSearchPageDto
+                    >(success.value)
+
+            assertEquals(1, page.pageInfo?.currentPage)
+            assertEquals(10, page.pageInfo?.perPage)
+            assertEquals(1, page.media?.size)
+            assertEquals(20, page.media?.first()?.id)
+        } finally {
+            client.close()
+        }
+    }
+
+    @Test
+    fun `deve validar parametros de pagina e perPage em getTrendingAnime`() = runTest {
+        val client = createTestClient(MockEngine { error("Não deve ser chamado") })
+        val api = AniListAnimeApi(client)
+
+        try {
+            val failurePage = assertIs<NetworkResult.Failure>(api.getTrendingAnime(page = 0, perPage = 10))
+            assertIs<NetworkFailure.InvalidRequest>(failurePage.error)
+
+            val failurePerPage = assertIs<NetworkResult.Failure>(api.getTrendingAnime(page = 1, perPage = 0))
+            assertIs<NetworkFailure.InvalidRequest>(failurePerPage.error)
+        } finally {
+            client.close()
+        }
+    }
+
     private fun createTestClient(
         engine: MockEngine,
     ): HttpClient =
