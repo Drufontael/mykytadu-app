@@ -617,7 +617,7 @@ offline, deploy e hospedagem definitiva permanecem fora da arquitetura atual.
 
 # 7. Biblioteca local
 
-> **Estado:** Modelos de domínio implementados (S8.1); persistência local e repositório em andamento (S8.2+).
+> **Estado:** Modelos de domínio, persistência local, repositório e DI implementados (S8.1 a S8.4).
 
 A biblioteca segue a estratégia local-first:
 
@@ -840,6 +840,57 @@ classDiagram
     LibraryRepository <|.. DefaultLibraryRepository : implements
     DefaultLibraryRepository --> "1" LibraryLocalDataSource : localDataSource
     LibraryRepository ..> LibraryEntry : expõe
+```
+
+---
+
+## 7.6 Injeção de Dependências e Drivers Multiplataforma
+
+> **Estado:** Implementado (S8.4).
+
+Para integrar a persistência local com o ecossistema Koin sem acoplar a camada de dados ou o domínio a detalhes físicos dos diferentes sistemas operacionais e runtimes, a injeção foi modularizada:
+
+- **`StorageModule`**: Módulo Koin em `commonMain` responsável por expor `LibraryLocalDataSource` como singleton (`single<LibraryLocalDataSource> { provideLibraryLocalDataSource() }`).
+- **`PlatformStorageDriver`**: Padrão expect/actual para instanciar a fonte de dados local de acordo com o target:
+  - `expect fun provideLibraryLocalDataSource(): LibraryLocalDataSource` em `commonMain`.
+  - `actual fun provideLibraryLocalDataSource(): LibraryLocalDataSource` nos source sets específicos (`androidMain`, `desktopMain`, `iosMain` e `webMain`, atendendo conjuntamente JS e WasmJS).
+- **`RepositoryModule`**: Atualizado para registrar `LibraryRepository` como singleton, recebendo `localDataSource = get()` injetado via `DefaultLibraryRepository`.
+- **`initializeKoin()`**: Inclui `StorageModule` na lista de módulos carregados na inicialização do aplicativo.
+
+```mermaid
+flowchart TD
+    subgraph DI["Injeção de Dependências (Koin)"]
+        SM["StorageModule"]
+        RM["RepositoryModule"]
+        Driver["PlatformStorageDriver (expect/actual)"]
+    end
+
+    subgraph PlatformDrivers["Implementações por Plataforma"]
+        AndroidDriver["androidMain"]
+        DesktopDriver["desktopMain"]
+        IosDriver["iosMain"]
+        WebDriver["webMain (JS + WasmJS)"]
+    end
+
+    subgraph DataDomain["Dados & Domínio"]
+        LDS["LibraryLocalDataSource"]
+        LR["LibraryRepository"]
+        DLR["DefaultLibraryRepository"]
+    end
+
+    SM --> Driver
+    Driver -.-> AndroidDriver
+    Driver -.-> DesktopDriver
+    Driver -.-> IosDriver
+    Driver -.-> WebDriver
+    AndroidDriver --> LDS
+    DesktopDriver --> LDS
+    IosDriver --> LDS
+    WebDriver --> LDS
+
+    RM --> DLR
+    DLR --> LR
+    DLR -.->|injeta via get()| LDS
 ```
 
 ---
