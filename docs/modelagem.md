@@ -1081,26 +1081,40 @@ por relações permanece incremental.
 
 ---
 
-## 8.2 Atualização da Biblioteca
+## 8.2 Apresentação e Atualização da Biblioteca
+
+> **Estado:** Modelos de apresentação, filtros, ordenação e `LibraryViewModel` implementados (S9.1); componentes de UI e detalhes em integração (S9.2 a S9.4).
 
 ```mermaid
 sequenceDiagram
     actor User as Usuário
-    participant UI as AnimeDetails
+    participant UI as LibraryScreen
     participant VM as LibraryViewModel
-    participant Repo as LibraryRepository
-    participant Local as LocalDataSource
+    participant LibRepo as LibraryRepository
+    participant AnimeRepo as AnimeRepository
 
-    User->>UI: adiciona ou atualiza anime
-    UI->>VM: solicita alteração
-    VM->>Repo: atualizar LibraryEntry
-    Repo->>Local: persistir alteração
-    Local-->>Repo: registro persistido
-    Repo-->>VM: LibraryEntry atualizada
-    VM-->>UI: atualizar estado
+    User->>UI: abre tela de biblioteca / altera filtro / altera ordenação
+    UI->>VM: onFilterSelected(filter) / onSortSelected(sort)
+    Note over VM: Observa reativamente observeAllEntries()
+    LibRepo-->>VM: Lista de LibraryEntry atualizada
+    opt Cache de metadados ausente para animeId
+        VM->>AnimeRepo: getAnimeDetails(animeId)
+        AnimeRepo-->>VM: AnimeDetails (títulos e capas)
+    end
+    VM-->>UI: Emite LibraryUiState.Content com LibraryItemUiState ordenado e filtrado
+    User->>UI: incrementProgress / updateStatus / updateRating / toggleFavorite
+    UI->>VM: disparar mutação
+    Note over VM: Mutação atômica e otimista no estado local
+    VM->>LibRepo: saveEntry(entry)
+    LibRepo-->>VM: Resultado persistido
 ```
 
-> Diagrama conceitual das Sprints 8 e 9. A operação principal é local e independe do backend. A sincronização será modelada separadamente na Sprint 13, quando existirem autenticação e contratos reais.
+- **`LibraryUiState`**: `Loading`, `Content(items, filter, sort)` e `Failure(message)`.
+- **`LibraryFilter`**: `ALL`, `WATCHING`, `PLANNING`, `COMPLETED`, `PAUSED` e `DROPPED`.
+- **`LibrarySort`**: `RECENT_UPDATED` (padrão), `TITLE` (alfabético), `RATING` (nota decrescente) e `PROGRESS` (percentual decrescente).
+- **`LibraryItemUiState`**: Consolida `entry: LibraryEntry`, `titles: AnimeTitles?` e `images: AnimeImages?`, fornecendo métodos utilitários de exibição (`displayTitle`, `coverUrl`, `completionPercentage`, `statusLabel`).
+- **Resiliência e Reatividade**: Mutação otimista imediata para feedback instantâneo na UI, com persistência assíncrona delegada ao repositório e cache inteligente de metadados do catálogo.
+
 
 ---
 
