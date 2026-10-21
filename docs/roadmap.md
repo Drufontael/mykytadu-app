@@ -36,7 +36,7 @@ arquitetural identificados por `M`.
 | S6 | Busca de Animes End-to-End | Concluída | [S6](sprints/S6.md) |
 | M1 | Desacoplamento da identidade do catálogo | Concluída | [M1](sprints/M1.md) |
 | S7 | Detalhes do Anime End-to-End | Concluída | [S7](sprints/S7.md) |
-| S8 | Persistência e Biblioteca Local | Em andamento | [S8](sprints/S8.md) |
+| S8 | Persistência e Biblioteca Local | Concluída | [S8](sprints/S8.md) |
 | S9 | Biblioteca End-to-End | Planejada | a criar |
 | S10 | Home | Planejada | a criar |
 | S11 | Configurações e Preferências | Planejada | a criar |
@@ -233,7 +233,7 @@ Transformar a rota de detalhes em uma funcionalidade completa baseada no anime s
 
 # Sprint 8 — Persistência e Biblioteca Local
 
-**Status:** Em andamento — S8.1 a S8.4 concluídas; S8.5 em andamento
+**Status:** Concluída
 
 ## Objetivo
 
@@ -266,7 +266,7 @@ Criar a base local-first da biblioteca pessoal sem depender de autenticação ou
 ### Critérios de aceite
 
 - [x] A biblioteca funciona sem conexão e sem autenticação.
-- [ ] Dados permanecem após reiniciar o aplicativo.
+- [x] Dados permanecem após reiniciar o aplicativo.
 - [x] Progresso negativo não é aceito.
 - [x] Progresso acima do total conhecido possui tratamento explícito.
 - [x] IDs de catálogo, IDs nativos da AniList, IDs locais e futuros IDs de backend não são confundidos.

@@ -4,7 +4,7 @@
 
 MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
 
-Atualmente, as sprints até a S7 estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList, domínio do catálogo, busca end-to-end e detalhes completos do anime com navegação por relações. A Sprint 8 (Persistência e Biblioteca Local) está em andamento, estruturando a base local-first da biblioteca pessoal nos 5 targets ativos. O build e a execução nativos iOS permanecem pendentes por dependerem de macOS e Xcode, sem bloquear a evolução dos demais targets.
+Atualmente, as sprints até a S8 estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList, domínio do catálogo, busca end-to-end, detalhes completos do anime com navegação por relações e a base local-first da biblioteca pessoal com persistência e repositório reativo nos 5 targets ativos. O build e a execução nativos iOS permanecem pendentes por dependerem de macOS e Xcode, sem bloquear a evolução dos demais targets.
 
 ## Plataformas
 
@@ -25,7 +25,7 @@ Atualmente, as sprints até a S7 estão concluídas: fundação multiplataforma,
 | Sprint W1 — Fundação Web | Concluída |
 | Sprint 6 — Busca de Animes | Concluída — validação manual em Android, Desktop e Web; iOS nativo pendente de ambiente |
 | Sprint 7 — Detalhes do Anime | Concluída — detalhes completos, trailer, relações navegáveis e layout responsivo nos temas claro/escuro |
-| Sprint 8 — Persistência e Biblioteca Local | Em andamento — modelos de domínio, persistência local, repositório e injeção Koin validados nos 5 targets |
+| Sprint 8 — Persistência e Biblioteca Local | Concluída — base local-first, modelos de domínio, persistência local, repositório reativo e DI validados nos 5 targets |
 | Sprints 9 a 16 | Planejadas |
 
 Já estão disponíveis:
