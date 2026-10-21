@@ -96,4 +96,17 @@
     <string name="library_error_title">Não foi possível carregar a biblioteca</string>
     <string name="library_error_generic">Ocorreu uma falha ao acessar seus registros locais.</string>
     <string name="library_retry">Tentar novamente</string>
+    <string name="library_edit_dialog_title">Editar na biblioteca</string>
+    <string name="library_edit_status_label">Status de acompanhamento</string>
+    <string name="library_edit_progress_label">Episódios assistidos</string>
+    <string name="library_edit_rating_label">Nota pessoal (0–100)</string>
+    <string name="library_edit_favorite_label">Marcar como favorito</string>
+    <string name="library_edit_notes_label">Anotações pessoais</string>
+    <string name="library_edit_save">Salvar alterações</string>
+    <string name="library_edit_cancel">Cancelar</string>
+    <string name="library_edit_delete">Remover da biblioteca</string>
+    <string name="library_delete_dialog_title">Remover da biblioteca?</string>
+    <string name="library_delete_dialog_message">Tem certeza de que deseja remover \"%1$s\" da sua biblioteca? Esta ação não pode ser desfeita.</string>
+    <string name="library_delete_dialog_confirm">Remover</string>
+    <string name="library_delete_dialog_cancel">Cancelar</string>
 </resources>

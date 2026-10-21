@@ -36,6 +36,8 @@ import br.com.mykytadu.core.layout.responsiveLayoutFor
 import br.com.mykytadu.core.theme.AppDimensions
 import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.features.library.components.LibraryAnimeCard
+import br.com.mykytadu.features.library.components.LibraryDeleteConfirmationDialog
+import br.com.mykytadu.features.library.components.LibraryEditDialog
 import br.com.mykytadu.features.library.components.LibraryEmptyState
 import br.com.mykytadu.features.library.components.LibraryFilterChips
 import br.com.mykytadu.presentation.components.AppError
@@ -52,6 +54,8 @@ fun LibraryScreen(
     viewModel: LibraryViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var editingItem by remember { mutableStateOf<LibraryItemUiState?>(null) }
+    var deletingItem by remember { mutableStateOf<LibraryItemUiState?>(null) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         when (val state = uiState) {
@@ -178,9 +182,7 @@ fun LibraryScreen(
                                     item = item,
                                     onClick = { onAnimeSelected(item.animeId) },
                                     onIncrementProgress = { viewModel.incrementProgress(item.animeId) },
-                                    onEditClick = {
-                                        // Preparado para S9.3
-                                    },
+                                    onEditClick = { editingItem = item },
                                 )
                             }
                         }
@@ -188,5 +190,38 @@ fun LibraryScreen(
                 }
             }
         }
+    }
+
+    editingItem?.let { item ->
+        LibraryEditDialog(
+            item = item,
+            onSave = { status, progress, rating, notes, isFavorite ->
+                viewModel.updateEntryDetails(
+                    entryId = item.id,
+                    newStatus = status,
+                    newProgress = progress,
+                    newRating = rating,
+                    newNotes = notes,
+                    isFavorite = isFavorite,
+                )
+                editingItem = null
+            },
+            onDeleteRequest = {
+                deletingItem = item
+                editingItem = null
+            },
+            onDismissRequest = { editingItem = null },
+        )
+    }
+
+    deletingItem?.let { item ->
+        LibraryDeleteConfirmationDialog(
+            animeTitle = item.title,
+            onConfirm = {
+                viewModel.deleteEntry(item.id)
+                deletingItem = null
+            },
+            onDismissRequest = { deletingItem = null },
+        )
     }
 }
