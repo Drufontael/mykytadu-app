@@ -1,3 +1,5 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
@@ -24,7 +26,12 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+    jvm("desktop") {
+        mainRun {
+            mainClass.set("br.com.mykytadu.MainKt")
+        }
+    }
 
     wasmJs {
         browser()
@@ -147,5 +154,17 @@ android {
 
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = "br.com.mykytadu.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "br.com.mykytadu"
+            packageVersion = "1.0.0"
+        }
     }
 }

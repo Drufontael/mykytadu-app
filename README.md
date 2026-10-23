@@ -93,10 +93,17 @@ Clone o repositório e acesse a pasta do projeto. No Windows, use `gradlew.bat`;
 .\gradlew.bat :composeApp:desktopRun
 ```
 
+Ou através da task do Compose Multiplatform:
+
+```powershell
+.\gradlew.bat :composeApp:run
+```
+
 Em macOS ou Linux:
 
 ```bash
 ./gradlew :composeApp:desktopRun
+# ou ./gradlew :composeApp:run
 ```
 
 ### Android
