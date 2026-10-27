@@ -126,4 +126,26 @@
     <string name="home_empty_library_action">Pesquisar catálogo</string>
     <string name="home_retry_section">Tentar novamente</string>
     <string name="home_increment_progress">+1 Ep</string>
+    <string name="settings_title">Configurações</string>
+    <string name="settings_back">Voltar</string>
+    <string name="settings_appearance_section">Aparência</string>
+    <string name="settings_theme_label">Tema da interface</string>
+    <string name="settings_theme_system">Padrão do sistema</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Escuro</string>
+    <string name="settings_content_section">Catálogo e Exibição</string>
+    <string name="settings_title_language_label">Idioma dos títulos</string>
+    <string name="settings_title_language_romaji">Romaji</string>
+    <string name="settings_title_language_english">Inglês</string>
+    <string name="settings_title_language_native">Nativo</string>
+    <string name="settings_adult_content_label">Exibir conteúdo adulto (18+)</string>
+    <string name="settings_adult_content_description">Inclui animes destinados ao público adulto na busca e tendências.</string>
+    <string name="settings_language_section">Idioma do Aplicativo</string>
+    <string name="settings_language_system">Padrão do sistema</string>
+    <string name="settings_language_pt_br">Português (Brasil)</string>
+    <string name="settings_language_en_us">English (US)</string>
+    <string name="settings_about_section">Sobre o MykytaDu</string>
+    <string name="settings_about_description">Assistente multiplataforma para acompanhamento de animes com persistência local-first.</string>
+    <string name="settings_about_version">Versão %1$s</string>
+    <string name="settings_about_open_source">Código aberto em Kotlin e Compose Multiplatform.</string>
 </resources>
