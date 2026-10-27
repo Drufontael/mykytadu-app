@@ -4,14 +4,14 @@ import br.com.mykytadu.domain.model.AnimeDetails
 import br.com.mykytadu.domain.model.AnimeRelation
 import br.com.mykytadu.domain.model.MediaType
 import br.com.mykytadu.domain.model.PartialDate
+import br.com.mykytadu.domain.model.TitleLanguagePreference
 import br.com.mykytadu.domain.model.Trailer
+import br.com.mykytadu.domain.model.resolveDisplayTitle
 
-internal fun AnimeDetails.displayTitle(unavailableTitle: String): String =
-    sequenceOf(titles.english, titles.romaji, titles.native)
-        .plus(titles.synonyms.asSequence())
-        .mapNotNull { title -> title?.trim()?.takeIf(String::isNotEmpty) }
-        .firstOrNull()
-        ?: unavailableTitle
+internal fun AnimeDetails.displayTitle(
+    unavailableTitle: String,
+    preference: TitleLanguagePreference = TitleLanguagePreference.ENGLISH,
+): String = titles.resolveDisplayTitle(preference, unavailableTitle)
 
 internal fun AnimeDetails.coverUrl(): String? =
     sequenceOf(images.coverExtraLarge, images.coverLarge)
@@ -62,12 +62,10 @@ internal fun Trailer.externalUrl(): String? {
     }
 }
 
-internal fun AnimeRelation.displayTitle(unavailableTitle: String): String =
-    sequenceOf(titles.english, titles.romaji, titles.native)
-        .plus(titles.synonyms.asSequence())
-        .mapNotNull { title -> title?.trim()?.takeIf(String::isNotEmpty) }
-        .firstOrNull()
-        ?: unavailableTitle
+internal fun AnimeRelation.displayTitle(
+    unavailableTitle: String,
+    preference: TitleLanguagePreference = TitleLanguagePreference.ENGLISH,
+): String = titles.resolveDisplayTitle(preference, unavailableTitle)
 
 internal fun AnimeRelation.coverUrl(): String? = coverMedium?.trim()?.takeIf(String::isNotEmpty)
 
