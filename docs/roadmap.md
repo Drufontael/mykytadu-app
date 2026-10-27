@@ -39,7 +39,7 @@ arquitetural identificados por `M`.
 | S8 | Persistência e Biblioteca Local | Concluída | [S8](sprints/S8.md) |
 | S9 | Biblioteca End-to-End | Concluída | [S9](sprints/S9.md) |
 | S10 | Home | Concluída | [S10](sprints/S10.md) |
-| S11 | Configurações e Preferências | Em andamento | [S11](sprints/S11.md) |
+| S11 | Configurações e Preferências | Concluída | [S11](sprints/S11.md) |
 | S12 | Backend e Autenticação | Planejada | a criar |
 | S13 | Sincronização e Perfil | Planejada | a criar |
 | S14 | Cache e Experiência Offline | Planejada | a criar |
@@ -351,7 +351,7 @@ A Home deve priorizar:
 
 # Sprint 11 — Configurações e Preferências
 
-**Status:** Em andamento
+**Status:** Concluída
 
 ## Objetivo
 
@@ -359,27 +359,27 @@ Permitir personalização local e preparar a aplicação para localização.
 
 ### Escopo
 
-- [ ] Tema claro
-- [ ] Tema escuro
-- [ ] Seguir o sistema
-- [ ] Idioma da interface
-- [ ] Preferência de título
-- [ ] Preferência sobre conteúdo adulto
-- [ ] Outras preferências justificadas
-- [ ] Persistência local
-- [ ] Tela Sobre
-- [ ] Recursos de string da aplicação
+- [x] Tema claro
+- [x] Tema escuro
+- [x] Seguir o sistema
+- [x] Idioma da interface
+- [x] Preferência de título
+- [x] Preferência sobre conteúdo adulto
+- [x] Outras preferências justificadas
+- [x] Persistência local
+- [x] Tela Sobre
+- [x] Recursos de string da aplicação
 
 Logout não pertence a esta sprint porque ainda não existe autenticação.
 
 ### Critérios de aceite
 
-- [ ] Preferências permanecem após reiniciar o aplicativo.
-- [ ] Alterações de tema são aplicadas globalmente.
-- [ ] Textos da interface utilizam recursos apropriados.
-- [ ] A preferência de título é aplicada de forma consistente.
-- [ ] Configurações inválidas possuem fallback seguro.
-- [ ] Logout não é exibido sem sessão autenticada.
+- [x] Preferências permanecem após reiniciar o aplicativo.
+- [x] Alterações de tema são aplicadas globalmente.
+- [x] Textos da interface utilizam recursos apropriados.
+- [x] A preferência de título é aplicada de forma consistente.
+- [x] Configurações inválidas possuem fallback seguro.
+- [x] Logout não é exibido sem sessão autenticada.
 
 ---
 

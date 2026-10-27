@@ -1162,17 +1162,34 @@ Essa visão deve ser refinada apenas quando as responsabilidades reais das camad
 
 ---
 
-# 10. ERD / Persistência
+# 10. ERD / Persistência Local-First
 
-> **Status:** Não iniciado.
+> **Status:** Implementado (Biblioteca e Preferências do Usuário).
 
-Um diagrama entidade-relacionamento será criado somente quando houver necessidade concreta de documentar persistência local, backend ou sincronização de dados.
-
-Não devemos assumir que o modelo persistido será idêntico ao modelo de domínio ou aos DTOs das APIs.
+O armazenamento local opera de forma local-first e resiliente nos 5 targets ativos (Android, Desktop, iOS, JS e WasmJS). As entidades de persistência preservam os dados serializados em JSON de forma atômica e desacoplada dos modelos de domínio.
 
 ```mermaid
 erDiagram
-    %% Estrutura será definida quando a camada de persistência for modelada.
+    PreferencesEntity {
+        string theme
+        string titleLanguage
+        boolean adultContent
+        string appLanguage
+        long updatedAtEpochMillis
+    }
+
+    LibraryEntity {
+        string id PK
+        string animeId
+        string status
+        int progressCurrent
+        int progressTotal
+        int rating
+        boolean favorite
+        string notes
+        long createdAtEpochMillis
+        long updatedAtEpochMillis
+    }
 ```
 
 ---

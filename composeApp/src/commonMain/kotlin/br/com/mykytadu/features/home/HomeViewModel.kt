@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.domain.model.LibraryEntry
 import br.com.mykytadu.domain.model.LibraryStatus
+import br.com.mykytadu.domain.model.resolveDisplayTitle
 import br.com.mykytadu.domain.repository.AnimeRepository
 import br.com.mykytadu.domain.repository.LibraryRepository
 import br.com.mykytadu.domain.result.RepositoryResult
@@ -141,14 +142,7 @@ class HomeViewModel(
                         trendingSectionState.value = HomeSectionState.Empty()
                     } else {
                         val mapped = paged.items.map { summary ->
-                            val title = sequenceOf(
-                                summary.titles.english,
-                                summary.titles.romaji,
-                                summary.titles.native,
-                            ).plus(summary.titles.synonyms.asSequence())
-                                .mapNotNull { it?.trim()?.takeIf(String::isNotEmpty) }
-                                .firstOrNull() ?: "Anime #${summary.id.value}"
-
+                            val title = summary.titles.resolveDisplayTitle(unavailableTitle = "Anime #${summary.id.value}")
                             val cover = summary.images.coverLarge ?: summary.images.coverExtraLarge
 
                             HomeTrendingItemUiState(
@@ -182,13 +176,7 @@ class HomeViewModel(
                     when (val result = animeRepository.getAnimeDetails(entry.animeId)) {
                         is RepositoryResult.Success -> {
                             val details = result.value
-                            val title = sequenceOf(
-                                details.titles.english,
-                                details.titles.romaji,
-                                details.titles.native,
-                            ).plus(details.titles.synonyms.asSequence())
-                                .mapNotNull { it?.trim()?.takeIf(String::isNotEmpty) }
-                                .firstOrNull() ?: "Anime #$key"
+                            val title = details.titles.resolveDisplayTitle(unavailableTitle = "Anime #$key")
                             val cover = details.images.coverExtraLarge ?: details.images.coverLarge
                             val episodes = details.episodes
 
