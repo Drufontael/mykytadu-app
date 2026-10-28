@@ -70,4 +70,35 @@ class StorageModuleTest {
             koinApplication.close()
         }
     }
+
+    @Test
+    fun `deve resolver SecureStorageDriver a partir do StorageModule`() {
+        val koinApplication = koinApplication {
+            modules(StorageModule)
+        }
+
+        try {
+            val driver = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.SecureStorageDriver>()
+
+            assertNotNull(driver)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de SecureStorageDriver`() {
+        val koinApplication = koinApplication {
+            modules(StorageModule)
+        }
+
+        try {
+            val driver1 = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.SecureStorageDriver>()
+            val driver2 = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.SecureStorageDriver>()
+
+            assertSame(driver1, driver2)
+        } finally {
+            koinApplication.close()
+        }
+    }
 }
