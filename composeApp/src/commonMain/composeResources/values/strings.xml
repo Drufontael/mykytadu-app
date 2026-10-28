@@ -148,4 +148,28 @@
     <string name="settings_about_description">Assistente multiplataforma para acompanhamento de animes com persistência local-first.</string>
     <string name="settings_about_version">Versão %1$s</string>
     <string name="settings_about_open_source">Código aberto em Kotlin e Compose Multiplatform.</string>
+
+    <!-- Autenticação -->
+    <string name="auth_login_title">Entrar na sua conta</string>
+    <string name="auth_login_subtitle">Acesse sua biblioteca e sincronize seus animes em qualquer dispositivo.</string>
+    <string name="auth_register_title">Criar uma conta</string>
+    <string name="auth_register_subtitle">Cadastre-se para acompanhar animes e manter seu histórico seguro.</string>
+    <string name="auth_email_label">E-mail</string>
+    <string name="auth_email_placeholder">exemplo@email.com</string>
+    <string name="auth_password_label">Senha</string>
+    <string name="auth_password_placeholder">Sua senha</string>
+    <string name="auth_name_label">Nome</string>
+    <string name="auth_name_placeholder">Seu nome ou apelido</string>
+    <string name="auth_button_login">Entrar</string>
+    <string name="auth_button_register">Cadastrar</string>
+    <string name="auth_toggle_to_register">Não tem uma conta? Cadastre-se</string>
+    <string name="auth_toggle_to_login">Já possui uma conta? Entrar</string>
+    <string name="auth_loading">Processando…</string>
+    <string name="auth_error_invalid_credentials">E-mail ou senha incorretos.</string>
+    <string name="auth_error_registration_rejected">Não foi possível concluir o cadastro. O e-mail informado já pode estar em uso.</string>
+    <string name="auth_error_session_expired">Sua sessão expirou. Por favor, entre novamente.</string>
+    <string name="auth_error_rate_limited">Muitas tentativas consecutivas. Aguarde alguns instantes.</string>
+    <string name="auth_error_network">Não foi possível conectar ao servidor. Verifique sua conexão.</string>
+    <string name="auth_error_generic">Ocorreu um erro inesperado. Tente novamente.</string>
+    <string name="auth_logout_button">Sair da conta</string>
 </resources>

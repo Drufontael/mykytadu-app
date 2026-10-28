@@ -12,6 +12,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun AppTextField(
@@ -29,6 +30,7 @@ fun AppTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     require(onTrailingIconClick == null || !trailingIconContentDescription.isNullOrBlank()) {
         "An actionable trailing icon requires a non-blank description"
@@ -42,6 +44,7 @@ fun AppTextField(
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         singleLine = singleLine,
+        visualTransformation = visualTransformation,
         shape = RoundedCornerShape(AppShapes.radius.input),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
