@@ -24,11 +24,13 @@ import br.com.mykytadu.data.repository.AniListAnimeRepository
 import br.com.mykytadu.data.repository.DefaultAuthRepository
 import br.com.mykytadu.data.repository.DefaultLibraryRepository
 import br.com.mykytadu.data.repository.DefaultPreferencesRepository
+import br.com.mykytadu.data.repository.DefaultProfileRepository
 import br.com.mykytadu.data.repository.DefaultSyncRepository
 import br.com.mykytadu.domain.repository.AnimeRepository
 import br.com.mykytadu.domain.repository.AuthRepository
 import br.com.mykytadu.domain.repository.LibraryRepository
 import br.com.mykytadu.domain.repository.PreferencesRepository
+import br.com.mykytadu.domain.repository.ProfileRepository
 import br.com.mykytadu.domain.repository.SyncRepository
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
@@ -236,6 +238,47 @@ class RepositoryModuleTest {
         try {
             val repository1 = koinApplication.koin.get<SyncRepository>()
             val repository2 = koinApplication.koin.get<SyncRepository>()
+
+            assertSame(repository1, repository2)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve resolver ProfileRepository com implementacao DefaultProfileRepository`() {
+        val testDepsModule = module {
+            single<AuthApi> { FakeAuthApi() }
+            single<SecureStorageDriver> { InMemorySecureStorageDriver() }
+            single<LibraryLocalDataSource> { InMemoryLibraryLocalDataSource() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val repository = koinApplication.koin.get<ProfileRepository>()
+
+            assertIs<DefaultProfileRepository>(repository)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de ProfileRepository`() {
+        val testDepsModule = module {
+            single<AuthApi> { FakeAuthApi() }
+            single<SecureStorageDriver> { InMemorySecureStorageDriver() }
+            single<LibraryLocalDataSource> { InMemoryLibraryLocalDataSource() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val repository1 = koinApplication.koin.get<ProfileRepository>()
+            val repository2 = koinApplication.koin.get<ProfileRepository>()
 
             assertSame(repository1, repository2)
         } finally {
