@@ -38,4 +38,11 @@ val ViewModelModule = module {
     viewModel {
         br.com.mykytadu.features.auth.AuthViewModel(authRepository = get())
     }
+    viewModel {
+        br.com.mykytadu.features.profile.ProfileViewModel(
+            profileRepository = get(),
+            syncRepository = get(),
+            authRepository = get(),
+        )
+    }
 }
