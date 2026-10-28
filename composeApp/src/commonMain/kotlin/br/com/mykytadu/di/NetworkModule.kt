@@ -23,6 +23,9 @@ import br.com.mykytadu.data.remote.api.AnimeApi
 import br.com.mykytadu.data.remote.api.AuthApi
 import br.com.mykytadu.data.remote.api.KtorAuthApi
 
+import br.com.mykytadu.data.remote.api.SyncApi
+import br.com.mykytadu.data.remote.api.KtorSyncApi
+
 // Platform-specific engine factory provider (actual implementations per platform)
 expect fun provideHttpClientEngine(): HttpClientEngineFactory<*>
 
@@ -41,6 +44,10 @@ val NetworkModule = module {
 
     single<AuthApi> {
         KtorAuthApi(httpClient = get())
+    }
+
+    single<SyncApi> {
+        KtorSyncApi(httpClient = get())
     }
 }
 

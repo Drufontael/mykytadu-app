@@ -108,4 +108,35 @@ class NetworkModuleTest {
             koinApplication.close()
         }
     }
+
+    @Test
+    fun `deve resolver SyncApi com implementacao KtorSyncApi`() {
+        val koinApplication = koinApplication {
+            modules(NetworkModule)
+        }
+
+        try {
+            val syncApi = koinApplication.koin.get<br.com.mykytadu.data.remote.api.SyncApi>()
+
+            assertIs<br.com.mykytadu.data.remote.api.KtorSyncApi>(syncApi)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de SyncApi`() {
+        val koinApplication = koinApplication {
+            modules(NetworkModule)
+        }
+
+        try {
+            val syncApi1 = koinApplication.koin.get<br.com.mykytadu.data.remote.api.SyncApi>()
+            val syncApi2 = koinApplication.koin.get<br.com.mykytadu.data.remote.api.SyncApi>()
+
+            assertSame(syncApi1, syncApi2)
+        } finally {
+            koinApplication.close()
+        }
+    }
 }

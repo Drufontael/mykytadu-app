@@ -4,10 +4,12 @@ import br.com.mykytadu.data.repository.AniListAnimeRepository
 import br.com.mykytadu.data.repository.DefaultAuthRepository
 import br.com.mykytadu.data.repository.DefaultLibraryRepository
 import br.com.mykytadu.data.repository.DefaultPreferencesRepository
+import br.com.mykytadu.data.repository.DefaultSyncRepository
 import br.com.mykytadu.domain.repository.AnimeRepository
 import br.com.mykytadu.domain.repository.AuthRepository
 import br.com.mykytadu.domain.repository.LibraryRepository
 import br.com.mykytadu.domain.repository.PreferencesRepository
+import br.com.mykytadu.domain.repository.SyncRepository
 import org.koin.dsl.module
 
 val RepositoryModule = module {
@@ -16,7 +18,10 @@ val RepositoryModule = module {
     }
 
     single<LibraryRepository> {
-        DefaultLibraryRepository(localDataSource = get())
+        DefaultLibraryRepository(
+            localDataSource = get(),
+            syncQueueLocalDataSource = getOrNull(),
+        )
     }
 
     single<PreferencesRepository> {
@@ -27,6 +32,15 @@ val RepositoryModule = module {
         DefaultAuthRepository(
             authApi = get(),
             secureStorageDriver = get(),
+        )
+    }
+
+    single<SyncRepository> {
+        DefaultSyncRepository(
+            syncApi = get(),
+            authRepository = get(),
+            libraryLocalDataSource = get(),
+            syncQueueLocalDataSource = get(),
         )
     }
 }
