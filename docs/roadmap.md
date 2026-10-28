@@ -40,7 +40,7 @@ arquitetural identificados por `M`.
 | S9 | Biblioteca End-to-End | Concluída | [S9](sprints/S9.md) |
 | S10 | Home | Concluída | [S10](sprints/S10.md) |
 | S11 | Configurações e Preferências | Concluída | [S11](sprints/S11.md) |
-| S12 | Backend e Autenticação | Planejada | a criar |
+| S12 | Backend e Autenticação | Em andamento | [S12](sprints/S12.md) |
 | S13 | Sincronização e Perfil | Planejada | a criar |
 | S14 | Cache e Experiência Offline | Planejada | a criar |
 | S15 | Localização e Tradução | Planejada | a criar |
@@ -385,7 +385,7 @@ Logout não pertence a esta sprint porque ainda não existe autenticação.
 
 # Sprint 12 — Backend e Autenticação
 
-**Status:** Planejada
+**Status:** Em andamento
 
 ## Objetivo
 
