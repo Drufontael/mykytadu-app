@@ -1267,7 +1267,148 @@ sequenceDiagram
 
 ---
 
-# 12. Regras de Manutenção
+# 12. Arquitetura de Sincronização e Domínio de Perfil
+
+> **Estado:** Implementada e validada em todos os targets (Sprint 13).
+
+A sincronização no MykytaDu opera sob a filosofia **Local-First**, garantindo que a biblioteca local continue
+100% funcional sem conexão de rede e sem autenticação. Quando autenticado, as mutações locais são enfileiradas de
+forma transparente e convergidas com o backend (`mykytadu-api`) com resolução explícita de conflitos baseada em
+*Last-Write-Wins* (LWW). O domínio de Perfil agrega estatísticas reais calculadas dinamicamente a partir dos
+dados locais e exibe os controles de sincronização.
+
+## 12.1 Fluxo de Sincronização Local-First com Fila e LWW
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Usuário
+    participant UI as ProfileScreen / LibraryScreen
+    participant VM as ProfileViewModel
+    participant SyncRepo as SyncRepository (DefaultSyncRepository)
+    participant LibRepo as LibraryRepository (DefaultLibraryRepository)
+    participant Queue as SyncQueueLocalDataSource
+    participant LocalDB as LibraryLocalDataSource
+    participant AuthRepo as AuthRepository
+    participant API as SyncApi (KtorSyncApi)
+
+    Note over User,LocalDB: 1. Operação Offline / Mutação Local
+    User->>UI: Atualiza status/progresso de anime
+    UI->>LibRepo: saveEntry(entry)
+    LibRepo->>LocalDB: upsertEntry(entity)
+    LibRepo->>Queue: enqueue(SyncQueueEntryEntity [UPSERT/DELETE])
+
+    Note over User,API: 2. Disparo de Sincronização (Manual ou Automático)
+    User->>UI: Clica em "Sincronizar"
+    UI->>VM: triggerSync()
+    VM->>SyncRepo: synchronize()
+    SyncRepo->>AuthRepo: currentAccessToken()
+    alt Desautenticado
+        SyncRepo-->>VM: SyncResult.Unauthenticated
+    else Autenticado
+        SyncRepo->>SyncRepo: Emit SyncStatus.Syncing
+        SyncRepo->>Queue: getPendingEntries()
+        SyncRepo->>API: syncLibrary(accessToken, SyncBatchRequestDto)
+        alt Falha de Rede / Erro HTTP
+            API-->>SyncRepo: NetworkResult.Failure(error)
+            SyncRepo-->>VM: SyncResult.Failure(message)
+            SyncRepo->>SyncRepo: Emit SyncStatus.Error (Fila preservada intacta)
+        else Sucesso no Servidor
+            API-->>SyncRepo: NetworkResult.Success(SyncBatchResponseDto)
+            loop Para cada serverChange remota
+                SyncRepo->>LocalDB: getEntry(animeId)
+                Note over SyncRepo,LocalDB: Resolução de Conflito Last-Write-Wins (LWW)<br/>remote.updatedAtEpochMillis >= local.updatedAtEpochMillis
+                opt Versão remota mais recente
+                    SyncRepo->>LocalDB: upsertEntry(remoteEntity)
+                end
+            end
+            loop Para cada deletedAnimeId
+                SyncRepo->>LocalDB: deleteEntry(animeId)
+            end
+            SyncRepo->>Queue: remove(pushedIds)
+            SyncRepo->>SyncRepo: Atualiza lastSyncedEpochMillis e Emit SyncStatus.Idle
+            SyncRepo-->>VM: SyncResult.Success(appliedCount, serverChangesCount)
+        end
+    end
+```
+
+## 12.2 Diagrama de Classes e Domínio de Perfil
+
+```mermaid
+classDiagram
+    class ProfileViewModel {
+        +StateFlow~ProfileUiState~ uiState
+        +triggerSync()
+        +logout()
+    }
+
+    class ProfileUiState {
+        +User? user
+        +String userInitials
+        +UserStats stats
+        +SyncStatus syncStatus
+        +Long? lastSyncedEpochMillis
+        +Int pendingMutationsCount
+        +Boolean isSyncing
+        +String? syncErrorMessage
+    }
+
+    class UserStats {
+        +Int totalAnimeCount
+        +Int watchingCount
+        +Int completedCount
+        +Int planningCount
+        +Int pausedCount
+        +Int droppedCount
+        +Int favoriteCount
+        +Int totalEpisodesWatched
+        +Double estimatedHoursWatched
+        +Double averageScore
+        +fromEntries(entries) UserStats
+    }
+
+    class ProfileRepository {
+        <<interface>>
+        +StateFlow~AuthState~ authState
+        +observeUserStats() Flow~UserStats~
+    }
+
+    class SyncRepository {
+        <<interface>>
+        +StateFlow~SyncStatus~ syncStatus
+        +StateFlow~Long?~ lastSyncedEpochMillis
+        +Flow~Int~ pendingMutationsCount
+        +synchronize() SyncResult
+        +clearPendingQueue()
+    }
+
+    class SyncQueueLocalDataSource {
+        <<interface>>
+        +enqueue(entry)
+        +getPendingEntries() List~SyncQueueEntryEntity~
+        +remove(ids)
+        +clear()
+        +observePendingCount() Flow~Int~
+    }
+
+    class SyncApi {
+        <<interface>>
+        +syncLibrary(accessToken, request) NetworkResult~SyncBatchResponseDto~
+    }
+
+    ProfileViewModel --> ProfileRepository
+    ProfileViewModel --> SyncRepository
+    ProfileViewModel --> ProfileUiState
+    ProfileUiState --> UserStats
+    ProfileRepository <|.. DefaultProfileRepository
+    SyncRepository <|.. DefaultSyncRepository
+    DefaultSyncRepository --> SyncApi
+    DefaultSyncRepository --> SyncQueueLocalDataSource
+```
+
+---
+
+# 13. Regras de Manutenção
 
 Ao atualizar este documento:
 
@@ -1282,7 +1423,7 @@ Ao atualizar este documento:
 
 ---
 
-# 13. Fontes do Projeto
+# 14. Fontes do Projeto
 
 Este documento deve ser mantido em conjunto com:
 
@@ -1298,3 +1439,4 @@ Este documento deve ser mantido em conjunto com:
 > **Princípio do documento**
 >
 > Modelar o suficiente para reduzir ambiguidades e orientar a implementação, sem transformar a documentação em uma arquitetura imaginária do futuro.
+
