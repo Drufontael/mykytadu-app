@@ -31,6 +31,12 @@ import br.com.mykytadu.presentation.MainNavigationRail
 import br.com.mykytadu.core.layout.ResponsiveLayout
 import br.com.mykytadu.core.layout.ResponsiveLayoutTokens
 import br.com.mykytadu.core.layout.responsiveLayoutFor
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.mykytadu.domain.model.auth.AuthState
+import br.com.mykytadu.domain.repository.AuthRepository
+import org.koin.mp.KoinPlatformTools
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -47,12 +53,34 @@ internal val navigationConfig = SavedStateConfiguration {
 @Composable
 fun AppNavigation(
     navigationHistoryBridge: NavigationHistoryBridge? = null,
+    authRepository: AuthRepository? = null,
 ) {
+    val repository = authRepository ?: KoinPlatformTools.defaultContext().getOrNull()?.getOrNull<AuthRepository>()
     val backStack = rememberNavBackStack(
         navigationConfig,
         *(navigationHistoryBridge?.initialBackStack ?: listOf(AppRoute.Splash)).toTypedArray(),
     )
     val currentRoute = backStack.last() as AppRoute
+
+    if (repository != null) {
+        val authState by repository.authState.collectAsStateWithLifecycle()
+
+        LaunchedEffect(currentRoute, authState) {
+            if (authState is AuthState.Unauthenticated && currentRoute.access == RouteAccess.PROTECTED) {
+                if (backStack.lastOrNull() != AppRoute.Login) {
+                    backStack.clear()
+                    backStack.add(AppRoute.Login)
+                    navigationHistoryBridge?.onAppNavigation(listOf(AppRoute.Login), NavigationMutation.REPLACE)
+                }
+            } else if (authState is AuthState.Authenticated && currentRoute == AppRoute.Login) {
+                if (backStack.lastOrNull() != AppRoute.Home) {
+                    backStack.clear()
+                    backStack.add(AppRoute.Home)
+                    navigationHistoryBridge?.onAppNavigation(listOf(AppRoute.Home), NavigationMutation.REPLACE)
+                }
+            }
+        }
+    }
 
     fun updateBackStack(
         mutation: NavigationMutation,
@@ -137,7 +165,14 @@ fun AppNavigation(
                                     backStack.clear()
                                     backStack.add(AppRoute.Login)
                                 }
-                            }
+                            },
+                            onNavigateToHome = {
+                                updateBackStack(NavigationMutation.REPLACE) {
+                                    backStack.clear()
+                                    backStack.add(AppRoute.Home)
+                                }
+                            },
+                            authRepository = repository,
                         )
                     }
 

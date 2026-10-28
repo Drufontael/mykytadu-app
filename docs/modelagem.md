@@ -1194,7 +1194,80 @@ erDiagram
 
 ---
 
-# 11. Regras de Manutenção
+# 11. Autenticação e Sessão
+
+> **Estado:** Implementado (Sprint 12).
+
+## 11.1 Modelo de Domínio e Contratos
+
+A autenticação é desacoplada de detalhes de transporte e utiliza o padrão RFC 9457 para tratamento de erros remotos da API MykytaDu.
+
+```mermaid
+classDiagram
+    class User {
+        +UserId id
+        +String email
+        +String name
+        +Long createdAtEpochMillis
+    }
+
+    class UserId {
+        +String value
+    }
+
+    class AuthTokens {
+        +String accessToken
+        +String tokenType
+        +Long expiresInSeconds
+        +String? refreshToken
+    }
+
+    class AuthState {
+        <<sealed>>
+    }
+    class Initializing {
+    }
+    class Unauthenticated {
+    }
+    class Authenticated {
+        +User user
+    }
+
+    AuthState <|-- Initializing
+    AuthState <|-- Unauthenticated
+    AuthState <|-- Authenticated
+    User *-- UserId
+    Authenticated *-- User
+```
+
+## 11.2 Arquitetura e Armazenamento Seguro
+
+- **`accessToken`**: Vida curta (10 min), mantido estritamente em memória volátil (`DefaultAuthRepository`).
+- **`refreshToken`**: Longa duração, armazenado de forma protegida via `SecureStorageDriver` (`expect/actual` em Android Keystore, Desktop, iOS Keychain e Web).
+- **`RouteAccess`**: Rotas públicas (`Splash`, `Login`) vs protegidas (`Home`, `Search`, `AnimeDetails`, `Library`, `Profile`, `Settings`). Redirecionamento automático ao login quando não autenticado.
+
+```mermaid
+sequenceDiagram
+    participant UI as LoginScreen / Splash
+    participant VM as AuthViewModel
+    participant Repo as AuthRepository
+    participant Storage as SecureStorageDriver
+    participant API as AuthApi (Ktor)
+
+    UI->>VM: submit(email, password)
+    VM->>Repo: login(email, password)
+    Repo->>API: login(LoginRequestDto)
+    API-->>Repo: LoginResponseDto (accessToken, refreshToken, user)
+    Repo->>Storage: saveRefreshToken(token)
+    Note over Repo: accessToken mantido apenas em memória
+    Repo-->>VM: AuthResult.Success(user)
+    Repo-->>UI: AuthState.Authenticated(user)
+    UI->>UI: Redireciona para Home
+```
+
+---
+
+# 12. Regras de Manutenção
 
 Ao atualizar este documento:
 
@@ -1209,7 +1282,7 @@ Ao atualizar este documento:
 
 ---
 
-# 12. Fontes do Projeto
+# 13. Fontes do Projeto
 
 Este documento deve ser mantido em conjunto com:
 

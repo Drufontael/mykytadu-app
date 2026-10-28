@@ -35,4 +35,7 @@ val ViewModelModule = module {
     viewModel {
         SettingsViewModel(preferencesRepository = get())
     }
+    viewModel {
+        br.com.mykytadu.features.auth.AuthViewModel(authRepository = get())
+    }
 }

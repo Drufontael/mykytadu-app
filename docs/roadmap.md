@@ -40,7 +40,7 @@ arquitetural identificados por `M`.
 | S9 | Biblioteca End-to-End | Concluída | [S9](sprints/S9.md) |
 | S10 | Home | Concluída | [S10](sprints/S10.md) |
 | S11 | Configurações e Preferências | Concluída | [S11](sprints/S11.md) |
-| S12 | Backend e Autenticação | Planejada | a criar |
+| S12 | Backend e Autenticação | Concluída | [S12](sprints/S12.md) |
 | S13 | Sincronização e Perfil | Planejada | a criar |
 | S14 | Cache e Experiência Offline | Planejada | a criar |
 | S15 | Localização e Tradução | Planejada | a criar |
@@ -385,7 +385,7 @@ Logout não pertence a esta sprint porque ainda não existe autenticação.
 
 # Sprint 12 — Backend e Autenticação
 
-**Status:** Planejada
+**Status:** Concluída
 
 ## Objetivo
 
@@ -397,29 +397,29 @@ Esta sprint não deve começar sem contrato documentado e backend disponível ou
 
 ### Escopo
 
-- [ ] `AuthApi`
-- [ ] `AuthRepository`
-- [ ] Modelo `User`
-- [ ] Cadastro
-- [ ] Login
-- [ ] Logout
-- [ ] Armazenamento seguro de credenciais
-- [ ] Refresh token
-- [ ] Restauração da sessão
-- [ ] Expiração da sessão
-- [ ] Aplicação efetiva de `RouteAccess`
-- [ ] Erros de autenticação
-- [ ] Testes dos fluxos principais
+- [x] `AuthApi`
+- [x] `AuthRepository`
+- [x] Modelo `User`
+- [x] Cadastro
+- [x] Login
+- [x] Logout
+- [x] Armazenamento seguro de credenciais
+- [x] Refresh token
+- [x] Restauração da sessão
+- [x] Expiração da sessão
+- [x] Aplicação efetiva de `RouteAccess`
+- [x] Erros de autenticação
+- [x] Testes dos fluxos principais
 
 ### Critérios de aceite
 
-- [ ] O usuário pode cadastrar-se, entrar e sair.
-- [ ] A sessão é restaurada após reiniciar o aplicativo.
-- [ ] Tokens não são armazenados em preferências comuns.
-- [ ] Dados sensíveis não aparecem em logs.
-- [ ] Refresh e expiração possuem comportamento definido.
-- [ ] Rotas protegidas verificam a sessão real.
-- [ ] Falhas de autenticação não apagam indevidamente dados locais.
+- [x] O usuário pode cadastrar-se, entrar e sair.
+- [x] A sessão é restaurada após reiniciar o aplicativo.
+- [x] Tokens não são armazenados em preferências comuns.
+- [x] Dados sensíveis não aparecem em logs.
+- [x] Refresh e expiração possuem comportamento definido.
+- [x] Rotas protegidas verificam a sessão real.
+- [x] Falhas de autenticação não apagam indevidamente dados locais.
 
 ---
 

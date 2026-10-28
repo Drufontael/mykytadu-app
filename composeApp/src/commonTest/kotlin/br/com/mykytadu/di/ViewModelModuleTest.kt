@@ -70,6 +70,29 @@ class ViewModelModuleTest {
         }
     }
 
+    @Test
+    fun `deve resolver AuthViewModel como definicao nao singleton`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        val koinApplication = koinApplication {
+            modules(
+                module {
+                    single<br.com.mykytadu.domain.repository.AuthRepository> { FakeAuthRepository() }
+                },
+                ViewModelModule,
+            )
+        }
+
+        try {
+            val first = koinApplication.koin.get<br.com.mykytadu.features.auth.AuthViewModel>()
+            val second = koinApplication.koin.get<br.com.mykytadu.features.auth.AuthViewModel>()
+
+            assertNotSame(first, second)
+        } finally {
+            koinApplication.close()
+            Dispatchers.resetMain()
+        }
+    }
+
     private class FakeAnimeRepository : AnimeRepository {
         override suspend fun searchAnime(
             query: String,
@@ -80,5 +103,24 @@ class ViewModelModuleTest {
 
         override suspend fun getAnimeDetails(id: CatalogAnimeId): RepositoryResult<AnimeDetails> =
             RepositoryResult.Success(AnimeDetails(id = id))
+    }
+
+    private class FakeAuthRepository : br.com.mykytadu.domain.repository.AuthRepository {
+        private val _authState = kotlinx.coroutines.flow.MutableStateFlow<br.com.mykytadu.domain.model.auth.AuthState>(br.com.mykytadu.domain.model.auth.AuthState.Unauthenticated)
+        override val authState: kotlinx.coroutines.flow.StateFlow<br.com.mykytadu.domain.model.auth.AuthState> = _authState
+
+        override suspend fun login(email: String, password: String): br.com.mykytadu.domain.result.AuthResult<br.com.mykytadu.domain.model.auth.User> =
+            error("Não deve ser chamado neste teste.")
+
+        override suspend fun register(email: String, password: String, name: String): br.com.mykytadu.domain.result.AuthResult<br.com.mykytadu.domain.model.auth.User> =
+            error("Não deve ser chamado neste teste.")
+
+        override suspend fun logout(): br.com.mykytadu.domain.result.AuthResult<Unit> =
+            br.com.mykytadu.domain.result.AuthResult.Success(Unit)
+
+        override suspend fun restoreSession(): br.com.mykytadu.domain.result.AuthResult<br.com.mykytadu.domain.model.auth.User?> =
+            br.com.mykytadu.domain.result.AuthResult.Success(null)
+
+        override fun currentAccessToken(): String? = null
     }
 }

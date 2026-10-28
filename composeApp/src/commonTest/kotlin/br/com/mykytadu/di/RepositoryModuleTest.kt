@@ -3,15 +3,28 @@ package br.com.mykytadu.di
 import br.com.mykytadu.core.network.NetworkResult
 import br.com.mykytadu.data.local.datasource.InMemoryLibraryLocalDataSource
 import br.com.mykytadu.data.local.datasource.InMemoryPreferencesLocalDataSource
+import br.com.mykytadu.data.local.datasource.InMemorySecureStorageDriver
 import br.com.mykytadu.data.local.datasource.LibraryLocalDataSource
 import br.com.mykytadu.data.local.datasource.PreferencesLocalDataSource
+import br.com.mykytadu.data.local.datasource.SecureStorageDriver
 import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeSearchPageDto
 import br.com.mykytadu.data.remote.api.AnimeApi
+import br.com.mykytadu.data.remote.api.AuthApi
+import br.com.mykytadu.data.remote.dto.auth.LoginRequestDto
+import br.com.mykytadu.data.remote.dto.auth.LoginResponseDto
+import br.com.mykytadu.data.remote.dto.auth.LogoutRequestDto
+import br.com.mykytadu.data.remote.dto.auth.RefreshRequestDto
+import br.com.mykytadu.data.remote.dto.auth.RefreshResponseDto
+import br.com.mykytadu.data.remote.dto.auth.RegisterRequestDto
+import br.com.mykytadu.data.remote.dto.auth.RegisterResponseDto
+import br.com.mykytadu.data.remote.dto.auth.UserDto
 import br.com.mykytadu.data.repository.AniListAnimeRepository
+import br.com.mykytadu.data.repository.DefaultAuthRepository
 import br.com.mykytadu.data.repository.DefaultLibraryRepository
 import br.com.mykytadu.data.repository.DefaultPreferencesRepository
 import br.com.mykytadu.domain.repository.AnimeRepository
+import br.com.mykytadu.domain.repository.AuthRepository
 import br.com.mykytadu.domain.repository.LibraryRepository
 import br.com.mykytadu.domain.repository.PreferencesRepository
 import org.koin.dsl.koinApplication
@@ -139,6 +152,49 @@ class RepositoryModuleTest {
         }
     }
 
+    @Test
+    fun `deve resolver AuthRepository com implementacao DefaultAuthRepository`() {
+        val storageDriver = InMemorySecureStorageDriver()
+        val authApi = FakeAuthApi()
+        val testDepsModule = module {
+            single<SecureStorageDriver> { storageDriver }
+            single<AuthApi> { authApi }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val repository = koinApplication.koin.get<AuthRepository>()
+
+            assertIs<DefaultAuthRepository>(repository)
+            assertSame(storageDriver, koinApplication.koin.get<SecureStorageDriver>())
+            assertSame(authApi, koinApplication.koin.get<AuthApi>())
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de AuthRepository`() {
+        val testDepsModule = module {
+            single<SecureStorageDriver> { InMemorySecureStorageDriver() }
+            single<AuthApi> { FakeAuthApi() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val repository1 = koinApplication.koin.get<AuthRepository>()
+            val repository2 = koinApplication.koin.get<AuthRepository>()
+
+            assertSame(repository1, repository2)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
     private class FakeAnimeApi : AnimeApi {
 
         override suspend fun searchAnime(
@@ -151,6 +207,23 @@ class RepositoryModuleTest {
         override suspend fun getAnimeDetails(
             id: Int,
         ): NetworkResult<AnimeDetailsDto> =
+            error("Não deve ser chamado neste teste.")
+    }
+
+    private class FakeAuthApi : AuthApi {
+        override suspend fun login(request: LoginRequestDto): NetworkResult<LoginResponseDto> =
+            error("Não deve ser chamado neste teste.")
+
+        override suspend fun register(request: RegisterRequestDto): NetworkResult<RegisterResponseDto> =
+            error("Não deve ser chamado neste teste.")
+
+        override suspend fun refresh(request: RefreshRequestDto): NetworkResult<RefreshResponseDto> =
+            error("Não deve ser chamado neste teste.")
+
+        override suspend fun logout(request: LogoutRequestDto): NetworkResult<Unit> =
+            error("Não deve ser chamado neste teste.")
+
+        override suspend fun getProfile(accessToken: String): NetworkResult<UserDto> =
             error("Não deve ser chamado neste teste.")
     }
 }

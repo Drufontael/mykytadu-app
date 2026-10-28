@@ -20,6 +20,9 @@ import org.koin.core.module.dsl.withOptions
 import org.koin.dsl.module
 import br.com.mykytadu.data.remote.anilist.AniListAnimeApi
 import br.com.mykytadu.data.remote.api.AnimeApi
+import br.com.mykytadu.data.remote.api.AuthApi
+import br.com.mykytadu.data.remote.api.KtorAuthApi
+
 // Platform-specific engine factory provider (actual implementations per platform)
 expect fun provideHttpClientEngine(): HttpClientEngineFactory<*>
 
@@ -34,6 +37,10 @@ val NetworkModule = module {
 
     single<AnimeApi> {
         AniListAnimeApi(httpClient = get())
+    }
+
+    single<AuthApi> {
+        KtorAuthApi(httpClient = get())
     }
 }
 
