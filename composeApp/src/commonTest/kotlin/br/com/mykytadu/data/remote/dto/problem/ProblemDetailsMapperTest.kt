@@ -77,4 +77,25 @@ class ProblemDetailsMapperTest {
         assertEquals(500, failure.status)
         assertEquals("internal_error", failure.code)
     }
+
+    @Test
+    fun `NetworkFailure Http com corpo RFC 9457 e convertido para AuthFailure correspondente`() {
+        val failure = br.com.mykytadu.core.network.NetworkFailure.Http(
+            statusCode = 401,
+            cause = IllegalStateException(),
+            responseBody = """{"code":"invalid_credentials","detail":"Senha invalida"}"""
+        )
+        val authFailure = failure.toAuthFailure()
+        assertTrue(authFailure is AuthFailure.InvalidCredentials)
+        assertEquals("Senha invalida", authFailure.message)
+    }
+
+    @Test
+    fun `NetworkFailure Connection e convertido para AuthFailure NetworkError`() {
+        val cause = kotlinx.io.IOException("Conexao recusada")
+        val failure = br.com.mykytadu.core.network.NetworkFailure.Connection(cause)
+        val authFailure = failure.toAuthFailure()
+        assertTrue(authFailure is AuthFailure.NetworkError)
+        assertEquals(cause, authFailure.cause)
+    }
 }

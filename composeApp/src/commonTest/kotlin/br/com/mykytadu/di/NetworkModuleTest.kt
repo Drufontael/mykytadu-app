@@ -77,4 +77,35 @@ class NetworkModuleTest {
             koinApplication.close()
         }
     }
+
+    @Test
+    fun `deve resolver AuthApi com implementacao KtorAuthApi`() {
+        val koinApplication = koinApplication {
+            modules(NetworkModule)
+        }
+
+        try {
+            val authApi = koinApplication.koin.get<br.com.mykytadu.data.remote.api.AuthApi>()
+
+            assertIs<br.com.mykytadu.data.remote.api.KtorAuthApi>(authApi)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de AuthApi`() {
+        val koinApplication = koinApplication {
+            modules(NetworkModule)
+        }
+
+        try {
+            val authApi1 = koinApplication.koin.get<br.com.mykytadu.data.remote.api.AuthApi>()
+            val authApi2 = koinApplication.koin.get<br.com.mykytadu.data.remote.api.AuthApi>()
+
+            assertSame(authApi1, authApi2)
+        } finally {
+            koinApplication.close()
+        }
+    }
 }

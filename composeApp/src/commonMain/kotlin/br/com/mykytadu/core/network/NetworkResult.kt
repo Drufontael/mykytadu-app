@@ -4,6 +4,7 @@ import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ResponseException
+import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.ContentConvertException
 import kotlinx.coroutines.CancellationException
 import kotlinx.io.IOException
@@ -27,10 +28,12 @@ suspend inline fun <T> safeNetworkCall(block: suspend () -> T): NetworkResult<T>
     } catch (cause: SocketTimeoutException) {
         NetworkResult.Failure(NetworkFailure.Timeout(cause))
     } catch (cause: ResponseException) {
+        val body = runCatching { cause.response.bodyAsText() }.getOrNull()
         NetworkResult.Failure(
             NetworkFailure.Http(
                 statusCode = cause.response.status.value,
                 cause = cause,
+                responseBody = body,
             )
         )
     } catch (cause: ContentConvertException) {

@@ -10,6 +10,7 @@ sealed interface NetworkFailure {
     data class Http(
         val statusCode: Int,
         override val cause: Throwable,
+        val responseBody: String? = null,
     ) : NetworkFailure
 
     data class Serialization(override val cause: Throwable) : NetworkFailure
