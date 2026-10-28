@@ -223,7 +223,9 @@ fun AppNavigation(
                     }
 
                     entry<AppRoute.Settings> {
-                        SettingsScreen()
+                        SettingsScreen(
+                            onNavigateBack = ::navigateBack,
+                        )
                     }
                 }
                         )

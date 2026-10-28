@@ -91,3 +91,4 @@ implementação, validações aplicáveis, aceite humano e encerramento document
 | S8 — Persistência e Biblioteca Local | Concluída | [S8.md](S8.md) |
 | S9 — Biblioteca End-to-End | Concluída | [S9.md](S9.md) |
 | S10 — Home | Concluída | [S10.md](S10.md) |
+| S11 — Configurações e Preferências | Concluída | [S11.md](S11.md) |

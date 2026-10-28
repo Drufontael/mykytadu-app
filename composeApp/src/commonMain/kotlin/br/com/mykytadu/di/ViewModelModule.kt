@@ -5,6 +5,7 @@ import br.com.mykytadu.features.anime.AnimeDetailsViewModel
 import br.com.mykytadu.features.home.HomeViewModel
 import br.com.mykytadu.features.library.LibraryViewModel
 import br.com.mykytadu.features.search.SearchViewModel
+import br.com.mykytadu.features.settings.SettingsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -31,5 +32,7 @@ val ViewModelModule = module {
             animeRepository = get(),
         )
     }
+    viewModel {
+        SettingsViewModel(preferencesRepository = get())
+    }
 }
-
