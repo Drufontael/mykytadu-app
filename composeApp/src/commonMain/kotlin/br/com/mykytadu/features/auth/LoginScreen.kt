@@ -200,8 +200,8 @@ fun LoginScreenContent(
                         modifier = Modifier.fillMaxWidth().testTag("auth_input_password"),
                     )
 
-                    if (uiState.error != null) {
-                        val errorMessage = when (val err = uiState.error) {
+                    uiState.error?.let { err ->
+                        val errorMessage = when (err) {
                             is AuthFailure.InvalidCredentials -> err.message ?: stringResource(Res.string.auth_error_invalid_credentials)
                             is AuthFailure.RegistrationRejected -> err.message ?: stringResource(Res.string.auth_error_registration_rejected)
                             is AuthFailure.SessionExpired -> err.message ?: stringResource(Res.string.auth_error_session_expired)
