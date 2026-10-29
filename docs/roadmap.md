@@ -494,7 +494,7 @@ Aprimorar desempenho, resiliência e uso offline do catálogo.
 
 # Sprint 15 — Localização e Tradução
 
-**Status:** Planejada
+**Status:** Em andamento
 
 ## Objetivo
 
