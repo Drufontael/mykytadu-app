@@ -8,6 +8,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.dp
@@ -170,6 +172,44 @@ class AnimeDetailsContentUiTest {
         compose.onNodeWithText("Cowboy Bebop").assertIsDisplayed()
         compose.onNodeWithText("Série de TV").fetchSemanticsNode()
         compose.onNodeWithText("Sinopse").fetchSemanticsNode()
+    }
+
+    @Test
+    fun `controles de traducao exibem estados correto na sinopse`() {
+        var toggleClickCount = 0
+
+        // Estado inicial: exibindo original com botão "Traduzir sinopse"
+        compose.setContent {
+            AppTheme {
+                AnimeDetailsContent(
+                    details = completeDetails(),
+                    isShowingTranslation = false,
+                    onToggleTranslation = { toggleClickCount++ },
+                )
+            }
+        }
+
+        val toggleButton = compose.onNodeWithTag("translation_toggle_button")
+        toggleButton.assertIsDisplayed()
+        toggleButton.assertTextContains("Traduzir sinopse")
+        toggleButton.performClick()
+        assertEquals(1, toggleClickCount)
+
+        // Estado traduzido: exibe badge "Traduzido" e botão "Ver original"
+        compose.setContent {
+            AppTheme {
+                AnimeDetailsContent(
+                    details = completeDetails(),
+                    isShowingTranslation = true,
+                    translatedDescription = "Sinopse totalmente traduzida para portugues.",
+                    onToggleTranslation = { toggleClickCount++ },
+                )
+            }
+        }
+
+        compose.onNodeWithTag("translation_badge").assertIsDisplayed()
+        compose.onNodeWithTag("translation_toggle_button").assertTextContains("Ver sinopse original")
+        compose.onNodeWithText("Sinopse totalmente traduzida para portugues.").assertIsDisplayed()
     }
 
     private fun completeDetails(

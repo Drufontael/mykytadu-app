@@ -121,6 +121,11 @@ fun AnimeDetailsScreen(
                 is AnimeDetailsUiState.Content -> AnimeDetailsContent(
                     details = current.details,
                     libraryEntry = libraryEntry,
+                    isTranslating = current.isTranslating,
+                    isShowingTranslation = current.isShowingTranslation,
+                    translatedDescription = current.translatedDescription,
+                    translationError = current.translationError,
+                    onToggleTranslation = viewModel::toggleTranslation,
                     onAddToLibrary = { viewModel.addToLibrary(totalEpisodes = current.details.episodes) },
                     onEditLibrary = { showEditDialog = true },
                     onIncrementProgress = viewModel::incrementProgress,
@@ -189,6 +194,11 @@ internal fun AnimeDetailsContent(
     details: AnimeDetails,
     modifier: Modifier = Modifier,
     libraryEntry: LibraryEntry? = null,
+    isTranslating: Boolean = false,
+    isShowingTranslation: Boolean = false,
+    translatedDescription: String? = null,
+    translationError: String? = null,
+    onToggleTranslation: () -> Unit = {},
     onAddToLibrary: () -> Unit = {},
     onEditLibrary: () -> Unit = {},
     onIncrementProgress: () -> Unit = {},
@@ -239,6 +249,11 @@ internal fun AnimeDetailsContent(
                             details = details,
                             title = title,
                             description = description,
+                            isTranslating = isTranslating,
+                            isShowingTranslation = isShowingTranslation,
+                            translatedDescription = translatedDescription,
+                            translationError = translationError,
+                            onToggleTranslation = onToggleTranslation,
                             libraryEntry = libraryEntry,
                             onAddToLibrary = onAddToLibrary,
                             onEditLibrary = onEditLibrary,
@@ -260,6 +275,11 @@ internal fun AnimeDetailsContent(
                             details = details,
                             title = title,
                             description = description,
+                            isTranslating = isTranslating,
+                            isShowingTranslation = isShowingTranslation,
+                            translatedDescription = translatedDescription,
+                            translationError = translationError,
+                            onToggleTranslation = onToggleTranslation,
                             libraryEntry = libraryEntry,
                             onAddToLibrary = onAddToLibrary,
                             onEditLibrary = onEditLibrary,
@@ -323,6 +343,11 @@ private fun DetailsText(
     details: AnimeDetails,
     title: String,
     description: String?,
+    isTranslating: Boolean,
+    isShowingTranslation: Boolean,
+    translatedDescription: String?,
+    translationError: String?,
+    onToggleTranslation: () -> Unit,
     libraryEntry: LibraryEntry?,
     onAddToLibrary: () -> Unit,
     onEditLibrary: () -> Unit,
@@ -352,15 +377,72 @@ private fun DetailsText(
 
         description?.let {
             Column(verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.anime_details_description_title),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        )
+                        if (isShowingTranslation) {
+                            Surface(
+                                shape = RoundedCornerShape(AppShapes.radius.chip),
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                modifier = Modifier.testTag("translation_badge"),
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.anime_details_translated_badge),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                )
+                            }
+                        }
+                    }
+
+                    TextButton(
+                        onClick = onToggleTranslation,
+                        enabled = !isTranslating,
+                        modifier = Modifier.testTag("translation_toggle_button"),
+                    ) {
+                        Text(
+                            text = when {
+                                isTranslating -> stringResource(Res.string.anime_details_translating_description)
+                                isShowingTranslation -> stringResource(Res.string.anime_details_show_original_description)
+                                else -> stringResource(Res.string.anime_details_translate_description)
+                            },
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
+                }
+
+                if (translationError != null) {
+                    Text(
+                        text = stringResource(Res.string.anime_details_translation_unavailable),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.testTag("translation_error_message"),
+                    )
+                }
+
+                val textToDisplay = if (isShowingTranslation && !translatedDescription.isNullOrBlank()) {
+                    translatedDescription
+                } else {
+                    it
+                }
+
                 Text(
-                    text = stringResource(Res.string.anime_details_description_title),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-                Text(
-                    text = it,
+                    text = textToDisplay,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.testTag("anime_details_description_text"),
                 )
             }
         }

@@ -8,8 +8,11 @@ import br.com.mykytadu.domain.model.LibraryEntryId
 import br.com.mykytadu.domain.model.LibraryProgress
 import br.com.mykytadu.domain.model.LibraryRating
 import br.com.mykytadu.domain.model.LibraryStatus
+import br.com.mykytadu.domain.model.translation.LanguageCode
 import br.com.mykytadu.domain.repository.AnimeRepository
 import br.com.mykytadu.domain.repository.LibraryRepository
+import br.com.mykytadu.domain.repository.PreferencesRepository
+import br.com.mykytadu.domain.repository.TranslationRepository
 import br.com.mykytadu.domain.result.RepositoryResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +27,8 @@ class AnimeDetailsViewModel internal constructor(
     private val id: CatalogAnimeId,
     private val animeRepository: AnimeRepository,
     private val libraryRepository: LibraryRepository? = null,
+    private val translationRepository: TranslationRepository? = null,
+    private val preferencesRepository: PreferencesRepository? = null,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate,
     private val timeProvider: () -> Long = { kotlin.time.Clock.System.now().toEpochMilliseconds() },
 ) : ViewModel() {
@@ -111,4 +116,64 @@ class AnimeDetailsViewModel internal constructor(
             repo.deleteEntry(current.id)
         }
     }
+
+    fun toggleTranslation() {
+        val current = _uiState.value as? AnimeDetailsUiState.Content ?: return
+        if (current.isTranslating) return
+
+        if (current.isShowingTranslation) {
+            _uiState.value = current.copy(isShowingTranslation = false, translationError = null)
+            return
+        }
+
+        if (!current.translatedDescription.isNullOrBlank()) {
+            _uiState.value = current.copy(isShowingTranslation = true, translationError = null)
+            return
+        }
+
+        val originalText = current.details.description?.trim().orEmpty()
+        if (originalText.isEmpty()) {
+            return
+        }
+
+        val translationRepo = translationRepository
+        if (translationRepo == null) {
+            _uiState.value = current.copy(translationError = "Translation repository unavailable")
+            return
+        }
+
+        _uiState.value = current.copy(isTranslating = true, translationError = null)
+        viewModelScope.launch(dispatcher) {
+            val userLanguage = preferencesRepository?.getPreferences()?.let { prefResult ->
+                (prefResult as? RepositoryResult.Success)?.value?.appLanguage?.let { pref ->
+                    LanguageCode.fromAppLanguage(pref)
+                }
+            } ?: LanguageCode.PORTUGUESE
+
+            when (val result = translationRepo.translateSynopsis(
+                text = originalText,
+                targetLanguage = userLanguage,
+                sourceLanguage = LanguageCode.ENGLISH,
+            )) {
+                is RepositoryResult.Success -> {
+                    val latest = _uiState.value as? AnimeDetailsUiState.Content ?: return@launch
+                    _uiState.value = latest.copy(
+                        isTranslating = false,
+                        translatedDescription = result.value.translatedText,
+                        isShowingTranslation = true,
+                        translationError = null,
+                    )
+                }
+                is RepositoryResult.Failure -> {
+                    val latest = _uiState.value as? AnimeDetailsUiState.Content ?: return@launch
+                    _uiState.value = latest.copy(
+                        isTranslating = false,
+                        isShowingTranslation = false,
+                        translationError = "Translation failed",
+                    )
+                }
+            }
+        }
+    }
 }
+
