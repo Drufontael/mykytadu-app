@@ -94,3 +94,4 @@ implementação, validações aplicáveis, aceite humano e encerramento document
 | S11 — Configurações e Preferências | Concluída | [S11.md](S11.md) |
 | S12 — Backend e Autenticação | Concluída | [S12.md](S12.md) |
 | S13 — Sincronização e Perfil | Concluída | [S13.md](S13.md) |
+| S14 — Cache e Experiência Offline | Em andamento | [S14.md](S14.md) |

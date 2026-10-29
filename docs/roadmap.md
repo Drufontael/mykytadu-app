@@ -41,8 +41,8 @@ arquitetural identificados por `M`.
 | S10 | Home | Concluída | [S10](sprints/S10.md) |
 | S11 | Configurações e Preferências | Concluída | [S11](sprints/S11.md) |
 | S12 | Backend e Autenticação | Concluída | [S12](sprints/S12.md) |
-| S13 | Sincronização e Perfil | Planejada | [S13](sprints/S13.md) |
-| S14 | Cache e Experiência Offline | Planejada | a criar |
+| S13 | Sincronização e Perfil | Concluída | [S13](sprints/S13.md) |
+| S14 | Cache e Experiência Offline | Em andamento | [S14](sprints/S14.md) |
 | S15 | Localização e Tradução | Planejada | a criar |
 | S16 | Preparação para Lançamento | Planejada | a criar |
 
@@ -462,7 +462,7 @@ Associar a experiência local ao usuário autenticado e sincronizar a biblioteca
 
 # Sprint 14 — Cache e Experiência Offline
 
-**Status:** Planejada
+**Status:** Em andamento
 
 ## Objetivo
 
