@@ -287,6 +287,7 @@ class SearchViewModel internal constructor(
                     SearchContent.Results(
                         items = value.items,
                         pageInfo = value.pageInfo,
+                        isOfflineFallback = value.isOfflineFallback,
                     )
                 }
             }

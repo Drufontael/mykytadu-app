@@ -16,7 +16,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
 import br.com.mykytadu.core.theme.AppTheme
+import br.com.mykytadu.data.local.datasource.InMemoryCatalogCacheLocalDataSource
 import br.com.mykytadu.data.local.datasource.InMemoryPreferencesLocalDataSource
+import br.com.mykytadu.data.repository.DefaultCatalogCacheManager
 import br.com.mykytadu.data.repository.DefaultPreferencesRepository
 import br.com.mykytadu.domain.model.AppLanguagePreference
 import br.com.mykytadu.domain.model.ThemePreference
@@ -128,5 +130,53 @@ class SettingsEndToEndUiTest {
         assertEquals(TitleLanguagePreference.ROMAJI, prefs.titleLanguage)
         assertFalse(prefs.adultContent)
         assertEquals(AppLanguagePreference.SYSTEM, prefs.appLanguage)
+    }
+
+    @Test
+    fun `limpar cache na tela de configuracoes exibe confirmacao e aciona gerenciador de cache`() {
+        val prefsDataSource = InMemoryPreferencesLocalDataSource()
+        val prefsRepository = DefaultPreferencesRepository(prefsDataSource)
+        val cacheDataSource = InMemoryCatalogCacheLocalDataSource()
+        val cacheManager = DefaultCatalogCacheManager(cacheDataSource)
+        val viewModel = SettingsViewModel(prefsRepository, cacheManager)
+
+        // Popula cache
+        runBlocking {
+            cacheDataSource.putAnimeDetails(
+                details = br.com.mykytadu.domain.model.AnimeDetails(id = br.com.mykytadu.domain.model.CatalogAnimeId("100")),
+                cachedAt = 1000L,
+                expiresAt = 5000L,
+            )
+            assertEquals(1, cacheManager.getCachedDetailsCount())
+        }
+
+        compose.setContent {
+            val state by viewModel.uiState.collectAsState()
+            AppTheme {
+                Box(Modifier.size(800.dp, 1000.dp)) {
+                    SettingsContent(
+                        uiState = state,
+                        onThemeSelected = viewModel::setTheme,
+                        onTitleLanguageSelected = viewModel::setTitleLanguage,
+                        onAdultContentChanged = viewModel::setAdultContent,
+                        onAppLanguageSelected = viewModel::setAppLanguage,
+                        onClearCache = viewModel::clearCatalogCache,
+                        onNavigateBack = {},
+                    )
+                }
+            }
+        }
+
+        // Clica no botão de limpar cache
+        compose.onNodeWithTag("settings_clear_cache_button").performClick()
+        compose.waitForIdle()
+
+        // Valida que o cache foi limpo
+        runBlocking {
+            assertEquals(0, cacheManager.getCachedDetailsCount())
+        }
+
+        // Valida que a mensagem de sucesso está visível na tela
+        compose.onNodeWithTag("settings_cache_cleared_message").assertIsDisplayed()
     }
 }

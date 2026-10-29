@@ -12,11 +12,16 @@ import br.com.mykytadu.domain.repository.LibraryRepository
 import br.com.mykytadu.domain.repository.PreferencesRepository
 import br.com.mykytadu.domain.repository.ProfileRepository
 import br.com.mykytadu.domain.repository.SyncRepository
+import br.com.mykytadu.data.repository.DefaultCatalogCacheManager
+import br.com.mykytadu.domain.repository.CatalogCacheManager
 import org.koin.dsl.module
 
 val RepositoryModule = module {
     single<AnimeRepository> {
-        AniListAnimeRepository(animeApi = get())
+        AniListAnimeRepository(
+            animeApi = get(),
+            catalogCacheDataSource = getOrNull(),
+        )
     }
 
     single<LibraryRepository> {
@@ -50,6 +55,12 @@ val RepositoryModule = module {
         DefaultProfileRepository(
             authRepository = get(),
             libraryRepository = get(),
+        )
+    }
+
+    single<CatalogCacheManager> {
+        DefaultCatalogCacheManager(
+            catalogCacheLocalDataSource = get(),
         )
     }
 }

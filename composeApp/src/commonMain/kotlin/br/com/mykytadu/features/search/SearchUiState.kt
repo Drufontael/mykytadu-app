@@ -27,6 +27,7 @@ sealed interface SearchContent {
         val items: List<AnimeSummary>,
         val pageInfo: PageInfo,
         val pagination: SearchPaginationState = SearchPaginationState.Idle,
+        val isOfflineFallback: Boolean = false,
     ) : SearchContent
 
     data object Empty : SearchContent

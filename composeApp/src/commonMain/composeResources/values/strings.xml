@@ -148,6 +148,12 @@
     <string name="settings_about_description">Assistente multiplataforma para acompanhamento de animes com persistência local-first.</string>
     <string name="settings_about_version">Versão %1$s</string>
     <string name="settings_about_open_source">Código aberto em Kotlin e Compose Multiplatform.</string>
+    <string name="settings_storage_section">Armazenamento e Cache</string>
+    <string name="settings_storage_cache_title">Cache de navegação</string>
+    <string name="settings_storage_cache_description">Remove buscas e animes salvos temporariamente para uso offline. Sua biblioteca local e preferências não serão alteradas.</string>
+    <string name="settings_storage_clear_cache_button">Limpar cache de navegação</string>
+    <string name="settings_storage_cache_cleared">Cache de navegação limpo com sucesso!</string>
+    <string name="catalog_offline_fallback_badge">Exibindo dados em cache (modo offline)</string>
 
     <!-- Autenticação -->
     <string name="auth_login_title">Entrar na sua conta</string>

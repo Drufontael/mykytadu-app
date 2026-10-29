@@ -41,8 +41,8 @@ arquitetural identificados por `M`.
 | S10 | Home | Concluída | [S10](sprints/S10.md) |
 | S11 | Configurações e Preferências | Concluída | [S11](sprints/S11.md) |
 | S12 | Backend e Autenticação | Concluída | [S12](sprints/S12.md) |
-| S13 | Sincronização e Perfil | Planejada | [S13](sprints/S13.md) |
-| S14 | Cache e Experiência Offline | Planejada | a criar |
+| S13 | Sincronização e Perfil | Concluída | [S13](sprints/S13.md) |
+| S14 | Cache e Experiência Offline | Em andamento | [S14](sprints/S14.md) |
 | S15 | Localização e Tradução | Planejada | a criar |
 | S16 | Preparação para Lançamento | Planejada | a criar |
 
@@ -462,7 +462,7 @@ Associar a experiência local ao usuário autenticado e sincronizar a biblioteca
 
 # Sprint 14 — Cache e Experiência Offline
 
-**Status:** Planejada
+**Status:** Concluída
 
 ## Objetivo
 
@@ -470,25 +470,25 @@ Aprimorar desempenho, resiliência e uso offline do catálogo.
 
 ### Escopo
 
-- [ ] Cache de pesquisas
-- [ ] Cache de detalhes
-- [ ] Revisão do cache de imagens
-- [ ] Política de expiração
-- [ ] Invalidação
-- [ ] Fallback offline
-- [ ] Diferenciação entre dado atual, cache válido e cache expirado
-- [ ] Limpeza controlada
-- [ ] Limites de armazenamento
-- [ ] Testes de política de cache
+- [x] Cache de pesquisas
+- [x] Cache de detalhes
+- [x] Revisão do cache de imagens
+- [x] Política de expiração
+- [x] Invalidação
+- [x] Fallback offline
+- [x] Diferenciação entre dado atual, cache válido e cache expirado
+- [x] Limpeza controlada
+- [x] Limites de armazenamento
+- [x] Testes de política de cache
 
 ### Critérios de aceite
 
-- [ ] Dados armazenados possuem política de validade explícita.
-- [ ] O aplicativo apresenta conteúdo disponível quando estiver offline.
-- [ ] Dados expirados não são tratados silenciosamente como atuais.
-- [ ] Limpeza não remove dados permanentes da biblioteca.
-- [ ] Cache não replica indiscriminadamente a base da AniList.
-- [ ] Falhas de atualização preservam conteúdo útil já disponível.
+- [x] Dados armazenados possuem política de validade explícita.
+- [x] O aplicativo apresenta conteúdo disponível quando estiver offline.
+- [x] Dados expirados não são tratados silenciosamente como atuais.
+- [x] Limpeza não remove dados permanentes da biblioteca.
+- [x] Cache não replica indiscriminadamente a base da AniList.
+- [x] Falhas de atualização preservam conteúdo útil já disponível.
 
 ---
 

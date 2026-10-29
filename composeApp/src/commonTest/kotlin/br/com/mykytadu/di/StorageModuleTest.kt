@@ -132,4 +132,36 @@ class StorageModuleTest {
             koinApplication.close()
         }
     }
+
+    @Test
+    fun `deve resolver CatalogCacheLocalDataSource a partir do StorageModule`() {
+        val koinApplication = koinApplication {
+            modules(StorageModule)
+        }
+
+        try {
+            val dataSource = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.CatalogCacheLocalDataSource>()
+
+            assertNotNull(dataSource)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de CatalogCacheLocalDataSource`() {
+        val koinApplication = koinApplication {
+            modules(StorageModule)
+        }
+
+        try {
+            val dataSource1 = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.CatalogCacheLocalDataSource>()
+            val dataSource2 = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.CatalogCacheLocalDataSource>()
+
+            assertSame(dataSource1, dataSource2)
+        } finally {
+            koinApplication.close()
+        }
+    }
 }
+

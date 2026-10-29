@@ -1,5 +1,7 @@
 package br.com.mykytadu.di
 
+import br.com.mykytadu.data.local.datasource.CatalogCacheLocalDataSource
+import br.com.mykytadu.data.local.datasource.InMemoryCatalogCacheLocalDataSource
 import br.com.mykytadu.data.local.datasource.InMemoryLibraryLocalDataSource
 import br.com.mykytadu.data.local.datasource.InMemoryPreferencesLocalDataSource
 import br.com.mykytadu.data.local.datasource.InMemorySecureStorageDriver
@@ -20,3 +22,7 @@ actual fun provideSecureStorageDriver(): SecureStorageDriver =
 
 actual fun provideSyncQueueLocalDataSource(): SyncQueueLocalDataSource =
     InMemorySyncQueueLocalDataSource()
+
+actual fun provideCatalogCacheLocalDataSource(): CatalogCacheLocalDataSource =
+    InMemoryCatalogCacheLocalDataSource()
+

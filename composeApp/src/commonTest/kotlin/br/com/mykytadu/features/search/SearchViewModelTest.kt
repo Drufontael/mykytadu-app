@@ -401,6 +401,34 @@ class SearchViewModelTest {
         viewModel.clearQuery()
     }
 
+    @Test
+    fun `sucesso com fallback offline reflete isOfflineFallback nos resultados`() = runTest {
+        val animeItem = anime(10, "Naruto")
+        val offlinePage = PagedResult(
+            items = listOf(animeItem),
+            pageInfo = PageInfo(
+                currentPage = 1,
+                lastPage = 1,
+                hasNextPage = false,
+                perPage = SEARCH_PAGE_SIZE,
+                total = 1,
+            ),
+            isOfflineFallback = true,
+        )
+        val repository = ControllableAnimeRepository {
+            RepositoryResult.Success(offlinePage)
+        }
+        val viewModel = SearchViewModel(repository, StandardTestDispatcher(testScheduler))
+
+        viewModel.onQueryChange("Naruto")
+        viewModel.submit()
+        runCurrent()
+
+        val results = assertIs<SearchContent.Results>(viewModel.uiState.value.content)
+        assertEquals(true, results.isOfflineFallback)
+        assertEquals(listOf(animeItem), results.items)
+    }
+
     private data class SearchCall(
         val query: String,
         val page: Int,
