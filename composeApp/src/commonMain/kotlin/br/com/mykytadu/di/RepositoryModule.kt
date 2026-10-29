@@ -16,7 +16,10 @@ import org.koin.dsl.module
 
 val RepositoryModule = module {
     single<AnimeRepository> {
-        AniListAnimeRepository(animeApi = get())
+        AniListAnimeRepository(
+            animeApi = get(),
+            catalogCacheDataSource = getOrNull(),
+        )
     }
 
     single<LibraryRepository> {

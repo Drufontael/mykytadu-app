@@ -21,6 +21,7 @@ import br.com.mykytadu.core.network.NetworkFailure
 import kotlin.test.assertSame
 import kotlinx.coroutines.CancellationException
 import kotlin.test.assertFailsWith
+import br.com.mykytadu.data.local.datasource.InMemoryCatalogCacheLocalDataSource
 
 class AniListAnimeRepositoryTest {
 
@@ -379,6 +380,153 @@ class AniListAnimeRepositoryTest {
             perPage: Int,
         ): NetworkResult<AnimeSearchPageDto> =
             throw cause
+    }
+
+    @Test
+    fun `searchAnime grava no cache em caso de sucesso e reutiliza cache dentro do TTL`() = runTest {
+        val cache = InMemoryCatalogCacheLocalDataSource()
+        val api = RecordingAnimeApi(
+            searchResult = NetworkResult.Success(
+                AnimeSearchPageDto(
+                    pageInfo = PageInfoDto(1, 1, false, 20, 1),
+                    media = listOf(
+                        AnimeSearchItemDto(id = 10, title = AnimeTitleDto(romaji = "Naruto")),
+                    ),
+                ),
+            ),
+        )
+        var currentTime = 1000L
+        val repository = AniListAnimeRepository(
+            animeApi = api,
+            catalogCacheDataSource = cache,
+            timeProvider = { currentTime },
+        )
+
+        // Primeira chamada busca na rede e popula o cache
+        val result1 = repository.searchAnime("Naruto", 1, 20)
+        assertIs<RepositoryResult.Success<*>>(result1)
+        assertEquals(1, api.searchCallCount)
+
+        // Segunda chamada dentro do TTL reutiliza o cache sem chamar a rede
+        currentTime += 60_000L
+        val result2 = repository.searchAnime("Naruto", 1, 20)
+        assertIs<RepositoryResult.Success<*>>(result2)
+        assertEquals(1, api.searchCallCount)
+    }
+
+    @Test
+    fun `searchAnime usa cache como fallback offline quando rede falha`() = runTest {
+        val cache = InMemoryCatalogCacheLocalDataSource()
+        val successApi = RecordingAnimeApi(
+            searchResult = NetworkResult.Success(
+                AnimeSearchPageDto(
+                    pageInfo = PageInfoDto(1, 1, false, 20, 1),
+                    media = listOf(
+                        AnimeSearchItemDto(id = 10, title = AnimeTitleDto(romaji = "Naruto")),
+                    ),
+                ),
+            ),
+        )
+        var currentTime = 1000L
+        val repositorySuccess = AniListAnimeRepository(
+            animeApi = successApi,
+            catalogCacheDataSource = cache,
+            timeProvider = { currentTime },
+        )
+
+        // Popula cache
+        repositorySuccess.searchAnime("Naruto", 1, 20)
+
+        // Simula passagem de tempo para expirar o cache e falha de rede
+        currentTime += 100_000_000L
+        val failingApi = RecordingAnimeApi(
+            searchResult = NetworkResult.Failure(NetworkFailure.Connection(Exception("Sem conexao"))),
+        )
+        val repositoryFailing = AniListAnimeRepository(
+            animeApi = failingApi,
+            catalogCacheDataSource = cache,
+            timeProvider = { currentTime },
+        )
+
+        val result = repositoryFailing.searchAnime("Naruto", 1, 20)
+        val success = assertIs<RepositoryResult.Success<*>>(result)
+        val page = assertIs<PagedResult<*>>(success.value)
+        assertEquals(1, page.items.size)
+    }
+
+    @Test
+    fun `getAnimeDetails grava no cache e reutiliza dentro do TTL`() = runTest {
+        val cache = InMemoryCatalogCacheLocalDataSource()
+        val api = RecordingAnimeApi(
+            detailsResult = NetworkResult.Success(
+                AnimeDetailsDto(id = 5114, title = AnimeTitleDto(romaji = "Fullmetal Alchemist")),
+            ),
+        )
+        var currentTime = 1000L
+        val repository = AniListAnimeRepository(
+            animeApi = api,
+            catalogCacheDataSource = cache,
+            timeProvider = { currentTime },
+        )
+
+        val result1 = repository.getAnimeDetails(CatalogAnimeId("5114"))
+        assertIs<RepositoryResult.Success<*>>(result1)
+        assertEquals(5114, api.requestedDetailsId)
+
+        // Segunda consulta dentro do TTL
+        val result2 = repository.getAnimeDetails(CatalogAnimeId("5114"))
+        assertIs<RepositoryResult.Success<*>>(result2)
+        val details = (result2 as RepositoryResult.Success<AnimeDetails>).value
+        assertEquals("5114", details.id.value)
+    }
+
+    @Test
+    fun `getAnimeDetails usa cache como fallback offline diante de erro de rede`() = runTest {
+        val cache = InMemoryCatalogCacheLocalDataSource()
+        val successApi = RecordingAnimeApi(
+            detailsResult = NetworkResult.Success(
+                AnimeDetailsDto(id = 5114, title = AnimeTitleDto(romaji = "Fullmetal Alchemist")),
+            ),
+        )
+        var currentTime = 1000L
+        val repositorySuccess = AniListAnimeRepository(
+            animeApi = successApi,
+            catalogCacheDataSource = cache,
+            timeProvider = { currentTime },
+        )
+
+        repositorySuccess.getAnimeDetails(CatalogAnimeId("5114"))
+
+        // Simula tempo expirado e erro de rede
+        currentTime += 100_000_000L
+        val failingApi = RecordingAnimeApi(
+            detailsResult = NetworkResult.Failure(NetworkFailure.Connection(Exception("Sem conexao"))),
+        )
+        val repositoryFailing = AniListAnimeRepository(
+            animeApi = failingApi,
+            catalogCacheDataSource = cache,
+            timeProvider = { currentTime },
+        )
+
+        val result = repositoryFailing.getAnimeDetails(CatalogAnimeId("5114"))
+        assertIs<RepositoryResult.Success<*>>(result)
+        val details = (result as RepositoryResult.Success<AnimeDetails>).value
+        assertEquals("5114", details.id.value)
+    }
+
+    @Test
+    fun `getAnimeDetails falha se rede falhar e nao houver cache`() = runTest {
+        val cache = InMemoryCatalogCacheLocalDataSource()
+        val failingApi = RecordingAnimeApi(
+            detailsResult = NetworkResult.Failure(NetworkFailure.Connection(Exception("Sem conexao"))),
+        )
+        val repository = AniListAnimeRepository(
+            animeApi = failingApi,
+            catalogCacheDataSource = cache,
+        )
+
+        val result = repository.getAnimeDetails(CatalogAnimeId("5114"))
+        assertIs<RepositoryResult.Failure>(result)
     }
 
     private class RecordingAnimeApi(
