@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import br.com.mykytadu.core.theme.AppTheme
 import br.com.mykytadu.domain.model.AppLanguagePreference
 import br.com.mykytadu.domain.model.ThemePreference
@@ -74,12 +75,16 @@ class SettingsContentUiTest {
         compose.onNodeWithTag("settings_language_pt_br").assertIsDisplayed()
         compose.onNodeWithTag("settings_language_en_us").assertIsDisplayed()
 
+        // Seção Armazenamento e Cache
+        compose.onNodeWithText("Armazenamento e Cache").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_clear_cache_button").performScrollTo().assertIsDisplayed()
+
         // Seção Sobre
-        compose.onNodeWithText("Sobre o MykytaDu").assertIsDisplayed()
-        compose.onNodeWithText("MykytaDu").assertIsDisplayed()
-        compose.onNodeWithText("Versão 1.0.0").assertIsDisplayed()
-        compose.onNodeWithText("Assistente multiplataforma para acompanhamento de animes com persistência local-first.").assertIsDisplayed()
-        compose.onNodeWithText("Código aberto em Kotlin e Compose Multiplatform.").assertIsDisplayed()
+        compose.onNodeWithText("Sobre o MykytaDu").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("MykytaDu").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("Versão 1.0.0").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("Assistente multiplataforma para acompanhamento de animes com persistência local-first.").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("Código aberto em Kotlin e Compose Multiplatform.").performScrollTo().assertIsDisplayed()
 
         // Garantir que nenhum botão ou controle de logout/sessão está presente
         compose.onNodeWithText("Sair").assertDoesNotExist()
@@ -188,5 +193,27 @@ class SettingsContentUiTest {
 
         compose.onNodeWithContentDescription("Voltar").performClick()
         assertTrue(backClicked)
+    }
+
+    @Test
+    fun `SettingsContent dispara callback ao clicar no botao de limpar cache`() {
+        var clearCacheClicked = false
+
+        compose.setContent {
+            AppTheme {
+                SettingsContent(
+                    uiState = SettingsUiState(),
+                    onThemeSelected = {},
+                    onTitleLanguageSelected = {},
+                    onAdultContentChanged = {},
+                    onAppLanguageSelected = {},
+                    onClearCache = { clearCacheClicked = true },
+                    onNavigateBack = {},
+                )
+            }
+        }
+
+        compose.onNodeWithTag("settings_clear_cache_button").performScrollTo().performClick()
+        assertTrue(clearCacheClicked)
     }
 }

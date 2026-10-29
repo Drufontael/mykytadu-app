@@ -1408,7 +1408,85 @@ classDiagram
 
 ---
 
-# 13. Regras de Manutenção
+# 13. Arquitetura de Cache e Resiliência Offline
+
+> Implementado na **Sprint S14**.
+
+A resiliência e o desempenho do catálogo do MykytaDu são sustentados por uma camada de cache local com políticas explícitas de validade (TTL), limites de capacidade LRU (evitando replicação descontrolada da base externa da AniList), mecanismo de fallback offline *Stale-While-Revalidate* e garantia de isolamento absoluto dos dados permanentes do usuário.
+
+## 13.1 Políticas de Validade e Capacidade
+
+1. **TTL de Pesquisas e Em Alta:** 1 hora (`3_600_000 ms`), acomodando a dinâmica de lançamentos sem chamadas repetitivas de rede;
+2. **TTL de Detalhes do Anime:** 24 horas (`86_400_000 ms`), visto que metadados detalhados de títulos são substancialmente estáveis;
+3. **Limites de Capacidade LRU:** o datasource mantém até 50 pesquisas e 200 animes detalhados. Ao atingir o limite, a entrada menos recentemente acessada é automaticamente descartada;
+4. **Isolamento de Dados:** o `CatalogCacheManager` limpa exclusivamente o cache transitório do catálogo. Registros permanentes da biblioteca (`LibraryEntry`) e preferências do usuário residem em fontes desacopladas e nunca são afetados.
+
+## 13.2 Fluxo Stale-While-Revalidate com Fallback Offline
+
+```mermaid
+flowchart TD
+    Req([Requisição de Busca ou Detalhes]) --> CheckCache{Cache presente?}
+    CheckCache -- Sim: Fresh (<= TTL) --> ReturnFresh([Retorna dado em cache\nisOfflineFallback = false])
+    CheckCache -- Sim: Expirado (> TTL) --> FetchNetwork[Consulta API AniList]
+    CheckCache -- Não --> FetchNetwork
+    FetchNetwork --> NetworkSuccess{Rede respondeu com sucesso?}
+    NetworkSuccess -- Sim --> SaveCache[Salva no Cache com novo TTL\nRespeita limites LRU]
+    SaveCache --> ReturnNetwork([Retorna dado da rede\nisOfflineFallback = false])
+    NetworkSuccess -- Não: Falha de conexão/timeout --> FallbackCheck{Existe dado prévio em cache?}
+    FallbackCheck -- Sim --> ReturnFallback([Retorna fallback offline\nisOfflineFallback = true])
+    FallbackCheck -- Não --> ReturnFailure([Retorna RepositoryFailure.NetworkError])
+```
+
+## 13.3 Diagrama de Classes e Componentes do Cache
+
+```mermaid
+classDiagram
+    class CatalogCacheLocalDataSource {
+        <<interface>>
+        +getSearch(key, currentTime) CachedValue~PagedResult~AnimeSummary~~
+        +putSearch(key, result, expiresAt, currentTime)
+        +getDetails(id, currentTime) CachedValue~AnimeDetails~
+        +putDetails(id, details, expiresAt, currentTime)
+        +clearAll()
+        +clearExpired(currentTime)
+    }
+
+    class InMemoryCatalogCacheLocalDataSource {
+        -maxSearchEntries: Int = 50
+        -maxDetailsEntries: Int = 200
+        -searchCache: LinkedHashMap
+        -detailsCache: LinkedHashMap
+        -mutex: Mutex
+    }
+
+    class CatalogCacheManager {
+        <<interface>>
+        +clearCatalogCache()
+    }
+
+    class DefaultCatalogCacheManager {
+        -catalogCacheDataSource: CatalogCacheLocalDataSource
+    }
+
+    class AniListAnimeRepository {
+        -animeApi: AnimeApi
+        -catalogCacheDataSource: CatalogCacheLocalDataSource
+        -timeProvider: () -> Long
+        +searchAnime(query, page, perPage) RepositoryResult
+        +getAnimeDetails(id) RepositoryResult
+        +getTrendingAnime(page, perPage) RepositoryResult
+    }
+
+    CatalogCacheLocalDataSource <|.. InMemoryCatalogCacheLocalDataSource
+    CatalogCacheManager <|.. DefaultCatalogCacheManager
+    DefaultCatalogCacheManager --> CatalogCacheLocalDataSource
+    AniListAnimeRepository --> AnimeApi
+    AniListAnimeRepository --> CatalogCacheLocalDataSource
+```
+
+---
+
+# 14. Regras de Manutenção
 
 Ao atualizar este documento:
 
@@ -1423,7 +1501,7 @@ Ao atualizar este documento:
 
 ---
 
-# 14. Fontes do Projeto
+# 15. Fontes do Projeto
 
 Este documento deve ser mantido em conjunto com:
 
@@ -1439,4 +1517,5 @@ Este documento deve ser mantido em conjunto com:
 > **Princípio do documento**
 >
 > Modelar o suficiente para reduzir ambiguidades e orientar a implementação, sem transformar a documentação em uma arquitetura imaginária do futuro.
+
 
