@@ -8,6 +8,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.unit.dp
 import br.com.mykytadu.core.theme.AppTheme
@@ -189,7 +190,7 @@ class AuthEndToEndUiTest {
             }
         }
 
-        compose.onNodeWithTag("profile_logout_button").assertIsDisplayed().performClick()
+        compose.onNodeWithTag("profile_logout_button").performScrollTo().performClick()
         compose.waitForIdle()
 
         assertNull(runBlocking { storage.getRefreshToken() })

@@ -11,6 +11,7 @@ import br.com.mykytadu.data.remote.anilist.dto.AnimeDetailsDto
 import br.com.mykytadu.data.remote.anilist.dto.AnimeSearchPageDto
 import br.com.mykytadu.data.remote.api.AnimeApi
 import br.com.mykytadu.data.remote.api.AuthApi
+import br.com.mykytadu.data.remote.api.SyncApi
 import br.com.mykytadu.data.remote.dto.auth.LoginRequestDto
 import br.com.mykytadu.data.remote.dto.auth.LoginResponseDto
 import br.com.mykytadu.data.remote.dto.auth.LogoutRequestDto
@@ -23,10 +24,14 @@ import br.com.mykytadu.data.repository.AniListAnimeRepository
 import br.com.mykytadu.data.repository.DefaultAuthRepository
 import br.com.mykytadu.data.repository.DefaultLibraryRepository
 import br.com.mykytadu.data.repository.DefaultPreferencesRepository
+import br.com.mykytadu.data.repository.DefaultProfileRepository
+import br.com.mykytadu.data.repository.DefaultSyncRepository
 import br.com.mykytadu.domain.repository.AnimeRepository
 import br.com.mykytadu.domain.repository.AuthRepository
 import br.com.mykytadu.domain.repository.LibraryRepository
 import br.com.mykytadu.domain.repository.PreferencesRepository
+import br.com.mykytadu.domain.repository.ProfileRepository
+import br.com.mykytadu.domain.repository.SyncRepository
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import kotlin.test.Test
@@ -195,6 +200,92 @@ class RepositoryModuleTest {
         }
     }
 
+    @Test
+    fun `deve resolver SyncRepository com implementacao DefaultSyncRepository`() {
+        val testDepsModule = module {
+            single<SyncApi> { FakeSyncApi() }
+            single<AuthApi> { FakeAuthApi() }
+            single<SecureStorageDriver> { InMemorySecureStorageDriver() }
+            single<LibraryLocalDataSource> { InMemoryLibraryLocalDataSource() }
+            single<br.com.mykytadu.data.local.datasource.SyncQueueLocalDataSource> { br.com.mykytadu.data.local.datasource.InMemorySyncQueueLocalDataSource() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val repository = koinApplication.koin.get<SyncRepository>()
+
+            assertIs<DefaultSyncRepository>(repository)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de SyncRepository`() {
+        val testDepsModule = module {
+            single<SyncApi> { FakeSyncApi() }
+            single<AuthApi> { FakeAuthApi() }
+            single<SecureStorageDriver> { InMemorySecureStorageDriver() }
+            single<LibraryLocalDataSource> { InMemoryLibraryLocalDataSource() }
+            single<br.com.mykytadu.data.local.datasource.SyncQueueLocalDataSource> { br.com.mykytadu.data.local.datasource.InMemorySyncQueueLocalDataSource() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val repository1 = koinApplication.koin.get<SyncRepository>()
+            val repository2 = koinApplication.koin.get<SyncRepository>()
+
+            assertSame(repository1, repository2)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve resolver ProfileRepository com implementacao DefaultProfileRepository`() {
+        val testDepsModule = module {
+            single<AuthApi> { FakeAuthApi() }
+            single<SecureStorageDriver> { InMemorySecureStorageDriver() }
+            single<LibraryLocalDataSource> { InMemoryLibraryLocalDataSource() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val repository = koinApplication.koin.get<ProfileRepository>()
+
+            assertIs<DefaultProfileRepository>(repository)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de ProfileRepository`() {
+        val testDepsModule = module {
+            single<AuthApi> { FakeAuthApi() }
+            single<SecureStorageDriver> { InMemorySecureStorageDriver() }
+            single<LibraryLocalDataSource> { InMemoryLibraryLocalDataSource() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val repository1 = koinApplication.koin.get<ProfileRepository>()
+            val repository2 = koinApplication.koin.get<ProfileRepository>()
+
+            assertSame(repository1, repository2)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
     private class FakeAnimeApi : AnimeApi {
 
         override suspend fun searchAnime(
@@ -224,6 +315,14 @@ class RepositoryModuleTest {
             error("Não deve ser chamado neste teste.")
 
         override suspend fun getProfile(accessToken: String): NetworkResult<UserDto> =
+            error("Não deve ser chamado neste teste.")
+    }
+
+    private class FakeSyncApi : SyncApi {
+        override suspend fun syncLibrary(
+            accessToken: String,
+            request: br.com.mykytadu.data.remote.dto.sync.SyncBatchRequestDto,
+        ): NetworkResult<br.com.mykytadu.data.remote.dto.sync.SyncBatchResponseDto> =
             error("Não deve ser chamado neste teste.")
     }
 }

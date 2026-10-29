@@ -172,4 +172,28 @@
     <string name="auth_error_network">Não foi possível conectar ao servidor. Verifique sua conexão.</string>
     <string name="auth_error_generic">Ocorreu um erro inesperado. Tente novamente.</string>
     <string name="auth_logout_button">Sair da conta</string>
+
+    <!-- Perfil e Sincronização -->
+    <string name="profile_title">Perfil</string>
+    <string name="profile_section_stats">Estatísticas da Biblioteca</string>
+    <string name="profile_stat_total_animes">Total de animes</string>
+    <string name="profile_stat_episodes">Episódios assistidos</string>
+    <string name="profile_stat_hours">Horas assistidas</string>
+    <string name="profile_stat_favorites">Favoritos</string>
+    <string name="profile_stat_average_score">Nota média</string>
+    <string name="profile_stat_watching">Assistindo</string>
+    <string name="profile_stat_completed">Completos</string>
+    <string name="profile_stat_planning">Planejados</string>
+    <string name="profile_stat_paused">Pausados</string>
+    <string name="profile_stat_dropped">Abandonados</string>
+    <string name="profile_section_sync">Sincronização em Nuvem</string>
+    <string name="profile_sync_button">Sincronizar agora</string>
+    <string name="profile_sync_status_idle">Pronto para sincronizar</string>
+    <string name="profile_sync_status_syncing">Sincronizando com a nuvem…</string>
+    <string name="profile_sync_status_success">Sincronizado com sucesso</string>
+    <string name="profile_sync_status_error">Falha ao sincronizar</string>
+    <string name="profile_sync_pending_count">%1$d alteração(ões) pendente(s)</string>
+    <string name="profile_sync_up_to_date">Biblioteca atualizada com a nuvem</string>
+    <string name="profile_sync_last_synced">Última sincronização: %1$s</string>
+    <string name="profile_sync_never">Nunca sincronizado</string>
 </resources>

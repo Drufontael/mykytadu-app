@@ -41,7 +41,7 @@ arquitetural identificados por `M`.
 | S10 | Home | Concluída | [S10](sprints/S10.md) |
 | S11 | Configurações e Preferências | Concluída | [S11](sprints/S11.md) |
 | S12 | Backend e Autenticação | Concluída | [S12](sprints/S12.md) |
-| S13 | Sincronização e Perfil | Planejada | a criar |
+| S13 | Sincronização e Perfil | Planejada | [S13](sprints/S13.md) |
 | S14 | Cache e Experiência Offline | Planejada | a criar |
 | S15 | Localização e Tradução | Planejada | a criar |
 | S16 | Preparação para Lançamento | Planejada | a criar |
@@ -425,7 +425,7 @@ Esta sprint não deve começar sem contrato documentado e backend disponível ou
 
 # Sprint 13 — Sincronização e Perfil
 
-**Status:** Planejada
+**Status:** Concluída
 
 ## Objetivo
 
@@ -433,30 +433,30 @@ Associar a experiência local ao usuário autenticado e sincronizar a biblioteca
 
 ### Escopo
 
-- [ ] Estratégia de sincronização
-- [ ] Vínculo entre registros locais e remotos
-- [ ] Fila de operações pendentes
-- [ ] Resolução de conflitos
-- [ ] Retry
-- [ ] Estados de sincronização
-- [ ] Comportamento offline
-- [ ] Perfil
-- [ ] Avatar
-- [ ] Nome
-- [ ] Quantidade de animes
-- [ ] Horas assistidas
-- [ ] Favoritos
-- [ ] Outras estatísticas comprovadamente disponíveis
+- [x] Estratégia de sincronização
+- [x] Vínculo entre registros locais e remotos
+- [x] Fila de operações pendentes
+- [x] Resolução de conflitos
+- [x] Retry
+- [x] Estados de sincronização
+- [x] Comportamento offline
+- [x] Perfil
+- [x] Avatar
+- [x] Nome
+- [x] Quantidade de animes
+- [x] Horas assistidas
+- [x] Favoritos
+- [x] Outras estatísticas comprovadamente disponíveis
 
 ### Critérios de aceite
 
-- [ ] Biblioteca local continua utilizável offline.
-- [ ] Alterações pendentes são sincronizadas posteriormente.
-- [ ] Conflitos possuem política explícita.
-- [ ] Falhas de sincronização não causam perda silenciosa.
-- [ ] O usuário consegue identificar o estado da sincronização.
-- [ ] Perfil usa dados reais do backend ou agregações locais documentadas.
-- [ ] Logout preserva ou remove dados locais conforme política explícita.
+- [x] Biblioteca local continua utilizável offline.
+- [x] Alterações pendentes são sincronizadas posteriormente.
+- [x] Conflitos possuem política explícita.
+- [x] Falhas de sincronização não causam perda silenciosa.
+- [x] O usuário consegue identificar o estado da sincronização.
+- [x] Perfil usa dados reais do backend ou agregações locais documentadas.
+- [x] Logout preserva ou remove dados locais conforme política explícita.
 
 ---
 

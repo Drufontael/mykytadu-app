@@ -1,8 +1,11 @@
 package br.com.mykytadu.data.repository
 
 import br.com.mykytadu.data.local.datasource.LibraryLocalDataSource
+import br.com.mykytadu.data.local.datasource.SyncQueueLocalDataSource
+import br.com.mykytadu.data.local.entity.SyncQueueEntryEntity
 import br.com.mykytadu.data.mapper.toDomain
 import br.com.mykytadu.data.mapper.toEntity
+import br.com.mykytadu.data.remote.dto.sync.SyncMutationType
 import br.com.mykytadu.domain.model.CatalogAnimeId
 import br.com.mykytadu.domain.model.LibraryEntry
 import br.com.mykytadu.domain.model.LibraryEntryId
@@ -16,14 +19,26 @@ import kotlinx.coroutines.flow.map
 /**
  * Implementação padrão de [LibraryRepository] baseada em [LibraryLocalDataSource].
  * Converte chamadas e modelos do domínio para as entidades e operações de persistência local.
+ * Quando fornecido, enfileira mutações em [SyncQueueLocalDataSource] para sincronização posterior.
  */
 class DefaultLibraryRepository(
     private val localDataSource: LibraryLocalDataSource,
+    private val syncQueueLocalDataSource: SyncQueueLocalDataSource? = null,
 ) : LibraryRepository {
 
     override suspend fun saveEntry(entry: LibraryEntry): RepositoryResult<Unit> =
         executeCatching {
-            localDataSource.upsertEntry(entry.toEntity())
+            val entity = entry.toEntity()
+            localDataSource.upsertEntry(entity)
+            syncQueueLocalDataSource?.enqueue(
+                SyncQueueEntryEntity(
+                    id = "op-save-${entry.animeId.value}-${entry.updatedAtEpochMillis}",
+                    animeId = entry.animeId.value,
+                    type = SyncMutationType.UPSERT,
+                    entryEntity = entity,
+                    timestampEpochMillis = entry.updatedAtEpochMillis,
+                )
+            )
         }
 
     override suspend fun getEntryById(id: LibraryEntryId): RepositoryResult<LibraryEntry?> =
@@ -48,12 +63,39 @@ class DefaultLibraryRepository(
 
     override suspend fun deleteEntry(id: LibraryEntryId): RepositoryResult<Boolean> =
         executeCatching {
-            localDataSource.deleteEntry(id.value)
+            val existing = localDataSource.getEntryById(id.value)
+            val removed = localDataSource.deleteEntry(id.value)
+            if (removed && existing != null) {
+                syncQueueLocalDataSource?.enqueue(
+                    SyncQueueEntryEntity(
+                        id = "op-del-${existing.animeId}-${existing.updatedAtEpochMillis}",
+                        animeId = existing.animeId,
+                        type = SyncMutationType.DELETE,
+                        entryEntity = null,
+                        timestampEpochMillis = existing.updatedAtEpochMillis,
+                    )
+                )
+            }
+            removed
         }
 
     override suspend fun deleteEntryByAnimeId(animeId: CatalogAnimeId): RepositoryResult<Boolean> =
         executeCatching {
-            localDataSource.deleteEntryByAnimeId(animeId.value)
+            val existing = localDataSource.getEntryByAnimeId(animeId.value)
+            val removed = localDataSource.deleteEntryByAnimeId(animeId.value)
+            if (removed) {
+                val timestamp = existing?.updatedAtEpochMillis ?: 0L
+                syncQueueLocalDataSource?.enqueue(
+                    SyncQueueEntryEntity(
+                        id = "op-del-${animeId.value}-$timestamp",
+                        animeId = animeId.value,
+                        type = SyncMutationType.DELETE,
+                        entryEntity = null,
+                        timestampEpochMillis = timestamp,
+                    )
+                )
+            }
+            removed
         }
 
     override fun observeAllEntries(): Flow<List<LibraryEntry>> =

@@ -101,4 +101,35 @@ class StorageModuleTest {
             koinApplication.close()
         }
     }
+
+    @Test
+    fun `deve resolver SyncQueueLocalDataSource a partir do StorageModule`() {
+        val koinApplication = koinApplication {
+            modules(StorageModule)
+        }
+
+        try {
+            val dataSource = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.SyncQueueLocalDataSource>()
+
+            assertNotNull(dataSource)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de SyncQueueLocalDataSource`() {
+        val koinApplication = koinApplication {
+            modules(StorageModule)
+        }
+
+        try {
+            val dataSource1 = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.SyncQueueLocalDataSource>()
+            val dataSource2 = koinApplication.koin.get<br.com.mykytadu.data.local.datasource.SyncQueueLocalDataSource>()
+
+            assertSame(dataSource1, dataSource2)
+        } finally {
+            koinApplication.close()
+        }
+    }
 }
