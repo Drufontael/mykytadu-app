@@ -30,6 +30,10 @@ import br.com.mykytadu.domain.repository.AnimeRepository
 import br.com.mykytadu.domain.repository.AuthRepository
 import br.com.mykytadu.domain.repository.LibraryRepository
 import br.com.mykytadu.domain.repository.PreferencesRepository
+import br.com.mykytadu.data.local.datasource.CatalogCacheLocalDataSource
+import br.com.mykytadu.data.local.datasource.InMemoryCatalogCacheLocalDataSource
+import br.com.mykytadu.data.repository.DefaultCatalogCacheManager
+import br.com.mykytadu.domain.repository.CatalogCacheManager
 import br.com.mykytadu.domain.repository.ProfileRepository
 import br.com.mykytadu.domain.repository.SyncRepository
 import org.koin.dsl.koinApplication
@@ -281,6 +285,43 @@ class RepositoryModuleTest {
             val repository2 = koinApplication.koin.get<ProfileRepository>()
 
             assertSame(repository1, repository2)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve resolver CatalogCacheManager com implementacao DefaultCatalogCacheManager`() {
+        val testDepsModule = module {
+            single<CatalogCacheLocalDataSource> { InMemoryCatalogCacheLocalDataSource() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val manager = koinApplication.koin.get<CatalogCacheManager>()
+
+            assertIs<DefaultCatalogCacheManager>(manager)
+        } finally {
+            koinApplication.close()
+        }
+    }
+
+    @Test
+    fun `deve retornar a mesma instancia de CatalogCacheManager`() {
+        val testDepsModule = module {
+            single<CatalogCacheLocalDataSource> { InMemoryCatalogCacheLocalDataSource() }
+        }
+        val koinApplication = koinApplication {
+            modules(testDepsModule, RepositoryModule)
+        }
+
+        try {
+            val manager1 = koinApplication.koin.get<CatalogCacheManager>()
+            val manager2 = koinApplication.koin.get<CatalogCacheManager>()
+
+            assertSame(manager1, manager2)
         } finally {
             koinApplication.close()
         }

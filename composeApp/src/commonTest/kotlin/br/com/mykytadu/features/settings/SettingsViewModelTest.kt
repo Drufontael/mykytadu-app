@@ -12,10 +12,13 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import br.com.mykytadu.data.local.datasource.InMemoryCatalogCacheLocalDataSource
+import br.com.mykytadu.data.repository.DefaultCatalogCacheManager
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -99,5 +102,25 @@ class SettingsViewModelTest {
         advanceUntilIdle()
 
         assertEquals(AppLanguagePreference.PT_BR, viewModel.uiState.value.appLanguage)
+    }
+
+    @Test
+    fun `clearCatalogCache invoca cacheManager e reflete mensagem de sucesso no uiState`() = runTest {
+        val repository = DefaultPreferencesRepository(InMemoryPreferencesLocalDataSource())
+        val cacheDataSource = InMemoryCatalogCacheLocalDataSource()
+        val cacheManager = DefaultCatalogCacheManager(cacheDataSource)
+        val viewModel = SettingsViewModel(repository, cacheManager)
+
+        advanceUntilIdle()
+
+        viewModel.clearCatalogCache()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.cacheClearedMessage)
+
+        viewModel.dismissCacheClearedMessage()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.cacheClearedMessage)
     }
 }

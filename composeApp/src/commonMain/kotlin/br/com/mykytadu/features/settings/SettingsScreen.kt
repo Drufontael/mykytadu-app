@@ -51,11 +51,17 @@ import br.com.mykytadu.composeapp.generated.resources.settings_title_language_en
 import br.com.mykytadu.composeapp.generated.resources.settings_title_language_label
 import br.com.mykytadu.composeapp.generated.resources.settings_title_language_native
 import br.com.mykytadu.composeapp.generated.resources.settings_title_language_romaji
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_cleared
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_description
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_title
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_clear_cache_button
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_section
 import br.com.mykytadu.core.theme.AppDimensions
 import br.com.mykytadu.domain.model.AppLanguagePreference
 import br.com.mykytadu.domain.model.ThemePreference
 import br.com.mykytadu.domain.model.TitleLanguagePreference
 import br.com.mykytadu.features.settings.model.SettingsUiState
+import br.com.mykytadu.presentation.components.AppButton
 import br.com.mykytadu.presentation.components.AppCard
 import br.com.mykytadu.presentation.components.AppDivider
 import br.com.mykytadu.presentation.components.AppTopBar
@@ -77,6 +83,7 @@ fun SettingsScreen(
         onTitleLanguageSelected = viewModel::setTitleLanguage,
         onAdultContentChanged = viewModel::setAdultContent,
         onAppLanguageSelected = viewModel::setAppLanguage,
+        onClearCache = viewModel::clearCatalogCache,
         onNavigateBack = onNavigateBack,
     )
 }
@@ -88,6 +95,7 @@ fun SettingsContent(
     onTitleLanguageSelected: (TitleLanguagePreference) -> Unit,
     onAdultContentChanged: (Boolean) -> Unit,
     onAppLanguageSelected: (AppLanguagePreference) -> Unit,
+    onClearCache: () -> Unit = {},
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -248,6 +256,49 @@ fun SettingsContent(
                         onClick = { onAppLanguageSelected(AppLanguagePreference.EN_US) },
                         modifier = Modifier.weight(1f).testTag("settings_language_en_us"),
                     )
+                }
+            }
+
+            AppDivider()
+
+            // Seção Armazenamento e Cache
+            SettingsSection(
+                title = stringResource(Res.string.settings_storage_section),
+                testTag = "settings_storage_section",
+            ) {
+                AppCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("settings_cache_card"),
+                ) {
+                    Text(
+                        text = stringResource(Res.string.settings_storage_cache_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Spacer(modifier = Modifier.height(AppDimensions.spacing.xs))
+                    Text(
+                        text = stringResource(Res.string.settings_storage_cache_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(modifier = Modifier.height(AppDimensions.spacing.md))
+                    AppButton(
+                        text = stringResource(Res.string.settings_storage_clear_cache_button),
+                        onClick = onClearCache,
+                        enabled = !uiState.isClearingCache,
+                        loading = uiState.isClearingCache,
+                        modifier = Modifier.testTag("settings_clear_cache_button"),
+                    )
+                    if (uiState.cacheClearedMessage) {
+                        Spacer(modifier = Modifier.height(AppDimensions.spacing.sm))
+                        Text(
+                            text = stringResource(Res.string.settings_storage_cache_cleared),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.testTag("settings_cache_cleared_message"),
+                        )
+                    }
                 }
             }
 

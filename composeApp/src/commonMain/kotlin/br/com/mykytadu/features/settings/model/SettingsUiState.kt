@@ -11,4 +11,6 @@ data class SettingsUiState(
     val appLanguage: AppLanguagePreference = AppLanguagePreference.SYSTEM,
     val appName: String = "MykytaDu",
     val appVersion: String = "1.0.0",
+    val isClearingCache: Boolean = false,
+    val cacheClearedMessage: Boolean = false,
 )
