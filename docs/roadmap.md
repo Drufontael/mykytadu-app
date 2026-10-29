@@ -43,7 +43,7 @@ arquitetural identificados por `M`.
 | S12 | Backend e Autenticação | Concluída | [S12](sprints/S12.md) |
 | S13 | Sincronização e Perfil | Concluída | [S13](sprints/S13.md) |
 | S14 | Cache e Experiência Offline | Em andamento | [S14](sprints/S14.md) |
-| S15 | Localização e Tradução | Planejada | a criar |
+| S15 | Localização e Tradução | Concluída | [S15](sprints/S15.md) |
 | S16 | Preparação para Lançamento | Planejada | a criar |
 
 ## Diretrizes transversais
@@ -494,7 +494,7 @@ Aprimorar desempenho, resiliência e uso offline do catálogo.
 
 # Sprint 15 — Localização e Tradução
 
-**Status:** Em andamento
+**Status:** Concluída
 
 ## Objetivo
 
@@ -509,24 +509,24 @@ Distinguir:
 
 ### Escopo
 
-- [ ] Idiomas suportados pela interface
-- [ ] Revisão dos recursos de string
-- [ ] `TranslationApi`
-- [ ] Repository ou serviço apropriado
-- [ ] Cache de traduções
-- [ ] Fallback para conteúdo original
-- [ ] Preferência de idioma
-- [ ] Preferência de título
-- [ ] Estados de carregamento e falha da tradução
+- [x] Idiomas suportados pela interface
+- [x] Revisão dos recursos de string
+- [x] `TranslationApi`
+- [x] Repository ou serviço apropriado
+- [x] Cache de traduções
+- [x] Fallback para conteúdo original
+- [x] Preferência de idioma
+- [x] Preferência de título
+- [x] Estados de carregamento e falha da tradução
 
 ### Critérios de aceite
 
-- [ ] A interface pode trocar de idioma sem textos fixos relevantes.
-- [ ] Falha de tradução não impede a exibição do conteúdo original.
-- [ ] Traduções são reutilizadas quando disponíveis.
-- [ ] Conteúdo original permanece preservado.
-- [ ] Tradução não altera os DTOs nem o contrato da AniList.
-- [ ] Idiomas não suportados possuem fallback definido.
+- [x] A interface pode trocar de idioma sem textos fixos relevantes.
+- [x] Falha de tradução não impede a exibição do conteúdo original.
+- [x] Traduções são reutilizadas quando disponíveis.
+- [x] Conteúdo original permanece preservado.
+- [x] Tradução não altera os DTOs nem o contrato da AniList.
+- [x] Idiomas não suportados possuem fallback definido.
 
 ---
 
