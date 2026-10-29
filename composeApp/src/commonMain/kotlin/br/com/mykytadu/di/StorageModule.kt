@@ -1,5 +1,6 @@
 package br.com.mykytadu.di
 
+import br.com.mykytadu.data.local.datasource.CatalogCacheLocalDataSource
 import br.com.mykytadu.data.local.datasource.LibraryLocalDataSource
 import br.com.mykytadu.data.local.datasource.PreferencesLocalDataSource
 import br.com.mykytadu.data.local.datasource.SecureStorageDriver
@@ -10,6 +11,7 @@ expect fun provideLibraryLocalDataSource(): LibraryLocalDataSource
 expect fun providePreferencesLocalDataSource(): PreferencesLocalDataSource
 expect fun provideSecureStorageDriver(): SecureStorageDriver
 expect fun provideSyncQueueLocalDataSource(): SyncQueueLocalDataSource
+expect fun provideCatalogCacheLocalDataSource(): CatalogCacheLocalDataSource
 
 val StorageModule = module {
     single<LibraryLocalDataSource> {
@@ -27,4 +29,9 @@ val StorageModule = module {
     single<SyncQueueLocalDataSource> {
         provideSyncQueueLocalDataSource()
     }
+
+    single<CatalogCacheLocalDataSource> {
+        provideCatalogCacheLocalDataSource()
+    }
 }
+
