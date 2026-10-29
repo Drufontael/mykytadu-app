@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import br.com.mykytadu.core.localization.ProvideAppLocale
 import br.com.mykytadu.core.navigation.AppNavigation
 import br.com.mykytadu.core.navigation.NavigationHistoryBridge
 import br.com.mykytadu.core.theme.AppTheme
@@ -33,12 +34,14 @@ fun App(
         ThemePreference.DARK -> true
     }
 
-    AppTheme(darkTheme = isDarkTheme) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            AppNavigation(navigationHistoryBridge)
+    ProvideAppLocale(preferences.appLanguage) {
+        AppTheme(darkTheme = isDarkTheme) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                AppNavigation(navigationHistoryBridge)
+            }
         }
     }
 }

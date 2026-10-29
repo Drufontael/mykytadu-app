@@ -39,6 +39,7 @@ import br.com.mykytadu.composeapp.generated.resources.settings_appearance_sectio
 import br.com.mykytadu.composeapp.generated.resources.settings_back
 import br.com.mykytadu.composeapp.generated.resources.settings_content_section
 import br.com.mykytadu.composeapp.generated.resources.settings_language_en_us
+import br.com.mykytadu.composeapp.generated.resources.settings_language_es_es
 import br.com.mykytadu.composeapp.generated.resources.settings_language_pt_br
 import br.com.mykytadu.composeapp.generated.resources.settings_language_section
 import br.com.mykytadu.composeapp.generated.resources.settings_language_system
@@ -234,28 +235,41 @@ fun SettingsContent(
                 title = stringResource(Res.string.settings_language_section),
                 testTag = "settings_language_section",
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
-                ) {
-                    SettingsChoiceChip(
-                        label = stringResource(Res.string.settings_language_system),
-                        isSelected = uiState.appLanguage == AppLanguagePreference.SYSTEM,
-                        onClick = { onAppLanguageSelected(AppLanguagePreference.SYSTEM) },
-                        modifier = Modifier.weight(1f).testTag("settings_language_system"),
-                    )
-                    SettingsChoiceChip(
-                        label = stringResource(Res.string.settings_language_pt_br),
-                        isSelected = uiState.appLanguage == AppLanguagePreference.PT_BR,
-                        onClick = { onAppLanguageSelected(AppLanguagePreference.PT_BR) },
-                        modifier = Modifier.weight(1f).testTag("settings_language_pt_br"),
-                    )
-                    SettingsChoiceChip(
-                        label = stringResource(Res.string.settings_language_en_us),
-                        isSelected = uiState.appLanguage == AppLanguagePreference.EN_US,
-                        onClick = { onAppLanguageSelected(AppLanguagePreference.EN_US) },
-                        modifier = Modifier.weight(1f).testTag("settings_language_en_us"),
-                    )
+                Column(verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
+                    ) {
+                        SettingsChoiceChip(
+                            label = stringResource(Res.string.settings_language_system),
+                            isSelected = uiState.appLanguage == AppLanguagePreference.SYSTEM,
+                            onClick = { onAppLanguageSelected(AppLanguagePreference.SYSTEM) },
+                            modifier = Modifier.weight(1f).testTag("settings_language_system"),
+                        )
+                        SettingsChoiceChip(
+                            label = stringResource(Res.string.settings_language_pt_br),
+                            isSelected = uiState.appLanguage == AppLanguagePreference.PT_BR,
+                            onClick = { onAppLanguageSelected(AppLanguagePreference.PT_BR) },
+                            modifier = Modifier.weight(1f).testTag("settings_language_pt_br"),
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
+                    ) {
+                        SettingsChoiceChip(
+                            label = stringResource(Res.string.settings_language_en_us),
+                            isSelected = uiState.appLanguage == AppLanguagePreference.EN_US,
+                            onClick = { onAppLanguageSelected(AppLanguagePreference.EN_US) },
+                            modifier = Modifier.weight(1f).testTag("settings_language_en_us"),
+                        )
+                        SettingsChoiceChip(
+                            label = stringResource(Res.string.settings_language_es_es),
+                            isSelected = uiState.appLanguage == AppLanguagePreference.ES_ES,
+                            onClick = { onAppLanguageSelected(AppLanguagePreference.ES_ES) },
+                            modifier = Modifier.weight(1f).testTag("settings_language_es_es"),
+                        )
+                    }
                 }
             }
 

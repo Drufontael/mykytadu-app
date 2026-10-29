@@ -46,7 +46,9 @@ class UserPreferencesTest {
         assertEquals(AppLanguagePreference.EN_US, AppLanguagePreference.safeValueOf("en-US"))
         assertEquals(AppLanguagePreference.SYSTEM, AppLanguagePreference.safeValueOf("SYSTEM"))
         assertEquals(AppLanguagePreference.SYSTEM, AppLanguagePreference.safeValueOf("system"))
-        assertEquals(AppLanguagePreference.SYSTEM, AppLanguagePreference.safeValueOf("es-ES"))
+        assertEquals(AppLanguagePreference.ES_ES, AppLanguagePreference.safeValueOf("ES_ES"))
+        assertEquals(AppLanguagePreference.ES_ES, AppLanguagePreference.safeValueOf("es-ES"))
+        assertEquals(AppLanguagePreference.SYSTEM, AppLanguagePreference.safeValueOf("fr-FR"))
         assertEquals(AppLanguagePreference.SYSTEM, AppLanguagePreference.safeValueOf(null))
     }
 

@@ -74,6 +74,7 @@ class SettingsContentUiTest {
         compose.onNodeWithTag("settings_language_system").assertIsDisplayed()
         compose.onNodeWithTag("settings_language_pt_br").assertIsDisplayed()
         compose.onNodeWithTag("settings_language_en_us").assertIsDisplayed()
+        compose.onNodeWithTag("settings_language_es_es").assertIsDisplayed()
 
         // Seção Armazenamento e Cache
         compose.onNodeWithText("Armazenamento e Cache").performScrollTo().assertIsDisplayed()
@@ -172,6 +173,9 @@ class SettingsContentUiTest {
 
         compose.onNodeWithTag("settings_language_en_us").performClick()
         assertEquals(AppLanguagePreference.EN_US, selectedAppLanguage)
+
+        compose.onNodeWithTag("settings_language_es_es").performClick()
+        assertEquals(AppLanguagePreference.ES_ES, selectedAppLanguage)
     }
 
     @Test

@@ -25,7 +25,8 @@ enum class TitleLanguagePreference {
 enum class AppLanguagePreference(val code: String) {
     SYSTEM("system"),
     PT_BR("pt-BR"),
-    EN_US("en-US");
+    EN_US("en-US"),
+    ES_ES("es-ES");
 
     companion object {
         fun safeValueOf(value: String?): AppLanguagePreference =
