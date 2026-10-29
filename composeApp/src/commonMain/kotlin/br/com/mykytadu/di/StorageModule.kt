@@ -5,6 +5,8 @@ import br.com.mykytadu.data.local.datasource.LibraryLocalDataSource
 import br.com.mykytadu.data.local.datasource.PreferencesLocalDataSource
 import br.com.mykytadu.data.local.datasource.SecureStorageDriver
 import br.com.mykytadu.data.local.datasource.SyncQueueLocalDataSource
+import br.com.mykytadu.data.local.datasource.TranslationCacheLocalDataSource
+import br.com.mykytadu.data.local.datasource.InMemoryTranslationCacheLocalDataSource
 import org.koin.dsl.module
 
 expect fun provideLibraryLocalDataSource(): LibraryLocalDataSource
@@ -32,6 +34,10 @@ val StorageModule = module {
 
     single<CatalogCacheLocalDataSource> {
         provideCatalogCacheLocalDataSource()
+    }
+
+    single<TranslationCacheLocalDataSource> {
+        InMemoryTranslationCacheLocalDataSource()
     }
 }
 
