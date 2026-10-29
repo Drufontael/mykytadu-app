@@ -21,8 +21,33 @@ class AnimeDetails(
     studios: List<Studio> = emptyList(),
     val trailer: Trailer? = null,
     relations: List<AnimeRelation> = emptyList(),
+    val isOfflineFallback: Boolean = false,
 ) {
     val genres: List<String> = genres.toList()
     val studios: List<Studio> = studios.toList()
     val relations: List<AnimeRelation> = relations.toList()
+
+    fun copy(
+        isOfflineFallback: Boolean = this.isOfflineFallback,
+    ): AnimeDetails = AnimeDetails(
+        id = id,
+        titles = titles,
+        images = images,
+        description = description,
+        format = format,
+        status = status,
+        episodes = episodes,
+        duration = duration,
+        season = season,
+        seasonYear = seasonYear,
+        isAdult = isAdult,
+        startDate = startDate,
+        endDate = endDate,
+        genres = genres,
+        averageScore = averageScore,
+        studios = studios,
+        trailer = trailer,
+        relations = relations,
+        isOfflineFallback = isOfflineFallback,
+    )
 }

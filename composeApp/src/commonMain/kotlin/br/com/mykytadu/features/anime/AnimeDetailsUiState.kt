@@ -8,6 +8,7 @@ sealed interface AnimeDetailsUiState {
 
     data class Content(
         val details: AnimeDetails,
+        val isOfflineFallback: Boolean = details.isOfflineFallback,
     ) : AnimeDetailsUiState
 
     data class Failure(

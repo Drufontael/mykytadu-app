@@ -65,9 +65,15 @@ internal class AniListAnimeRepository(
             }
 
             is NetworkResult.Failure -> {
-                // Fallback offline: se a rede falhar e houver cache (mesmo expirado), retorna o cache existente
+                // Fallback offline: se a rede falhar e houver cache (mesmo expirado), retorna o cache existente com indicação de offline
                 if (cached != null) {
-                    RepositoryResult.Success(cached.pagedResult)
+                    RepositoryResult.Success(
+                        PagedResult(
+                            items = cached.pagedResult.items,
+                            pageInfo = cached.pagedResult.pageInfo,
+                            isOfflineFallback = true,
+                        ),
+                    )
                 } else {
                     result.error.toRepositoryFailure()
                 }
@@ -104,9 +110,9 @@ internal class AniListAnimeRepository(
             }
 
             is NetworkResult.Failure -> {
-                // Fallback offline: diante de erro de rede, utiliza detalhes em cache
+                // Fallback offline: diante de erro de rede, utiliza detalhes em cache com indicação de offline
                 if (cached != null) {
-                    RepositoryResult.Success(cached.details)
+                    RepositoryResult.Success(cached.details.copy(isOfflineFallback = true))
                 } else {
                     result.error.toRepositoryFailure()
                 }
@@ -154,7 +160,13 @@ internal class AniListAnimeRepository(
 
             is NetworkResult.Failure -> {
                 if (cached != null) {
-                    RepositoryResult.Success(cached.pagedResult)
+                    RepositoryResult.Success(
+                        PagedResult(
+                            items = cached.pagedResult.items,
+                            pageInfo = cached.pagedResult.pageInfo,
+                            isOfflineFallback = true,
+                        ),
+                    )
                 } else {
                     result.error.toRepositoryFailure()
                 }

@@ -22,6 +22,7 @@ data class PageInfo(
 class PagedResult<out T>(
     items: List<T>,
     val pageInfo: PageInfo,
+    val isOfflineFallback: Boolean = false,
 ) {
     val items: List<T> = items.toList()
 }

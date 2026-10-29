@@ -452,6 +452,7 @@ class AniListAnimeRepositoryTest {
         val success = assertIs<RepositoryResult.Success<*>>(result)
         val page = assertIs<PagedResult<*>>(success.value)
         assertEquals(1, page.items.size)
+        assertEquals(true, page.isOfflineFallback)
     }
 
     @Test
@@ -512,6 +513,7 @@ class AniListAnimeRepositoryTest {
         assertIs<RepositoryResult.Success<*>>(result)
         val details = (result as RepositoryResult.Success<AnimeDetails>).value
         assertEquals("5114", details.id.value)
+        assertEquals(true, details.isOfflineFallback)
     }
 
     @Test

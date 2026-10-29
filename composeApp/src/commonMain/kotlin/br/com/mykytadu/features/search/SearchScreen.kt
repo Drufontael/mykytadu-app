@@ -18,7 +18,9 @@ import br.com.mykytadu.domain.model.CatalogAnimeId
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +38,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.currentStateAsState
 import br.com.mykytadu.composeapp.generated.resources.Res
+import br.com.mykytadu.composeapp.generated.resources.catalog_offline_fallback_badge
 import br.com.mykytadu.composeapp.generated.resources.search_clear
 import br.com.mykytadu.composeapp.generated.resources.search_debouncing
 import br.com.mykytadu.composeapp.generated.resources.search_empty_message
@@ -181,6 +184,7 @@ private fun SearchFirstPageContent(
                 currentPage = content.pageInfo.currentPage,
                 hasNextPage = content.pageInfo.hasNextPage,
                 pagination = content.pagination,
+                isOfflineFallback = content.isOfflineFallback,
                 onLoadNextPage = onLoadNextPage,
                 onRetryNextPage = onRetryNextPage,
                 onAnimeSelected = onAnimeSelected,
@@ -234,6 +238,7 @@ private fun SearchResults(
     currentPage: Int,
     hasNextPage: Boolean,
     pagination: SearchPaginationState,
+    isOfflineFallback: Boolean = false,
     onLoadNextPage: () -> Unit,
     onRetryNextPage: () -> Unit,
     onAnimeSelected: (CatalogAnimeId) -> Unit,
@@ -273,6 +278,29 @@ private fun SearchResults(
             horizontalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
             verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
         ) {
+            if (isOfflineFallback) {
+                item(
+                    key = "offline_fallback_badge",
+                    span = { GridItemSpan(maxLineSpan) },
+                ) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = AppDimensions.padding.xs)
+                            .testTag("offline_fallback_indicator"),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.catalog_offline_fallback_badge),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            modifier = Modifier.padding(horizontal = AppDimensions.padding.md, vertical = AppDimensions.padding.xs),
+                        )
+                    }
+                }
+            }
+
             items(
                 items = items,
                 key = { anime -> anime.id.value },

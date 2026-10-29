@@ -153,6 +153,7 @@
     <string name="settings_storage_cache_description">Remove buscas e animes salvos temporariamente para uso offline. Sua biblioteca local e preferências não serão alteradas.</string>
     <string name="settings_storage_clear_cache_button">Limpar cache de navegação</string>
     <string name="settings_storage_cache_cleared">Cache de navegação limpo com sucesso!</string>
+    <string name="catalog_offline_fallback_badge">Exibindo dados em cache (modo offline)</string>
 
     <!-- Autenticação -->
     <string name="auth_login_title">Entrar na sua conta</string>

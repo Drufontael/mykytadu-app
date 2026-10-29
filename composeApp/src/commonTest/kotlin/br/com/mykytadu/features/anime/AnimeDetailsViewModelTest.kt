@@ -95,6 +95,26 @@ class AnimeDetailsViewModelTest {
         assertEquals(1, repository.detailsCalls.size)
     }
 
+    @Test
+    fun `detalhes com fallback offline reflete isOfflineFallback no estado Content`() = runTest {
+        val id = CatalogAnimeId("21579")
+        val expected = AnimeDetails(id = id, isOfflineFallback = true)
+        val repository = FakeAnimeRepository {
+            RepositoryResult.Success(expected)
+        }
+
+        val viewModel = AnimeDetailsViewModel(
+            id = id,
+            animeRepository = repository,
+            dispatcher = StandardTestDispatcher(testScheduler),
+        )
+
+        runCurrent()
+
+        val content = assertIs<AnimeDetailsUiState.Content>(viewModel.uiState.value)
+        assertEquals(true, content.isOfflineFallback)
+    }
+
     private class FakeAnimeRepository(
         private val detailsResult: suspend () -> RepositoryResult<AnimeDetails>,
     ) : AnimeRepository {

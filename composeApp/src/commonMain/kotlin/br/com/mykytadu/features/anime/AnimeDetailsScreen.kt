@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -199,6 +200,25 @@ internal fun AnimeDetailsContent(
     val description = details.displayDescription()
 
     LazyColumn(modifier = modifier) {
+        if (details.isOfflineFallback) {
+            item {
+                Surface(
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    shape = MaterialTheme.shapes.small,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = AppDimensions.padding.lg, vertical = AppDimensions.padding.xs)
+                        .testTag("offline_fallback_indicator"),
+                ) {
+                    Text(
+                        text = stringResource(Res.string.catalog_offline_fallback_badge),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.padding(horizontal = AppDimensions.padding.md, vertical = AppDimensions.padding.xs),
+                    )
+                }
+            }
+        }
         item { DetailsBanner(details.bannerUrl()) }
         item {
             BoxWithConstraints(
