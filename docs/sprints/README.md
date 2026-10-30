@@ -95,3 +95,4 @@ implementação, validações aplicáveis, aceite humano e encerramento document
 | S12 — Backend e Autenticação | Concluída | [S12.md](S12.md) |
 | S13 — Sincronização e Perfil | Concluída | [S13.md](S13.md) |
 | S14 — Cache e Experiência Offline | Concluída | [S14.md](S14.md) |
+| S15 — Localização e Tradução | Concluída | [S15.md](S15.md) |

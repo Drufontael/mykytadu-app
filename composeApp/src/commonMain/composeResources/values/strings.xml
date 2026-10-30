@@ -24,6 +24,11 @@
     <string name="anime_details_title_unavailable">Título indisponível</string>
     <string name="anime_details_cover">Capa de %1$s</string>
     <string name="anime_details_description_title">Sinopse</string>
+    <string name="anime_details_translate_description">Traduzir sinopse</string>
+    <string name="anime_details_show_original_description">Ver sinopse original</string>
+    <string name="anime_details_translating_description">Traduzindo sinopse…</string>
+    <string name="anime_details_translation_unavailable">Tradução indisponível no momento</string>
+    <string name="anime_details_translated_badge">Traduzido</string>
     <string name="anime_details_genres_title">Gêneros</string>
     <string name="anime_details_dates_title">Exibição</string>
     <string name="anime_details_start_date">Início: %1$s</string>
@@ -144,6 +149,7 @@
     <string name="settings_language_system">Padrão do sistema</string>
     <string name="settings_language_pt_br">Português (Brasil)</string>
     <string name="settings_language_en_us">English (US)</string>
+    <string name="settings_language_es_es">Español</string>
     <string name="settings_about_section">Sobre o MykytaDu</string>
     <string name="settings_about_description">Assistente multiplataforma para acompanhamento de animes com persistência local-first.</string>
     <string name="settings_about_version">Versão %1$s</string>

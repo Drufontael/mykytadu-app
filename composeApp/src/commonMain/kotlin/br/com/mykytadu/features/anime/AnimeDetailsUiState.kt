@@ -9,7 +9,18 @@ sealed interface AnimeDetailsUiState {
     data class Content(
         val details: AnimeDetails,
         val isOfflineFallback: Boolean = details.isOfflineFallback,
-    ) : AnimeDetailsUiState
+        val isTranslating: Boolean = false,
+        val translatedDescription: String? = null,
+        val isShowingTranslation: Boolean = false,
+        val translationError: String? = null,
+    ) : AnimeDetailsUiState {
+        val displayedDescription: String?
+            get() = if (isShowingTranslation && !translatedDescription.isNullOrBlank()) {
+                translatedDescription
+            } else {
+                details.displayDescription()
+            }
+    }
 
     data class Failure(
         val reason: RepositoryFailure,

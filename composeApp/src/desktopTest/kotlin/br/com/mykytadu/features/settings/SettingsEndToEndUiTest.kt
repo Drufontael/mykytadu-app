@@ -14,6 +14,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.dp
 import br.com.mykytadu.core.theme.AppTheme
 import br.com.mykytadu.data.local.datasource.InMemoryCatalogCacheLocalDataSource
@@ -168,7 +169,7 @@ class SettingsEndToEndUiTest {
         }
 
         // Clica no botão de limpar cache
-        compose.onNodeWithTag("settings_clear_cache_button").performClick()
+        compose.onNodeWithTag("settings_clear_cache_button").performScrollTo().performClick()
         compose.waitForIdle()
 
         // Valida que o cache foi limpo
@@ -177,6 +178,6 @@ class SettingsEndToEndUiTest {
         }
 
         // Valida que a mensagem de sucesso está visível na tela
-        compose.onNodeWithTag("settings_cache_cleared_message").assertIsDisplayed()
+        compose.onNodeWithTag("settings_cache_cleared_message").performScrollTo().assertIsDisplayed()
     }
 }

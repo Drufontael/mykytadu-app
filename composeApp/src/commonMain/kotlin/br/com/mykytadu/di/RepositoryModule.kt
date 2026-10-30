@@ -14,6 +14,8 @@ import br.com.mykytadu.domain.repository.ProfileRepository
 import br.com.mykytadu.domain.repository.SyncRepository
 import br.com.mykytadu.data.repository.DefaultCatalogCacheManager
 import br.com.mykytadu.domain.repository.CatalogCacheManager
+import br.com.mykytadu.data.repository.DefaultTranslationRepository
+import br.com.mykytadu.domain.repository.TranslationRepository
 import org.koin.dsl.module
 
 val RepositoryModule = module {
@@ -61,6 +63,13 @@ val RepositoryModule = module {
     single<CatalogCacheManager> {
         DefaultCatalogCacheManager(
             catalogCacheLocalDataSource = get(),
+        )
+    }
+
+    single<TranslationRepository> {
+        DefaultTranslationRepository(
+            translationApi = get(),
+            translationCacheLocalDataSource = get(),
         )
     }
 }

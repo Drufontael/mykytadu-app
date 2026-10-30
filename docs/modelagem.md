@@ -1486,7 +1486,61 @@ classDiagram
 
 ---
 
-# 14. Regras de Manutenção
+# 14. Arquitetura de Localização e Tradução
+
+> **Estado:** Implementado (Sprint 15).
+
+A internacionalização e localização do MykytaDu é dividida estritamente em duas frentes independentes:
+1. **Localização da Interface (Textos Estáticos e Catálogos):** Suporte nativo em Compose Multiplatform com catálogos em Português (`values/strings.xml`), Inglês (`values-en/strings.xml`) e Espanhol (`values-es/strings.xml`). O idioma da aplicação é gerenciado dinamicamente via `ProvideAppLocale` e delegadores de plataforma (`PlatformLocaleDelegate`), garantindo reatividade instantânea no runtime sem reiniciar a aplicação.
+2. **Tradução de Conteúdo Externo Sob Demanda (Sinopses):** O conteúdo dinâmico (sinopses vindas da API da AniList) não altera os contratos remotos nem muta o modelo de domínio `AnimeDetails`. A tradução é disparada expressamente pelo usuário na tela de detalhes, orquestrada por `TranslationRepository` com cache LRU em memória (`TranslationCacheLocalDataSource`) e fallback gracioso que preserva o texto original intacto mesmo em caso de erro de rede.
+
+### Diagrama de Arquitetura de Tradução
+
+```mermaid
+flowchart TD
+    UI[AnimeDetailsScreen] -->|toggleTranslation| VM[AnimeDetailsViewModel]
+    VM -->|translateSynopsis| TR[TranslationRepository]
+    TR -->|getTranslation| TC[(TranslationCacheLocalDataSource)]
+    TC -.->|Cache Hit| TR
+    TR -->|Cache Miss: translate| TA[TranslationApi / KtorTranslationApi]
+    TA -->|HTTP GET| RemoteService[Serviço de Tradução Remoto]
+    RemoteService --> TA
+    TA -->|putTranslation| TC
+    TA -.->|Falha de Rede| TR
+    TR -->|Sucesso ou Fallback Seguro| VM
+    VM -->|AnimeDetailsUiState.Content| UI
+```
+
+### Provedor de Locale Dinâmico Multiplataforma
+
+```mermaid
+classDiagram
+    class AppLanguagePreference {
+        <<enumeration>>
+        SYSTEM
+        PT_BR
+        EN_US
+        ES_ES
+        +tag: String
+    }
+
+    class PlatformLocaleDelegate {
+        <<expect/actual>>
+        +applyPlatformLocale(language: AppLanguagePreference)
+    }
+
+    class ProvideAppLocale {
+        <<composable>>
+        +ProvideAppLocale(language: AppLanguagePreference, content: Composable)
+    }
+
+    ProvideAppLocale --> PlatformLocaleDelegate : sincroniza locale
+    ProvideAppLocale --> AppLanguagePreference : chave de recomposição
+```
+
+---
+
+# 15. Regras de Manutenção
 
 Ao atualizar este documento:
 
@@ -1501,7 +1555,7 @@ Ao atualizar este documento:
 
 ---
 
-# 15. Fontes do Projeto
+# 16. Fontes do Projeto
 
 Este documento deve ser mantido em conjunto com:
 
