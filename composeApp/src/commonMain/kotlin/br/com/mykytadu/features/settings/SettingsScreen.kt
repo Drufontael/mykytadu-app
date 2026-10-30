@@ -21,16 +21,33 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.mykytadu.composeapp.generated.resources.Res
+import br.com.mykytadu.composeapp.generated.resources.settings_about_attribution_button
+import br.com.mykytadu.composeapp.generated.resources.settings_about_attribution_content
+import br.com.mykytadu.composeapp.generated.resources.settings_about_attribution_title
 import br.com.mykytadu.composeapp.generated.resources.settings_about_description
+import br.com.mykytadu.composeapp.generated.resources.settings_about_dialog_close
+import br.com.mykytadu.composeapp.generated.resources.settings_about_github_button
+import br.com.mykytadu.composeapp.generated.resources.settings_about_licenses_button
+import br.com.mykytadu.composeapp.generated.resources.settings_about_licenses_content
+import br.com.mykytadu.composeapp.generated.resources.settings_about_licenses_title
 import br.com.mykytadu.composeapp.generated.resources.settings_about_open_source
+import br.com.mykytadu.composeapp.generated.resources.settings_about_privacy_button
+import br.com.mykytadu.composeapp.generated.resources.settings_about_privacy_content
+import br.com.mykytadu.composeapp.generated.resources.settings_about_privacy_title
 import br.com.mykytadu.composeapp.generated.resources.settings_about_section
 import br.com.mykytadu.composeapp.generated.resources.settings_about_version
 import br.com.mykytadu.composeapp.generated.resources.settings_adult_content_description
@@ -43,6 +60,11 @@ import br.com.mykytadu.composeapp.generated.resources.settings_language_es_es
 import br.com.mykytadu.composeapp.generated.resources.settings_language_pt_br
 import br.com.mykytadu.composeapp.generated.resources.settings_language_section
 import br.com.mykytadu.composeapp.generated.resources.settings_language_system
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_cleared
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_description
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_title
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_clear_cache_button
+import br.com.mykytadu.composeapp.generated.resources.settings_storage_section
 import br.com.mykytadu.composeapp.generated.resources.settings_theme_dark
 import br.com.mykytadu.composeapp.generated.resources.settings_theme_label
 import br.com.mykytadu.composeapp.generated.resources.settings_theme_light
@@ -52,11 +74,6 @@ import br.com.mykytadu.composeapp.generated.resources.settings_title_language_en
 import br.com.mykytadu.composeapp.generated.resources.settings_title_language_label
 import br.com.mykytadu.composeapp.generated.resources.settings_title_language_native
 import br.com.mykytadu.composeapp.generated.resources.settings_title_language_romaji
-import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_cleared
-import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_description
-import br.com.mykytadu.composeapp.generated.resources.settings_storage_cache_title
-import br.com.mykytadu.composeapp.generated.resources.settings_storage_clear_cache_button
-import br.com.mykytadu.composeapp.generated.resources.settings_storage_section
 import br.com.mykytadu.core.theme.AppDimensions
 import br.com.mykytadu.domain.model.AppLanguagePreference
 import br.com.mykytadu.domain.model.ThemePreference
@@ -65,6 +82,7 @@ import br.com.mykytadu.features.settings.model.SettingsUiState
 import br.com.mykytadu.presentation.components.AppButton
 import br.com.mykytadu.presentation.components.AppCard
 import br.com.mykytadu.presentation.components.AppDivider
+import br.com.mykytadu.presentation.components.AppInfoDialog
 import br.com.mykytadu.presentation.components.AppTopBar
 import br.com.mykytadu.presentation.components.appInteractivePointer
 import br.com.mykytadu.presentation.components.icons.AppIcons
@@ -100,6 +118,11 @@ fun SettingsContent(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showPrivacyDialog by remember { mutableStateOf(false) }
+    var showLicensesDialog by remember { mutableStateOf(false) }
+    var showAttributionDialog by remember { mutableStateOf(false) }
+    val uriHandler = LocalUriHandler.current
+
     Scaffold(
         modifier = modifier.testTag("settings_screen"),
         topBar = {
@@ -157,7 +180,7 @@ fun SettingsContent(
 
             AppDivider()
 
-            // Seção Catálogo e Exibição
+            // Seção Preferências de Conteúdo
             SettingsSection(
                 title = stringResource(Res.string.settings_content_section),
                 testTag = "settings_title_language_section",
@@ -192,11 +215,12 @@ fun SettingsContent(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(AppDimensions.spacing.md))
+                Spacer(modifier = Modifier.height(AppDimensions.spacing.sm))
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .appInteractivePointer(enabled = true)
                         .clip(MaterialTheme.shapes.medium)
                         .clickable { onAdultContentChanged(!uiState.adultContent) }
                         .padding(vertical = AppDimensions.spacing.xs),
@@ -351,9 +375,73 @@ fun SettingsContent(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                    Spacer(modifier = Modifier.height(AppDimensions.spacing.md))
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(AppDimensions.spacing.sm),
+                    ) {
+                        AppButton(
+                            text = stringResource(Res.string.settings_about_privacy_button),
+                            onClick = { showPrivacyDialog = true },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("settings_privacy_button"),
+                        )
+                        AppButton(
+                            text = stringResource(Res.string.settings_about_licenses_button),
+                            onClick = { showLicensesDialog = true },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("settings_licenses_button"),
+                        )
+                        AppButton(
+                            text = stringResource(Res.string.settings_about_attribution_button),
+                            onClick = { showAttributionDialog = true },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("settings_attribution_button"),
+                        )
+                        AppButton(
+                            text = stringResource(Res.string.settings_about_github_button),
+                            onClick = { uriHandler.openUri("https://github.com/Drufontael/mykytadu-app") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("settings_github_button"),
+                        )
+                    }
                 }
             }
         }
+    }
+
+    if (showPrivacyDialog) {
+        AppInfoDialog(
+            title = stringResource(Res.string.settings_about_privacy_title),
+            message = stringResource(Res.string.settings_about_privacy_content),
+            onDismissRequest = { showPrivacyDialog = false },
+            closeText = stringResource(Res.string.settings_about_dialog_close),
+            modifier = Modifier.testTag("settings_privacy_dialog"),
+        )
+    }
+
+    if (showLicensesDialog) {
+        AppInfoDialog(
+            title = stringResource(Res.string.settings_about_licenses_title),
+            message = stringResource(Res.string.settings_about_licenses_content),
+            onDismissRequest = { showLicensesDialog = false },
+            closeText = stringResource(Res.string.settings_about_dialog_close),
+            modifier = Modifier.testTag("settings_licenses_dialog"),
+        )
+    }
+
+    if (showAttributionDialog) {
+        AppInfoDialog(
+            title = stringResource(Res.string.settings_about_attribution_title),
+            message = stringResource(Res.string.settings_about_attribution_content),
+            onDismissRequest = { showAttributionDialog = false },
+            closeText = stringResource(Res.string.settings_about_dialog_close),
+            modifier = Modifier.testTag("settings_attribution_dialog"),
+        )
     }
 }
 
@@ -368,6 +456,9 @@ fun SettingsChoiceChip(
         modifier = modifier
             .appInteractivePointer(enabled = true)
             .clip(MaterialTheme.shapes.small)
+            .semantics {
+                selected = isSelected
+            }
             .clickable(onClick = onClick),
         shape = MaterialTheme.shapes.small,
         color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,

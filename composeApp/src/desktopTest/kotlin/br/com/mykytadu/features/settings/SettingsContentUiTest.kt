@@ -62,19 +62,19 @@ class SettingsContentUiTest {
         compose.onNodeWithTag("settings_theme_dark").assertIsDisplayed()
 
         // Seção Catálogo e Exibição
-        compose.onNodeWithText("Catálogo e Exibição").assertIsDisplayed()
-        compose.onNodeWithText("Idioma dos títulos").assertIsDisplayed()
-        compose.onNodeWithTag("settings_title_language_romaji").assertIsDisplayed()
-        compose.onNodeWithTag("settings_title_language_english").assertIsDisplayed()
-        compose.onNodeWithTag("settings_title_language_native").assertIsDisplayed()
-        compose.onNodeWithTag("settings_adult_content_switch").assertIsDisplayed().assertIsOff()
+        compose.onNodeWithText("Catálogo e Exibição").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("Idioma dos títulos").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_title_language_romaji").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_title_language_english").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_title_language_native").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_adult_content_switch").performScrollTo().assertIsDisplayed().assertIsOff()
 
         // Seção Idioma do Aplicativo
-        compose.onNodeWithText("Idioma do Aplicativo").assertIsDisplayed()
-        compose.onNodeWithTag("settings_language_system").assertIsDisplayed()
-        compose.onNodeWithTag("settings_language_pt_br").assertIsDisplayed()
-        compose.onNodeWithTag("settings_language_en_us").assertIsDisplayed()
-        compose.onNodeWithTag("settings_language_es_es").assertIsDisplayed()
+        compose.onNodeWithText("Idioma do Aplicativo").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_language_system").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_language_pt_br").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_language_en_us").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_language_es_es").performScrollTo().assertIsDisplayed()
 
         // Seção Armazenamento e Cache
         compose.onNodeWithText("Armazenamento e Cache").performScrollTo().assertIsDisplayed()
@@ -87,10 +87,50 @@ class SettingsContentUiTest {
         compose.onNodeWithText("Assistente multiplataforma para acompanhamento de animes com persistência local-first.").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("Código aberto em Kotlin e Compose Multiplatform.").performScrollTo().assertIsDisplayed()
 
+        // Botões de Ação na Seção Sobre
+        compose.onNodeWithTag("settings_privacy_button").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_licenses_button").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_attribution_button").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("settings_github_button").performScrollTo().assertIsDisplayed()
+
         // Garantir que nenhum botão ou controle de logout/sessão está presente
         compose.onNodeWithText("Sair").assertDoesNotExist()
         compose.onNodeWithText("Logout").assertDoesNotExist()
         compose.onNodeWithText("Desconectar").assertDoesNotExist()
+    }
+
+    @Test
+    fun `SettingsContent exibe botoes de privacidade, licencas e atribuicao e abre dialogs`() {
+        compose.setContent {
+            AppTheme {
+                SettingsContent(
+                    uiState = SettingsUiState(),
+                    onThemeSelected = {},
+                    onTitleLanguageSelected = {},
+                    onAdultContentChanged = {},
+                    onAppLanguageSelected = {},
+                    onNavigateBack = {},
+                )
+            }
+        }
+
+        // Botões de ação Sobre o aplicativo e seus diálogos informativos
+        compose.onNodeWithTag("settings_privacy_button").performScrollTo().assertIsDisplayed().performClick()
+        compose.onNodeWithTag("settings_privacy_dialog").assertIsDisplayed()
+        compose.onNodeWithText("Fechar").performClick()
+        compose.onNodeWithTag("settings_privacy_dialog").assertDoesNotExist()
+
+        compose.onNodeWithTag("settings_licenses_button").performScrollTo().assertIsDisplayed().performClick()
+        compose.onNodeWithTag("settings_licenses_dialog").assertIsDisplayed()
+        compose.onNodeWithText("Fechar").performClick()
+        compose.onNodeWithTag("settings_licenses_dialog").assertDoesNotExist()
+
+        compose.onNodeWithTag("settings_attribution_button").performScrollTo().assertIsDisplayed().performClick()
+        compose.onNodeWithTag("settings_attribution_dialog").assertIsDisplayed()
+        compose.onNodeWithText("Fechar").performClick()
+        compose.onNodeWithTag("settings_attribution_dialog").assertDoesNotExist()
+
+        compose.onNodeWithTag("settings_github_button").performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -141,13 +181,13 @@ class SettingsContentUiTest {
             }
         }
 
-        compose.onNodeWithTag("settings_title_language_english").performClick()
+        compose.onNodeWithTag("settings_title_language_english").performScrollTo().performClick()
         assertEquals(TitleLanguagePreference.ENGLISH, selectedTitleLanguage)
 
-        compose.onNodeWithTag("settings_title_language_native").performClick()
+        compose.onNodeWithTag("settings_title_language_native").performScrollTo().performClick()
         assertEquals(TitleLanguagePreference.NATIVE, selectedTitleLanguage)
 
-        compose.onNodeWithTag("settings_adult_content_switch").performClick()
+        compose.onNodeWithTag("settings_adult_content_switch").performScrollTo().performClick()
         assertEquals(true, adultContentToggled)
     }
 
@@ -168,13 +208,13 @@ class SettingsContentUiTest {
             }
         }
 
-        compose.onNodeWithTag("settings_language_pt_br").performClick()
+        compose.onNodeWithTag("settings_language_pt_br").performScrollTo().performClick()
         assertEquals(AppLanguagePreference.PT_BR, selectedAppLanguage)
 
-        compose.onNodeWithTag("settings_language_en_us").performClick()
+        compose.onNodeWithTag("settings_language_en_us").performScrollTo().performClick()
         assertEquals(AppLanguagePreference.EN_US, selectedAppLanguage)
 
-        compose.onNodeWithTag("settings_language_es_es").performClick()
+        compose.onNodeWithTag("settings_language_es_es").performScrollTo().performClick()
         assertEquals(AppLanguagePreference.ES_ES, selectedAppLanguage)
     }
 
