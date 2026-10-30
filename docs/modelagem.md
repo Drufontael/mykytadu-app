@@ -175,7 +175,7 @@ Home
 
 Após o acionamento do placeholder de Login, o usuário entra na área principal do aplicativo.
 
-No estado atual, o avanço é apenas um gatilho de navegação do placeholder. Não existe autenticação, validação de sessão ou regra de negócio. A infraestrutura apenas classifica as rotas para preparar a autenticação, atualmente planejada para a Sprint 12.
+Após a Sprint 12, a autenticação e sessão local-first foram consolidadas através do `AuthRepository`, permitindo uso anônimo/local ou autenticado com sincronização em nuvem.
 
 ---
 
@@ -1540,7 +1540,37 @@ classDiagram
 
 ---
 
-# 15. Regras de Manutenção
+# 15. Preparação para Lançamento e Metadados de Distribuição
+
+> **Estado:** Implementado (Sprint 16).
+
+A versão 1.0.0 do MykytaDu consolida os artefatos de distribuição, diretrizes de privacidade *local-first*, acessibilidade e metadados de empacotamento:
+
+1. **Acessibilidade e Semântica de UI:**
+   - Adicionada propriedade semântica explícita (`semantics { selected = ... }`) para componentes de seleção (tema, idioma e filtros), garantindo suporte a leitores de tela e tecnologias assistivas.
+   - Navegação por teclado e foco preservados nos modais roláveis (`AppInfoDialog`).
+
+2. **Transparência, Licenças e Atribuição Legal:**
+   - O aplicativo adota modelo 100% *local-first*, armazenando dados exclusivamente no dispositivo do usuário quando não autenticado, sem rastreamento ou telemetria intrusiva.
+   - Diálogos informativos na tela de configurações (`SettingsScreen`) expõem:
+     - **Política de Privacidade Local-First:** Esclarecimento transparente sobre armazenamento local e isolamento de credenciais;
+     - **Licenças de Código Aberto:** Reconhecimento das bibliotecas sob licença Apache 2.0 (Compose Multiplatform, Koin, Ktor, Coil, Kotlinx);
+     - **Atribuição da API AniList:** Atribuição à API pública GraphQL da AniList como provedora dos metadados de catálogo.
+
+3. **Arquitetura de Empacotamento Multiplataforma:**
+
+```mermaid
+flowchart TD
+    Source[Código Fonte KMP / composeApp] --> Gradle[Gradle Multiplatform Build]
+    Gradle -->|createDistributable| DesktopPkg[Desktop / JVM Binário Nativo]
+    Gradle -->|wasmJsBrowserDistribution| WebPkg[Web / WasmJS Produção Estática]
+    Gradle -->|assembleDebug / Release| AndroidPkg[Android APK / AAB]
+    Gradle -->|compileIosMainKotlinMetadata| IosPkg[iOS Metadata / Framework]
+```
+
+---
+
+# 16. Regras de Manutenção
 
 Ao atualizar este documento:
 
@@ -1555,7 +1585,7 @@ Ao atualizar este documento:
 
 ---
 
-# 16. Fontes do Projeto
+# 17. Fontes do Projeto
 
 Este documento deve ser mantido em conjunto com:
 

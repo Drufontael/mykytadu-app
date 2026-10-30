@@ -2,16 +2,16 @@
 
 > Sua jornada pelos animes.
 
-MykytaDu é um aplicativo multiplataforma para organizar e acompanhar animes. O produto está sendo desenvolvido de forma incremental, com foco em uma arquitetura desacoplada, componentes reutilizáveis e uma experiência visual consistente.
+MykytaDu é um aplicativo multiplataforma moderno para organizar e acompanhar animes. O produto foi construído de forma incremental com arquitetura desacoplada, design system consistente, persistência *local-first*, sincronização opcional em nuvem, resiliência offline, internacionalização e conformidade para distribuição.
 
-Atualmente, as sprints até a S10 estão concluídas: fundação multiplataforma, Design System, navegação, camada de comunicação com a AniList, domínio do catálogo, busca end-to-end, detalhes completos do anime com navegação por relações, persistência local-first, gerenciamento completo da biblioteca pessoal e tela Home híbrida com continuidade e tendências nos 5 targets ativos. O build e a execução nativos iOS permanecem pendentes por dependerem de macOS e Xcode, sem bloquear a evolução dos demais targets.
+Todas as **16 sprints** do roadmap funcional (S1 a S16), além das manutenções arquiteturais W1 e M1, estão **concluídas**, com a versão **1.0.0** empacotada e validada nos targets ativos. A compilação de metadata do target iOS está comprovada e funcional, dependendo apenas de ambiente físico macOS e Xcode para o build nativo final.
 
 ## Plataformas
 
-- Android
-- Desktop (JVM)
-- iOS (dispositivo e simulador)
-- Web (WasmJS e JavaScript)
+- Android (APK e AAB)
+- Desktop / JVM (Distribuição nativa executável)
+- iOS (Dispositivo e simulador — compilação de metadata validada)
+- Web (WasmJS principal e JavaScript alternativo)
 
 ## Estado atual
 
@@ -23,42 +23,32 @@ Atualmente, as sprints até a S10 estão concluídas: fundação multiplataforma
 | Sprint 4 — Comunicação | Concluída |
 | Sprint 5 — Domínio do Catálogo | Concluída |
 | Sprint W1 — Fundação Web | Concluída |
-| Sprint 6 — Busca de Animes | Concluída — validação manual em Android, Desktop e Web; iOS nativo pendente de ambiente |
-| Sprint 7 — Detalhes do Anime | Concluída — detalhes completos, trailer, relações navegáveis e layout responsivo nos temas claro/escuro |
-| Sprint 8 — Persistência e Biblioteca Local | Concluída — base local-first, modelos de domínio, persistência local, repositório reativo e DI validados nos 5 targets |
-| Sprint 9 — Biblioteca End-to-End | Concluída — experiência visual completa da biblioteca pessoal, filtros, ordenação, progresso (+1), modal de edição/exclusão e integração nos detalhes |
-| Sprint 10 — Home | Concluída — tela Home híbrida com prioridade visual de continuar assistindo (+1), atualizados recentemente, tendências AniList e isolamento defensivo |
-| Sprints 11 a 16 | Planejadas |
+| Sprint 6 — Busca de Animes | Concluída |
+| Sprint M1 — Identidade do Catálogo | Concluída |
+| Sprint 7 — Detalhes do Anime | Concluída |
+| Sprint 8 — Persistência e Biblioteca Local | Concluída |
+| Sprint 9 — Biblioteca End-to-End | Concluída |
+| Sprint 10 — Home | Concluída |
+| Sprint 11 — Configurações e Preferências | Concluída |
+| Sprint 12 — Backend e Autenticação | Concluída |
+| Sprint 13 — Sincronização e Perfil | Concluída |
+| Sprint 14 — Cache e Experiência Offline | Concluída |
+| Sprint 15 — Localização e Tradução | Concluída |
+| Sprint 16 — Preparação para Lançamento | Concluída (Versão 1.0.0) |
 
-Já estão disponíveis:
+## Capacidades disponíveis
 
-- configuração Kotlin e Compose Multiplatform;
-- injeção de dependências com Koin;
-- cliente HTTP Ktor com engine específica por plataforma;
-- serialização JSON com Kotlinx Serialization;
-- temas claro e escuro, tipografia, formas e dimensões;
-- componentes reutilizáveis de entrada, ação, navegação e feedback;
-- showcase para validação visual do Design System;
-- oito rotas tipadas e serializáveis com Navigation 3;
-- fluxo de entrada, navegação principal e rotas secundárias;
-- back stack compartilhado entre as plataformas;
-- classificação declarativa de rotas públicas e protegidas;
-- estrutura compartilhada para resolução de Deep Links;
-- comunicação HTTP robusta e padronizada;
-- pesquisa paginada e consulta de detalhes por meio do `AnimeApi` da AniList;
-- modelos de domínio, mapeadores AniList, `AnimeRepository` e registro no Koin para pesquisa e detalhes;
-- modelos de domínio e persistência local da biblioteca (`LibraryEntry`, `LibraryRepository`, `LibraryLocalDataSource`, drivers multiplataforma e `StorageModule`);
-- shell Web com transporte Ktor baseado em Fetch e comunicação direta validada com a AniList;
-- navegação Web por fragmentos, integrada ao histórico do navegador em JS e WasmJS;
-- rota de detalhes tipada com `CatalogAnimeId`, deep link compartilhado e URL Web `#/anime/{id}`;
-- shell Web responsivo e acessível no escopo validado, com distribuições de produção separadas para WasmJS e JavaScript.
-
-A busca já apresenta a grade de títulos com debounce, cancelamento, paginação
-incremental, estados e retry, usando ViewModel por entrada do Navigation 3. O
-resultado selecionado abre os detalhes com a identidade correta, exibindo banner,
-capa, título, metadados essenciais, sinopse, gêneros, datas, estúdios, trailer
-reconhecido e relações resumidas em layout responsivo com suporte a navegação por
-relações de anime.
+- **Fundação Multiplataforma:** Configuração completa Kotlin Multiplatform, Compose Multiplatform, Material 3, injeção de dependências com Koin, cliente HTTP Ktor com engines por plataforma e serialização com Kotlinx Serialization;
+- **Design System e Acessibilidade:** Tema escuro prioritário e tema claro baseados em tokens, tipografia Poppins, componentes reutilizáveis, modais informativos com rolagem vertical (`AppInfoDialog`), semântica assistiva (`semantics { selected = ... }`) e suporte a leitores de tela;
+- **Navegação Declarativa:** Navigation 3 compartilhado com back stack persistente, tipagem segura, rotas protegidas, Deep Links e shell Web integrado ao histórico do navegador por fragmentos (`#/anime/{id}`);
+- **Catálogo e Busca:** Integração robusta com a API GraphQL da AniList, debounce inteligente, paginação incremental, trailer, relações navegáveis e layout responsivo;
+- **Biblioteca Local-First:** Gerenciamento de status (Assistindo, Concluído, etc.), notas, contagem de episódios com incremento rápido (+1), ordenação, filtros e persistência local no dispositivo sem obrigar login;
+- **Home Híbrida:** Continuidade rápida ("Continuar Assistindo"), títulos recentemente atualizados e tendências populares da temporada com isolamento defensivo de falhas de rede;
+- **Configurações e Preferências:** Seleção de tema (Claro, Escuro, Sistema), idioma dinâmico, feedback tátil, limpeza de cache e exclusão segura de dados locais;
+- **Autenticação e Nuvem Opcional:** Sessão desacoplada (*local-first*) com suporte a backend MykytaDu/Supabase, sincronização em nuvem bidirecional idempotente e perfil de usuário com avatar e estatísticas;
+- **Resiliência e Cache Offline:** Estratégia de Cache-First para catálogo e detalhes, permitindo navegação fluida mesmo sem conectividade com a internet;
+- **Internacionalização (i18n):** Suporte multilíngue nativo em Português (pt-BR), Inglês (en-US) e Espanhol (es-ES) com troca em tempo de execução e tradução sob demanda de sinopses com cache LRU;
+- **Release v1.0.0 e Conformidade:** Identidade visual refinada, versão `1.0.0`, política de privacidade transparente (*local-first*), licenças de código aberto (Apache 2.0), atribuição à API AniList e empacotamento validado para Desktop, Web e Android.
 
 ## Stack
 
@@ -78,8 +68,8 @@ As versões efetivamente utilizadas são centralizadas em [`gradle/libs.versions
 ## Pré-requisitos
 
 - JDK 21;
-- Android Studio com Android SDK 36 para executar a versão Android;
-- macOS com Xcode para compilar e executar os targets iOS.
+- Android Studio com Android SDK 36 para executar o target Android;
+- macOS com Xcode para compilar e executar nativamente os targets iOS.
 
 Não é necessário instalar o Gradle separadamente: o repositório inclui o Gradle Wrapper.
 
@@ -116,11 +106,9 @@ Abra o projeto no Android Studio, selecione a configuração `composeApp` e exec
 
 ### iOS
 
-Os targets `iosArm64` e `iosSimulatorArm64` estão configurados. A compilação e a integração do framework iOS exigem macOS e Xcode, portanto a execução nativa permanece pendente no ambiente atual.
+Os targets `iosArm64` e `iosSimulatorArm64` estão configurados e suas tasks de metadata compilam com sucesso (`:composeApp:compileIosMainKotlinMetadata`). A compilação e a integração final do framework nativo exigem macOS e Xcode.
 
-O projeto está aberto a contribuições para configurar, executar e validar o
-aplicativo em iOS. O fluxo esperado inclui login, busca de animes, paginação,
-tela de detalhes e retorno para os resultados.
+O projeto está aberto a contribuições com ambiente macOS/Xcode para validar o empacotamento nativo em iOS.
 
 ### Web
 
@@ -133,40 +121,77 @@ Para executar os servidores de desenvolvimento no Windows:
 .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
 ```
 
-Para gerar as distribuições de produção:
+A navegação Web usa fragmentos (`#/...`) e não depende de rewrite de paths no servidor.
+
+## Empacotamento de distribuição (Release v1.0.0)
+
+O projeto está preparado e validado para a geração de pacotes distribuíveis em cada plataforma:
+
+### Desktop
+
+Gera o binário executável empacotado da aplicação com todos os metadados de versão (`1.0.0`), vendor e descrição:
+
+```powershell
+.\gradlew.bat :composeApp:createDistributable
+```
+
+O artefato é gerado em:
+```text
+composeApp/build/compose/binaries/main/app
+```
+
+### Web (WasmJS e JS)
+
+Gera os pacotes otimizados de produção:
 
 ```powershell
 .\gradlew.bat :composeApp:wasmJsBrowserDistribution
 .\gradlew.bat :composeApp:jsBrowserDistribution
 ```
 
-Os artefatos são gerados, respectivamente, em:
-
+Os artefatos são gerados em:
 ```text
 composeApp/build/dist/wasmJs/productionExecutable
 composeApp/build/dist/js/productionExecutable
 ```
 
-Sirva cada diretório por HTTP estático; abrir o `index.html` diretamente pelo sistema de arquivos não representa a execução validada. Por exemplo, em um ambiente com Python:
+Para testar localmente via HTTP estático:
 
 ```powershell
 python -m http.server 8080 --directory composeApp\build\dist\wasmJs\productionExecutable
 ```
 
-A navegação atual usa fragmentos (`#/...`) e não depende de rewrite de paths no servidor. Os parâmetros `?network-smoke=true` e `?design-system-showcase=true` ativam modos técnicos incluídos nas distribuições; o diagnóstico de rede tem precedência quando ambos estão ativos.
+### Android
+
+Gera o pacote APK para instalação:
+
+```powershell
+.\gradlew.bat :composeApp:assembleDebug
+```
+
+O APK é gerado em:
+```text
+composeApp/build/outputs/apk/debug/composeApp-debug.apk
+```
 
 ## Testes
 
-Para executar os testes do target Desktop:
+Para garantir a máxima integridade e redução de processos repetitivos, recomenda-se executar a **bateria composta de testes multiplataforma**, que valida os 5 targets simultaneamente:
 
 ```powershell
-.\gradlew.bat :composeApp:desktopTest
+.\gradlew.bat :composeApp:desktopTest :composeApp:testDebugUnitTest :composeApp:compileIosMainKotlinMetadata :composeApp:jsBrowserTest :composeApp:wasmJsBrowserTest
 ```
 
 Em macOS ou Linux:
 
 ```bash
-./gradlew :composeApp:desktopTest
+./gradlew :composeApp:desktopTest :composeApp:testDebugUnitTest :composeApp:compileIosMainKotlinMetadata :composeApp:jsBrowserTest :composeApp:wasmJsBrowserTest
+```
+
+Para executar testes unitários do Desktop individualmente:
+
+```powershell
+.\gradlew.bat :composeApp:desktopTest
 ```
 
 ## Estrutura do projeto
@@ -175,30 +200,31 @@ Em macOS ou Linux:
 mykytadu-app/
 ├── composeApp/
 │   └── src/
-│       ├── commonMain/    # UI, tema, componentes, domínio e DI compartilhados
-│       ├── commonTest/    # Testes compartilhados
-│       ├── androidMain/   # Entrada e engine HTTP do Android
-│       ├── desktopMain/   # Entrada e engine HTTP do Desktop
-│       ├── iosMain/       # Engine HTTP do iOS
-│       ├── webMain/       # Entrada, engine Fetch e diagnóstico técnico Web
+│       ├── commonMain/    # UI, temas, navegação, componentes, domínio e DI compartilhados
+│       ├── commonTest/    # Testes unitários compartilhados
+│       ├── androidMain/   # Entrada, recursos e engines do Android
+│       ├── desktopMain/   # Entrada e engines do Desktop
+│       ├── desktopTest/   # Testes de UI em Desktop Compose
+│       ├── iosMain/       # Engines e pontos de entrada do iOS
+│       ├── webMain/       # Entrada, engine Fetch e recursos Web
 │       ├── jsMain/        # APIs específicas do JavaScript
 │       └── wasmJsMain/    # APIs específicas do WasmJS
 ├── gradle/
 │   └── libs.versions.toml # Catálogo central de dependências
-└── docs/                  # Produto, identidade, modelagem e roadmap
+└── docs/                  # Produto, identidade, modelagem, sprints e ADRs
 ```
 
-O código compartilhado usa o namespace `br.com.mykytadu`. A arquitetura planejada separa apresentação, domínio e dados, mantendo regras de negócio fora da UI e o acesso externo atrás de repositories.
+O código compartilhado utiliza o namespace `br.com.mykytadu`. A arquitetura separa estritamente apresentação, domínio e dados, mantendo regras de negócio fora da UI e o acesso externo protegido atrás de repositories e fontes locais.
 
 ## Design System
 
 A identidade visual adota Poppins, Material 3 e temas claro e escuro baseados em tokens. O modo escuro é a principal referência da marca, com violeta como cor primária e turquesa como destaque.
 
-Entre os elementos implementados estão `AppButton`, `AppTextField`, `AppCard`, `AppTopBar`, `AppSearchBar`, `AppChip`, `AppIconButton`, `AppDialog`, `AppLoading`, `AppProgressBar`, `AppError`, `AppEmptyState`, `AppDivider` e `AppIcons`.
+Entre os componentes implementados estão `AppButton`, `AppTextField`, `AppCard`, `AppTopBar`, `AppSearchBar`, `AppChip`, `AppIconButton`, `AppDialog`, `AppInfoDialog`, `AppLoading`, `AppProgressBar`, `AppError`, `AppEmptyState`, `AppDivider` e `AppIcons`.
 
-## Roadmap resumido
+## Roadmap e evolução
 
-O desenvolvimento está organizado em 16 sprints funcionais e uma sprint técnica adicional, W1, inserida entre as Sprints 5 e 6:
+O desenvolvimento do MykytaDu foi estruturado em 16 sprints funcionais e manutenções técnicas integradas:
 
 1. Fundação do projeto;
 2. Design System;
@@ -207,6 +233,7 @@ O desenvolvimento está organizado em 16 sprints funcionais e uma sprint técnic
 5. Domínio do catálogo;
 W1. Fundação Web;
 6. Busca de animes end-to-end;
+M1. Identidade do catálogo;
 7. Detalhes do anime end-to-end;
 8. Persistência e biblioteca local;
 9. Biblioteca end-to-end;
@@ -216,27 +243,20 @@ W1. Fundação Web;
 13. Sincronização e perfil;
 14. Cache e experiência offline;
 15. Localização e tradução;
-16. Preparação para lançamento.
+16. Preparação para lançamento (v1.0.0).
 
-Consulte o [`docs/roadmap.md`](docs/roadmap.md) para entregas e critérios de aceite de cada sprint.
-
-A **Sprint 7 — Detalhes do anime end-to-end** está em andamento; a próxima
-etapa é integrar a navegação das relações e consolidar o fluxo. A
-validação nativa iOS pode ser adicionada posteriormente quando houver macOS e
-Xcode disponíveis.
+Todas as sprints acima estão **100% concluídas**. Consulte o [`docs/roadmap.md`](docs/roadmap.md) para o detalhamento consolidado dos critérios e a pasta [`docs/sprints/`](docs/sprints/README.md) para os registros contemporâneos de execução de cada entrega.
 
 ## Documentação
 
-- [`docs/README.md`](docs/README.md): índice da documentação;
+- [`docs/README.md`](docs/README.md): índice geral da documentação;
 - [`docs/documento-mestre.md`](docs/documento-mestre.md): especificações de produto e direção arquitetural estável;
-- [`docs/api-externa-anilist.md`](docs/api-externa-anilist.md): decisão arquitetural e contrato inicial da integração com a AniList;
+- [`docs/api-externa-anilist.md`](docs/api-externa-anilist.md): decisão arquitetural e contrato da integração com a AniList;
 - [`docs/identidade-visual.md`](docs/identidade-visual.md): identidade, cores, tipografia e princípios de UX;
-- [`docs/modelagem.md`](docs/modelagem.md): arquitetura, modelos e fluxos vigentes ou explicitamente propostos;
+- [`docs/modelagem.md`](docs/modelagem.md): arquitetura, diagramas Mermaid, modelos e fluxos vigentes;
 - [`docs/roadmap.md`](docs/roadmap.md): planejamento e estado consolidado das sprints;
-- [`docs/sprints/`](docs/sprints/README.md): execução, evidências e encerramentos;
-- [`docs/adr/`](docs/adr/README.md): decisões arquiteturais e consequências.
-
-Quando houver divergências, aplique a prioridade definida no `AGENTS.md` e corrija a fonte documental responsável pela informação.
+- [`docs/sprints/`](docs/sprints/README.md): registros de execução, evidências e encerramentos de sprints;
+- [`docs/adr/`](docs/adr/README.md): decisões arquiteturais, contexto e consequências.
 
 ## Princípios de desenvolvimento
 
@@ -245,9 +265,9 @@ Quando houver divergências, aplique a prioridade definida no `AGENTS.md` e corr
 - abstrair comunicação externa por repositories;
 - usar estados de tela padronizados;
 - favorecer código desacoplado, testável e sem duplicação;
-- evoluir incrementalmente, sem antecipar funcionalidades futuras.
 - entregar fatias verticais e modelar somente a partir de casos de uso concretos;
-- manter a biblioteca local-first, independente de autenticação e backend para seu funcionamento principal.
+- manter a biblioteca *local-first*, independente de autenticação e backend para seu funcionamento principal;
+- transparência com o usuário: respeito à privacidade e dados locais sem rastreamento indesejado.
 
 ---
 
