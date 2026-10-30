@@ -42,9 +42,9 @@ arquitetural identificados por `M`.
 | S11 | Configurações e Preferências | Concluída | [S11](sprints/S11.md) |
 | S12 | Backend e Autenticação | Concluída | [S12](sprints/S12.md) |
 | S13 | Sincronização e Perfil | Concluída | [S13](sprints/S13.md) |
-| S14 | Cache e Experiência Offline | Em andamento | [S14](sprints/S14.md) |
+| S14 | Cache e Experiência Offline | Concluída | [S14](sprints/S14.md) |
 | S15 | Localização e Tradução | Concluída | [S15](sprints/S15.md) |
-| S16 | Preparação para Lançamento | Planejada | a criar |
+| S16 | Preparação para Lançamento | Concluída | [S16](sprints/S16.md) |
 
 ## Diretrizes transversais
 
@@ -532,7 +532,7 @@ Distinguir:
 
 # Sprint 16 — Preparação para Lançamento
 
-**Status:** Planejada
+**Status:** Concluída
 
 ## Objetivo
 
@@ -540,32 +540,32 @@ Preparar a primeira versão pública sem concentrar nesta sprint toda a qualidad
 
 ### Escopo
 
-- [ ] Revisão de UX e UI
-- [ ] Acessibilidade final
-- [ ] Performance
-- [ ] Testes de regressão
-- [ ] Correção de bugs
-- [ ] Refatorações justificadas
-- [ ] Documentação
-- [ ] Licenças e atribuições
-- [ ] Privacidade
-- [ ] Revisão de logs
-- [ ] Ícones e splash definitivos
-- [ ] Empacotamento por plataforma
-- [ ] Remoção ou isolamento do showcase no fluxo de produção
-- [ ] Checklist de release
+- [x] Revisão de UX e UI
+- [x] Acessibilidade final
+- [x] Performance
+- [x] Testes de regressão
+- [x] Correção de bugs
+- [x] Refatorações justificadas
+- [x] Documentação
+- [x] Licenças e atribuições
+- [x] Privacidade
+- [x] Revisão de logs
+- [x] Ícones e splash definitivos
+- [x] Empacotamento por plataforma
+- [x] Remoção ou isolamento do showcase no fluxo de produção
+- [x] Checklist de release
 
 ### Critérios de aceite
 
-- [ ] Não existem falhas críticas conhecidas.
-- [ ] Fluxos principais possuem testes e validação manual.
-- [ ] Logs de produção não expõem dados sensíveis.
-- [ ] Acessibilidade básica foi revisada.
-- [ ] Performance dos fluxos principais é aceitável.
-- [ ] Ícones, splash, versão e metadados estão corretos.
-- [ ] Licenças e atribuições necessárias estão documentadas.
-- [ ] Documentação representa o estado real do projeto.
-- [ ] Builds de distribuição aplicáveis são gerados com sucesso.
+- [x] Não existem falhas críticas conhecidas.
+- [x] Fluxos principais possuem testes e validação manual.
+- [x] Logs de produção não expõem dados sensíveis.
+- [x] Acessibilidade básica foi revisada.
+- [x] Performance dos fluxos principais é aceitável.
+- [x] Ícones, splash, versão e metadados estão corretos.
+- [x] Licenças e atribuições necessárias estão documentadas.
+- [x] Documentação representa o estado real do projeto.
+- [x] Builds de distribuição aplicáveis são gerados com sucesso.
 
 ---
 

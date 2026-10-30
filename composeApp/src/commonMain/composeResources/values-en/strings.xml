@@ -208,4 +208,17 @@
     <string name="profile_sync_up_to_date">Library up to date with cloud</string>
     <string name="profile_sync_last_synced">Last synced: %1$s</string>
     <string name="profile_sync_never">Never synced</string>
+
+    <!-- Release / About / Privacy / Licenses (Sprint 16) -->
+    <string name="settings_about_privacy_button">Privacy Policy</string>
+    <string name="settings_about_privacy_title">Privacy Policy (Local-First)</string>
+    <string name="settings_about_privacy_content">MykytaDu is built with a local-first philosophy. Your preferences, anime library, histories, and notes are stored exclusively in your device\'s local database and cache.\n\nNo personal data, browsing history, or device identifiers are sent to third-party servers or used for advertising. Remote account authentication and cloud synchronization are strictly optional, used solely when you choose to sync your anime entries.</string>
+    <string name="settings_about_licenses_button">Open Source Licenses</string>
+    <string name="settings_about_licenses_title">Open Source Licenses</string>
+    <string name="settings_about_licenses_content">MykytaDu is built with leading open-source technologies:\n\n• Kotlin Multiplatform and Coroutines (Apache 2.0)\n• JetBrains Compose Multiplatform and Material 3 (Apache 2.0)\n• Ktor HTTP Client (Apache 2.0)\n• Coil 3 Image Loading (Apache 2.0)\n• Koin Dependency Injection (Apache 2.0)\n• Kotlinx Serialization (Apache 2.0)\n• Navigation 3 Multiplatform (Apache 2.0)</string>
+    <string name="settings_about_attribution_button">AniList API Attribution</string>
+    <string name="settings_about_attribution_title">AniList API Attribution</string>
+    <string name="settings_about_attribution_content">Anime data, synopses, cover images, episodes, genres, and studios are graciously provided by the public AniList GraphQL API (AniList.co).\n\nMykytaDu is an independent open-source client and deeply appreciates AniList for maintaining public community infrastructure for anime fans.</string>
+    <string name="settings_about_github_button">View on GitHub</string>
+    <string name="settings_about_dialog_close">Close</string>
 </resources>

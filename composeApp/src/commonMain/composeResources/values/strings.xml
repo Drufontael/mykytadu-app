@@ -208,4 +208,17 @@
     <string name="profile_sync_up_to_date">Biblioteca atualizada com a nuvem</string>
     <string name="profile_sync_last_synced">Última sincronização: %1$s</string>
     <string name="profile_sync_never">Nunca sincronizado</string>
+
+    <!-- Release / Sobre / Privacidade / Licenças (Sprint 16) -->
+    <string name="settings_about_privacy_button">Política de Privacidade</string>
+    <string name="settings_about_privacy_title">Política de Privacidade (Local-First)</string>
+    <string name="settings_about_privacy_content">O MykytaDu é desenvolvido sob o princípio local-first. Suas preferências, biblioteca de animes, históricos e notas são armazenados exclusivamente na memória e banco de dados local do seu dispositivo.\n\nNenhum dado pessoal, histórico de visualização ou identificador de dispositivo é transmitido para servidores de terceiros ou coletado para publicidade. O uso de conta remota e sincronização em nuvem é estritamente opcional e utilizado apenas quando você solicita a sincronização dos seus animes.</string>
+    <string name="settings_about_licenses_button">Licenças de Código Aberto</string>
+    <string name="settings_about_licenses_title">Licenças de Código Aberto</string>
+    <string name="settings_about_licenses_content">O MykytaDu é construído com tecnologias abertas de alto padrão:\n\n• Kotlin Multiplatform e Coroutines (Apache 2.0)\n• JetBrains Compose Multiplatform e Material 3 (Apache 2.0)\n• Ktor HTTP Client (Apache 2.0)\n• Coil 3 Image Loading (Apache 2.0)\n• Koin Injeção de Dependências (Apache 2.0)\n• Kotlinx Serialization (Apache 2.0)\n• Navigation 3 Multiplatform (Apache 2.0)</string>
+    <string name="settings_about_attribution_button">Atribuição da API AniList</string>
+    <string name="settings_about_attribution_title">Atribuição da API AniList</string>
+    <string name="settings_about_attribution_content">Os dados de animes, sinopses, capas, episódios, gêneros e estúdios são fornecidos gentilmente pela AniList GraphQL API pública (AniList.co).\n\nO MykytaDu é um aplicativo de código aberto independente e agradece imensamente à AniList por manter a infraestrutura comunitária disponível para entusiastas de animes.</string>
+    <string name="settings_about_github_button">Ver no GitHub</string>
+    <string name="settings_about_dialog_close">Fechar</string>
 </resources>

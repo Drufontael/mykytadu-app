@@ -139,7 +139,7 @@ android {
         minSdk = libs.versions.androidMinSdk.get().toInt()
         targetSdk = libs.versions.androidTargetSdk.get().toInt()
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
     }
 
     buildFeatures {
@@ -165,6 +165,10 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "br.com.mykytadu"
             packageVersion = "1.0.0"
+            description = "MykytaDu - Assistente de animes local-first"
+            copyright = "© 2026 MykytaDu. Todos os direitos reservados."
+            vendor = "MykytaDu Team"
         }
     }
 }
+

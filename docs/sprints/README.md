@@ -96,3 +96,4 @@ implementação, validações aplicáveis, aceite humano e encerramento document
 | S13 — Sincronização e Perfil | Concluída | [S13.md](S13.md) |
 | S14 — Cache e Experiência Offline | Concluída | [S14.md](S14.md) |
 | S15 — Localização e Tradução | Concluída | [S15.md](S15.md) |
+| S16 — Preparação para Lançamento | Concluída | [S16.md](S16.md) |
