@@ -44,7 +44,7 @@ arquitetural identificados por `M`.
 | S13 | Sincronização e Perfil | Concluída | [S13](sprints/S13.md) |
 | S14 | Cache e Experiência Offline | Em andamento | [S14](sprints/S14.md) |
 | S15 | Localização e Tradução | Concluída | [S15](sprints/S15.md) |
-| S16 | Preparação para Lançamento | Planejada | a criar |
+| S16 | Preparação para Lançamento | Em andamento | [S16](sprints/S16.md) |
 
 ## Diretrizes transversais
 
@@ -532,7 +532,7 @@ Distinguir:
 
 # Sprint 16 — Preparação para Lançamento
 
-**Status:** Planejada
+**Status:** Em andamento
 
 ## Objetivo
 
