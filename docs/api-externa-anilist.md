@@ -472,7 +472,7 @@ description(asHtml: false)
 
 O texto pode conter marcação própria da AniList, quebras de linha, spoilers ou conteúdo somente em inglês. A normalização visual e a tradução não pertencem à Sprint 4.
 
-A tradução permanece planejada para a Sprint 15 e não deve alterar o contrato externo original.
+A tradução foi implementada na Sprint 15 de forma isolada na camada de apresentação/domínio (`TranslationRepository`), mantendo o contrato externo original da AniList intacto.
 
 ## 10. Envelope GraphQL e erros
 
